@@ -1,0 +1,827 @@
+[ Header
+    2
+    ( "the-default-pullquote" , [] , [] )
+    [ Str "1."
+    , Space
+    , Str "The"
+    , Space
+    , Str "Default"
+    , Space
+    , Str "Pullquote"
+    ]
+, Para
+    [ Str "This"
+    , Space
+    , Str "first"
+    , Space
+    , Str "test"
+    , Space
+    , Str "checks"
+    , Space
+    , Str "that"
+    , Space
+    , Str "if"
+    , Space
+    , Str "a"
+    , Space
+    , Str "user"
+    , Space
+    , Str "provides"
+    , Space
+    , Str "absolutely"
+    , Space
+    , Str "no"
+    , Space
+    , Str "arguments,"
+    , Space
+    , Str "the"
+    , Space
+    , Str "fallback"
+    , Space
+    , Str "defaults"
+    , Space
+    , Str "(80%"
+    , Space
+    , Str "width,"
+    , Space
+    , Str "dark"
+    , Space
+    , Str "gray"
+    , Space
+    , Str "text,"
+    , Space
+    , Str "light"
+    , Space
+    , Str "gray"
+    , Space
+    , Str "bar,"
+    , Space
+    , Str "italicized"
+    , Space
+    , Str "large"
+    , Space
+    , Str "text,"
+    , Space
+    , Str "centered"
+    , Space
+    , Str "box)"
+    , Space
+    , Str "trigger"
+    , Space
+    , Str "correctly"
+    , Space
+    , Str "across"
+    , Space
+    , Str "all"
+    , Space
+    , Str "formats."
+    ]
+, Div
+    ( "" , [ "pullquote" ] , [] )
+    [ Para
+        [ Quoted
+            DoubleQuote
+            [ Str "Typography"
+            , Space
+            , Str "is"
+            , Space
+            , Str "the"
+            , Space
+            , Str "craft"
+            , Space
+            , Str "of"
+            , Space
+            , Str "endowing"
+            , Space
+            , Str "human"
+            , Space
+            , Str "language"
+            , Space
+            , Str "with"
+            , Space
+            , Str "a"
+            , Space
+            , Str "durable"
+            , Space
+            , Str "visual"
+            , Space
+            , Str "form."
+            ]
+        , SoftBreak
+        , Str "\8212"
+        , Space
+        , Str "Robert"
+        , Space
+        , Str "Bringhurst"
+        ]
+    ]
+, Para
+    [ Str "Here"
+    , Space
+    , Str "is"
+    , Space
+    , Str "some"
+    , Space
+    , Str "standard"
+    , Space
+    , Str "body"
+    , Space
+    , Str "text"
+    , Space
+    , Str "following"
+    , Space
+    , Str "the"
+    , Space
+    , Str "quote"
+    , Space
+    , Str "to"
+    , Space
+    , Str "ensure"
+    , Space
+    , Str "vertical"
+    , Space
+    , Str "spacing"
+    , Space
+    , Str "("
+    , Code ( "" , [] , [] ) "skip"
+    , Space
+    , Str "and"
+    , Space
+    , Code ( "" , [] , [] ) "margins"
+    , Str ")"
+    , Space
+    , Str "is"
+    , Space
+    , Str "rendering"
+    , Space
+    , Str "gracefully"
+    , Space
+    , Str "without"
+    , Space
+    , Str "colliding"
+    , Space
+    , Str "with"
+    , Space
+    , Str "the"
+    , Space
+    , Str "surrounding"
+    , Space
+    , Str "paragraphs."
+    ]
+, HorizontalRule
+, Header
+    2
+    ( "box-alignment-and-width" , [] , [] )
+    [ Str "2."
+    , Space
+    , Str "Box"
+    , Space
+    , Str "Alignment"
+    , Space
+    , Str "and"
+    , Space
+    , Str "Width"
+    ]
+, Para
+    [ Str "By"
+    , Space
+    , Str "adjusting"
+    , Space
+    , Code ( "" , [] , [] ) "width"
+    , Space
+    , Str "and"
+    , Space
+    , Code ( "" , [] , [] ) "boxalign"
+    , Str ","
+    , Space
+    , Str "we"
+    , Space
+    , Str "can"
+    , Space
+    , Str "float"
+    , Space
+    , Str "the"
+    , Space
+    , Str "pullquote"
+    , Space
+    , Str "to"
+    , Space
+    , Str "the"
+    , Space
+    , Str "side"
+    , Space
+    , Str "of"
+    , Space
+    , Str "the"
+    , Space
+    , Str "page"
+    , Space
+    , Str "to"
+    , Space
+    , Str "create"
+    , Space
+    , Str "dynamic,"
+    , Space
+    , Str "magazine-style"
+    , Space
+    , Str "layouts."
+    ]
+, Div
+    ( ""
+    , [ "pullquote" ]
+    , [ ( "width" , "45%" ) , ( "boxalign" , "pq-box-right" ) ]
+    )
+    [ Para
+        [ Str "This"
+        , Space
+        , Str "quote"
+        , Space
+        , Str "takes"
+        , Space
+        , Str "up"
+        , Space
+        , Str "45%"
+        , Space
+        , Str "of"
+        , Space
+        , Str "the"
+        , Space
+        , Str "page"
+        , Space
+        , Str "width"
+        , Space
+        , Str "and"
+        , Space
+        , Str "is"
+        , Space
+        , Str "flushed"
+        , Space
+        , Str "to"
+        , Space
+        , Str "the"
+        , Space
+        , Str "right"
+        , Space
+        , Str "margin."
+        ]
+    ]
+, Para
+    [ Str "Lorem"
+    , Space
+    , Str "ipsum"
+    , Space
+    , Str "dolor"
+    , Space
+    , Str "sit"
+    , Space
+    , Str "amet,"
+    , Space
+    , Str "consectetur"
+    , Space
+    , Str "adipiscing"
+    , Space
+    , Str "elit."
+    , Space
+    , Str "Sed"
+    , Space
+    , Str "do"
+    , Space
+    , Str "eiusmod"
+    , Space
+    , Str "tempor"
+    , Space
+    , Str "incididunt"
+    , Space
+    , Str "ut"
+    , Space
+    , Str "labore"
+    , Space
+    , Str "et"
+    , Space
+    , Str "dolore"
+    , Space
+    , Str "magna"
+    , Space
+    , Str "aliqua."
+    , Space
+    , Str "Ut"
+    , Space
+    , Str "enim"
+    , Space
+    , Str "ad"
+    , Space
+    , Str "minim"
+    , Space
+    , Str "veniam,"
+    , Space
+    , Str "quis"
+    , Space
+    , Str "nostrud"
+    , Space
+    , Str "exercitation"
+    , Space
+    , Str "ullamco"
+    , Space
+    , Str "laboris"
+    , Space
+    , Str "nisi"
+    , Space
+    , Str "ut"
+    , Space
+    , Str "aliquip"
+    , Space
+    , Str "ex"
+    , Space
+    , Str "ea"
+    , Space
+    , Str "commodo"
+    , Space
+    , Str "consequat."
+    , Space
+    , Str "Duis"
+    , Space
+    , Str "aute"
+    , Space
+    , Str "irure"
+    , Space
+    , Str "dolor"
+    , Space
+    , Str "in"
+    , Space
+    , Str "reprehenderit"
+    , Space
+    , Str "in"
+    , Space
+    , Str "voluptate"
+    , Space
+    , Str "velit"
+    , Space
+    , Str "esse"
+    , Space
+    , Str "cillum."
+    ]
+, Div
+    ( ""
+    , [ "pullquote" ]
+    , [ ( "width" , "60%" )
+      , ( "boxalign" , "pq-box-left" )
+      , ( "align" , "pq-align-center" )
+      ]
+    )
+    [ Para
+        [ Str "This"
+        , Space
+        , Str "one"
+        , Space
+        , Str "takes"
+        , Space
+        , Str "up"
+        , Space
+        , Str "60%,"
+        , Space
+        , Str "floats"
+        , Space
+        , Str "to"
+        , Space
+        , Str "the"
+        , Space
+        , Str "left"
+        , Space
+        , Str "margin,"
+        , Space
+        , Str "but"
+        , Space
+        , Str "the"
+        , Space
+        , Str "text"
+        , Space
+        , Emph [ Str "inside" ]
+        , Space
+        , Str "it"
+        , Space
+        , Str "is"
+        , Space
+        , Str "centered."
+        ]
+    ]
+, Para
+    [ Str "Curabitur"
+    , Space
+    , Str "pretium"
+    , Space
+    , Str "tincidunt"
+    , Space
+    , Str "lacus."
+    , Space
+    , Str "Nulla"
+    , Space
+    , Str "gravida"
+    , Space
+    , Str "orci"
+    , Space
+    , Str "a"
+    , Space
+    , Str "odio."
+    , Space
+    , Str "Nullam"
+    , Space
+    , Str "varius,"
+    , Space
+    , Str "turpis"
+    , Space
+    , Str "et"
+    , Space
+    , Str "commodo"
+    , Space
+    , Str "pharetra,"
+    , Space
+    , Str "est"
+    , Space
+    , Str "eros"
+    , Space
+    , Str "bibendum"
+    , Space
+    , Str "elit,"
+    , Space
+    , Str "nec"
+    , Space
+    , Str "luctus"
+    , Space
+    , Str "magna"
+    , Space
+    , Str "felis"
+    , Space
+    , Str "sollicitudin"
+    , Space
+    , Str "mauris."
+    , Space
+    , Str "Integer"
+    , Space
+    , Str "in"
+    , Space
+    , Str "mauris"
+    , Space
+    , Str "eu"
+    , Space
+    , Str "nibh"
+    , Space
+    , Str "euismod"
+    , Space
+    , Str "gravida."
+    ]
+, HorizontalRule
+, Header
+    2
+    ( "the-typography-engine" , [] , [] )
+    [ Str "3."
+    , Space
+    , Str "The"
+    , Space
+    , Str "Typography"
+    , Space
+    , Str "Engine"
+    ]
+, Para
+    [ Str "This"
+    , Space
+    , Str "tests"
+    , Space
+    , Str "the"
+    , Space
+    , Str "semantic"
+    , Space
+    , Str "sizes"
+    , Space
+    , Str "and"
+    , Space
+    , Str "the"
+    , Space
+    , Str "CSS-like"
+    , Space
+    , Str "class"
+    , Space
+    , Str "injection"
+    , Space
+    , Str "for"
+    , Space
+    , Str "font"
+    , Space
+    , Str "weights,"
+    , Space
+    , Str "families,"
+    , Space
+    , Str "and"
+    , Space
+    , Str "styles."
+    ]
+, Div
+    ( ""
+    , [ "pullquote" , "pq-weight-bold" , "pq-family-sans" ]
+    , [ ( "size" , "pq-size-xl" ) ]
+    )
+    [ Para
+        [ Str "This"
+        , Space
+        , Str "is"
+        , Space
+        , Str "an"
+        , Space
+        , Str "Extra"
+        , Space
+        , Str "Large"
+        , Space
+        , Str "(XL),"
+        , Space
+        , Str "Bold,"
+        , Space
+        , Str "Sans-Serif"
+        , Space
+        , Str "quote."
+        ]
+    ]
+, Div
+    ( ""
+    , [ "pullquote" , "pq-family-mono" ]
+    , [ ( "size" , "pq-size-s" )
+      , ( "align" , "pq-align-right" )
+      ]
+    )
+    [ Para
+        [ Str "This"
+        , Space
+        , Str "is"
+        , Space
+        , Str "a"
+        , Space
+        , Str "Small"
+        , Space
+        , Str "(S),"
+        , Space
+        , Str "Monospace"
+        , Space
+        , Str "quote,"
+        , Space
+        , Str "aligned"
+        , Space
+        , Str "to"
+        , Space
+        , Str "the"
+        , Space
+        , Str "right."
+        ]
+    ]
+, Div
+    ( ""
+    , [ "pullquote" , "pq-style-smallcaps" , "pq-weight-bold" ]
+    , [ ( "size" , "pq-size-2xl" ) ]
+    )
+    [ Para
+        [ Str "This"
+        , Space
+        , Str "is"
+        , Space
+        , Str "a"
+        , Space
+        , Str "2XL,"
+        , Space
+        , Str "Bold,"
+        , Space
+        , Str "Small-Caps"
+        , Space
+        , Str "quote."
+        ]
+    ]
+, HorizontalRule
+, Header
+    2
+    ( "color-parsing-svg-names-and-hex" , [] , [] )
+    [ Str "4."
+    , Space
+    , Str "Color"
+    , Space
+    , Str "Parsing"
+    , Space
+    , Str "(SVG"
+    , Space
+    , Str "Names"
+    , Space
+    , Str "and"
+    , Space
+    , Str "Hex)"
+    ]
+, Para
+    [ Str "This"
+    , Space
+    , Str "tests"
+    , Space
+    , Str "the"
+    , Space
+    , Str "robustness"
+    , Space
+    , Str "of"
+    , Space
+    , Str "the"
+    , Space
+    , Str "color"
+    , Space
+    , Str "parser."
+    , Space
+    , Str "It"
+    , Space
+    , Str "should"
+    , Space
+    , Str "seamlessly"
+    , Space
+    , Str "route"
+    , Space
+    , Str "standard"
+    , Space
+    , Str "SVG"
+    , Space
+    , Str "color"
+    , Space
+    , Str "names"
+    , Space
+    , Str "and"
+    , Space
+    , Str "raw"
+    , Space
+    , Str "HTML"
+    , Space
+    , Str "hex"
+    , Space
+    , Str "codes"
+    , Space
+    , Str "to"
+    , Space
+    , Str "the"
+    , Space
+    , Str "appropriate"
+    , Space
+    , Str "backend"
+    , Space
+    , Str "commands."
+    ]
+, Div
+    ( ""
+    , [ "pullquote" ]
+    , [ ( "color" , "Tomato" )
+      , ( "barcolor" , "DarkSlateBlue" )
+      , ( "barwidth" , "8px" )
+      ]
+    )
+    [ Para
+        [ Str "This"
+        , Space
+        , Str "quote"
+        , Space
+        , Str "uses"
+        , Space
+        , Str "the"
+        , Space
+        , Str "SVG"
+        , Space
+        , Str "named"
+        , Space
+        , Str "color"
+        , Space
+        , Strong [ Str "Tomato" ]
+        , Space
+        , Str "for"
+        , Space
+        , Str "text"
+        , Space
+        , Str "and"
+        , Space
+        , Strong [ Str "DarkSlateBlue" ]
+        , Space
+        , Str "for"
+        , Space
+        , Str "a"
+        , Space
+        , Str "thick"
+        , Space
+        , Str "8px"
+        , Space
+        , Str "border."
+        ]
+    ]
+, Div
+    ( ""
+    , [ "pullquote" ]
+    , [ ( "color" , "#2ECC71" )
+      , ( "barcolor" , "#E74C3C" )
+      , ( "width" , "70%" )
+      ]
+    )
+    [ Para
+        [ Str "This"
+        , Space
+        , Str "quote"
+        , Space
+        , Str "uses"
+        , Space
+        , Str "raw"
+        , Space
+        , Str "Hex"
+        , Space
+        , Str "codes:"
+        , Space
+        , Strong [ Str "#2ECC71" ]
+        , Space
+        , Str "(Green)"
+        , Space
+        , Str "for"
+        , Space
+        , Str "text"
+        , Space
+        , Str "and"
+        , Space
+        , Strong [ Str "#E74C3C" ]
+        , Space
+        , Str "(Red)"
+        , Space
+        , Str "for"
+        , Space
+        , Str "the"
+        , Space
+        , Str "bar."
+        ]
+    ]
+, HorizontalRule
+, Header
+    2
+    ( "the-extreme-stress-test" , [] , [] )
+    [ Str "5."
+    , Space
+    , Str "The"
+    , Space
+    , Str "Extreme"
+    , Space
+    , Str "Stress"
+    , Space
+    , Str "Test"
+    ]
+, Para
+    [ Str "Finally,"
+    , Space
+    , Str "we"
+    , Space
+    , Str "combine"
+    , Space
+    , Str "everything:"
+    , Space
+    , Str "custom"
+    , Space
+    , Str "width,"
+    , Space
+    , Str "extreme"
+    , Space
+    , Str "size,"
+    , Space
+    , Str "custom"
+    , Space
+    , Str "colors,"
+    , Space
+    , Str "custom"
+    , Space
+    , Str "alignments,"
+    , Space
+    , Str "and"
+    , Space
+    , Str "multiple"
+    , Space
+    , Str "font"
+    , Space
+    , Str "styles"
+    , Space
+    , Str "in"
+    , Space
+    , Str "a"
+    , Space
+    , Str "single"
+    , Space
+    , Str "fenced"
+    , Space
+    , Str "Div."
+    ]
+, Div
+    ( ""
+    , [ "pullquote"
+      , "pq-weight-bold"
+      , "pq-family-serif"
+      , "pq-style-upright"
+      ]
+    , [ ( "size" , "pq-size-3xl" )
+      , ( "align" , "pq-align-center" )
+      , ( "boxalign" , "pq-box-center" )
+      , ( "width" , "95%" )
+      , ( "color" , "DarkGoldenrod" )
+      , ( "barcolor" , "MidnightBlue" )
+      , ( "barwidth" , "12px" )
+      ]
+    )
+    [ Para
+        [ Str "THE" , Space , Str "ULTIMATE" , Space , Str "TEST" ]
+    ]
+]

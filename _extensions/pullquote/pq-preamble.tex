@@ -1,0 +1,54 @@
+% --- Safe Package Loading for Pandoc ---
+\PassOptionsToPackage{svgnames}{xcolor}
+\PassOptionsToPackage{most}{tcolorbox}
+
+\usepackage{tcolorbox}
+\usepackage{environ}
+\usepackage{keyval}
+
+% --- Define the Keys ---
+\makeatletter
+\define@key{pullquote}{width}{\def\pqwidth{#1}}
+\define@key{pullquote}{color}{\def\pqcolor{#1}}
+\define@key{pullquote}{size}{\def\pqsize{#1}}
+\define@key{pullquote}{skip}{\def\pqskip{#1}}
+\define@key{pullquote}{align}{\def\pqalign{#1}}
+\define@key{pullquote}{boxalign}{\def\pqboxalign{#1}}
+\define@key{pullquote}{barwidth}{\def\pqbarwidth{#1}}
+\define@key{pullquote}{barcolor}{\def\pqbarcolor{#1}}
+\makeatother
+
+% --- Publicly Sensible Default Values ---
+\newcommand{\pqsetdefaults}{%
+  \def\pqwidth{0.8\textwidth}%
+  \def\pqcolor{DarkGray}%
+  \def\pqsize{\large\itshape}%
+  \def\pqskip{1.2\baselineskip}%
+  \def\pqalign{\raggedright}%
+  \def\pqboxalign{center}%
+  \def\pqbarwidth{4pt}%
+  \def\pqbarcolor{LightGray}%
+}
+
+% --- Environment Definition ---
+\NewEnviron{pullquote}[1][]{%
+  \pqsetdefaults
+  \setkeys{pullquote}{#1}%
+  %
+  \begin{tcolorbox}[
+    standard,
+    sharp corners,
+    colback=white,
+    boxrule=0pt,
+    leftrule=\pqbarwidth,
+    colframe=\pqbarcolor,
+    width=\pqwidth,
+    \pqboxalign,
+    left=12pt, right=0pt, top=4pt, bottom=4pt,
+    before skip=15pt, after skip=15pt,
+    colupper=\pqcolor,
+    before upper={\pqsize\setlength{\baselineskip}{\pqskip}\pqalign},
+  ]
+   \BODY
+  \end{tcolorbox}
+}

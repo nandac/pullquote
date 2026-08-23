@@ -1,0 +1,16 @@
+standalone: true
+
+filters:
+  - type: lua
+    path: pullquote.lua
+
+metadata:
+  author: Nandakumar Chandrasekhar
+  date: 2026-08-23
+  fontsize: 12pt
+  mainfont: Noto Serif
+  sansfont: Noto Sans
+  monofont: Fira Mono
+  codefont: Fira Mono
+  linestretch: 1.25
+  number-sections: true

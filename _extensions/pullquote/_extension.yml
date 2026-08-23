@@ -1,0 +1,15 @@
+title: pullquote
+author: Nandakumar Chandrasekhar
+version: 1.0.0
+
+contributes:
+  filters:
+    - pullquote.lua
+
+  formats:
+    typst:
+      include-in-header: pq-preamble.typ
+    pdf:
+      include-in-header: pq-preamble.tex
+    latex:
+      include-in-header: pq-preamble.tex

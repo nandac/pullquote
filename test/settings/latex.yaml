@@ -1,0 +1,17 @@
+to: latex
+pdf-engine: lualatex
+
+include-in-header:
+  - _extensions/pullquote/pq-preamble.tex
+  - test/assets/preview-styles.tex
+
+variables:
+  papersize: A4
+  geometry:
+    - margin=20mm
+  monofontoptions:
+    - Scale=0.97
+  colorlinks: true
+  linkcolor: blue
+  urlcolor: blue
+  citecolor: blue

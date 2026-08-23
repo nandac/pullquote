@@ -1,0 +1,16 @@
+to: typst
+pdf-engine: typst
+
+template: test/assets/custom-template.typst
+
+include-in-header:
+  - _extensions/pullquote/pq-preamble.typ
+  - test/assets/preview-styles.typ
+
+variables:
+  papersize: a4
+  margin:
+    top: 20mm
+    bottom: 20mm
+    left: 20mm
+    right: 20mm
