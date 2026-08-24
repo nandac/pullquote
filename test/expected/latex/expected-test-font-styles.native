@@ -1,0 +1,140 @@
+[ Header
+    2
+    ( "weights-families-and-variants" , [] , [] )
+    [ Str "Weights,"
+    , Space
+    , Str "Families,"
+    , Space
+    , Str "and"
+    , Space
+    , Str "Variants"
+    ]
+, Para
+    [ Str "This"
+    , Space
+    , Str "tests"
+    , Space
+    , Str "the"
+    , Space
+    , Str "CSS-like"
+    , Space
+    , Str "class"
+    , Space
+    , Str "injection"
+    , Space
+    , Str "for"
+    , Space
+    , Str "font"
+    , Space
+    , Str "weights,"
+    , Space
+    , Str "families,"
+    , Space
+    , Str "and"
+    , Space
+    , Str "styles"
+    , Space
+    , Str "without"
+    , Space
+    , Str "disrupting"
+    , Space
+    , Str "the"
+    , Space
+    , Str "component"
+    , Space
+    , Str "layout."
+    ]
+, CodeBlock
+    ( "" , [ "markdown" ] , [] )
+    "::: {.pullquote .pq-weight-bold .pq-family-sans}\nThis is a Bold, Sans-Serif quote using the default size.\n:::"
+, Div
+    ( ""
+    , [ "pullquote" , "pq-weight-bold" , "pq-family-sans" ]
+    , []
+    )
+    [ Para
+        [ Str "This"
+        , Space
+        , Str "is"
+        , Space
+        , Str "a"
+        , Space
+        , Str "Bold,"
+        , Space
+        , Str "Sans-Serif"
+        , Space
+        , Str "quote"
+        , Space
+        , Str "using"
+        , Space
+        , Str "the"
+        , Space
+        , Str "default"
+        , Space
+        , Str "size."
+        ]
+    ]
+, CodeBlock
+    ( "" , [ "markdown" ] , [] )
+    "::: {.pullquote .pq-family-mono}\nThis is a Monospace quote.\n:::"
+, Div
+    ( "" , [ "pullquote" , "pq-family-mono" ] , [] )
+    [ Para
+        [ Str "This"
+        , Space
+        , Str "is"
+        , Space
+        , Str "a"
+        , Space
+        , Str "Monospace"
+        , Space
+        , Str "quote."
+        ]
+    ]
+, CodeBlock
+    ( "" , [ "markdown" ] , [] )
+    "::: {.pullquote .pq-style-smallcaps .pq-weight-bold}\nThis is a Bold, Small-Caps quote.\n:::"
+, Div
+    ( ""
+    , [ "pullquote" , "pq-style-smallcaps" , "pq-weight-bold" ]
+    , []
+    )
+    [ Para
+        [ Str "This"
+        , Space
+        , Str "is"
+        , Space
+        , Str "a"
+        , Space
+        , Str "Bold,"
+        , Space
+        , Str "Small-Caps"
+        , Space
+        , Str "quote."
+        ]
+    ]
+, CodeBlock
+    ( "" , [ "markdown" ] , [] )
+    "::: {.pullquote .pq-style-upright .pq-weight-medium}\nThis is a Medium-weight, Upright (non-italicized) quote.\n:::"
+, Div
+    ( ""
+    , [ "pullquote" , "pq-style-upright" , "pq-weight-medium" ]
+    , []
+    )
+    [ Para
+        [ Str "This"
+        , Space
+        , Str "is"
+        , Space
+        , Str "a"
+        , Space
+        , Str "Medium-weight,"
+        , Space
+        , Str "Upright"
+        , Space
+        , Str "(non-italicized)"
+        , Space
+        , Str "quote."
+        ]
+    ]
+]

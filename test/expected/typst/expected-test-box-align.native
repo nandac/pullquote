@@ -1,0 +1,296 @@
+[ Header
+    2
+    ( "floating-layouts" , [] , [] )
+    [ Str "Floating" , Space , Str "Layouts" ]
+, Para
+    [ Str "By"
+    , Space
+    , Str "adjusting"
+    , Space
+    , Code ( "" , [] , [] ) "width"
+    , Space
+    , Str "and"
+    , Space
+    , Code ( "" , [] , [] ) "boxalign"
+    , Str ","
+    , Space
+    , Str "we"
+    , Space
+    , Str "can"
+    , Space
+    , Str "float"
+    , Space
+    , Str "the"
+    , Space
+    , Str "pullquote"
+    , Space
+    , Str "to"
+    , Space
+    , Str "the"
+    , Space
+    , Str "side"
+    , Space
+    , Str "of"
+    , Space
+    , Str "the"
+    , Space
+    , Str "page"
+    , Space
+    , Str "to"
+    , Space
+    , Str "create"
+    , Space
+    , Str "dynamic"
+    , Space
+    , Str "layouts."
+    ]
+, CodeBlock
+    ( "" , [ "markdown" ] , [] )
+    "::: {.pullquote width=\"45%\" boxalign=\"pq-box-right\"}\nThis quote takes up 45% of the page width and is flushed to the right margin.\n:::"
+, Div
+    ( ""
+    , [ "pullquote" ]
+    , [ ( "width" , "45%" ) , ( "boxalign" , "pq-box-right" ) ]
+    )
+    [ Para
+        [ Str "This"
+        , Space
+        , Str "quote"
+        , Space
+        , Str "takes"
+        , Space
+        , Str "up"
+        , Space
+        , Str "45%"
+        , Space
+        , Str "of"
+        , Space
+        , Str "the"
+        , Space
+        , Str "page"
+        , Space
+        , Str "width"
+        , Space
+        , Str "and"
+        , Space
+        , Str "is"
+        , Space
+        , Str "flushed"
+        , Space
+        , Str "to"
+        , Space
+        , Str "the"
+        , Space
+        , Str "right"
+        , Space
+        , Str "margin."
+        ]
+    ]
+, Para
+    [ Str "Lorem"
+    , Space
+    , Str "ipsum"
+    , Space
+    , Str "dolor"
+    , Space
+    , Str "sit"
+    , Space
+    , Str "amet,"
+    , Space
+    , Str "consectetur"
+    , Space
+    , Str "adipiscing"
+    , Space
+    , Str "elit."
+    , Space
+    , Str "Sed"
+    , Space
+    , Str "do"
+    , Space
+    , Str "eiusmod"
+    , Space
+    , Str "tempor"
+    , Space
+    , Str "incididunt"
+    , Space
+    , Str "ut"
+    , Space
+    , Str "labore"
+    , Space
+    , Str "et"
+    , Space
+    , Str "dolore"
+    , Space
+    , Str "magna"
+    , Space
+    , Str "aliqua."
+    , Space
+    , Str "Ut"
+    , Space
+    , Str "enim"
+    , Space
+    , Str "ad"
+    , Space
+    , Str "minim"
+    , Space
+    , Str "veniam,"
+    , Space
+    , Str "quis"
+    , Space
+    , Str "nostrud"
+    , Space
+    , Str "exercitation"
+    , Space
+    , Str "ullamco"
+    , Space
+    , Str "laboris"
+    , Space
+    , Str "nisi"
+    , Space
+    , Str "ut"
+    , Space
+    , Str "aliquip"
+    , Space
+    , Str "ex"
+    , Space
+    , Str "ea"
+    , Space
+    , Str "commodo"
+    , Space
+    , Str "consequat."
+    , Space
+    , Str "Duis"
+    , Space
+    , Str "aute"
+    , Space
+    , Str "irure"
+    , Space
+    , Str "dolor"
+    , Space
+    , Str "in"
+    , Space
+    , Str "reprehenderit"
+    , Space
+    , Str "in"
+    , Space
+    , Str "voluptate"
+    , Space
+    , Str "velit"
+    , Space
+    , Str "esse"
+    , Space
+    , Str "cillum."
+    ]
+, CodeBlock
+    ( "" , [ "markdown" ] , [] )
+    "::: {.pullquote width=\"60%\" boxalign=\"pq-box-left\" align=\"pq-align-center\"}\nThis one takes up 60%, floats to the left margin, but the text *inside* it is centered.\n:::"
+, Div
+    ( ""
+    , [ "pullquote" ]
+    , [ ( "width" , "60%" )
+      , ( "boxalign" , "pq-box-left" )
+      , ( "align" , "pq-align-center" )
+      ]
+    )
+    [ Para
+        [ Str "This"
+        , Space
+        , Str "one"
+        , Space
+        , Str "takes"
+        , Space
+        , Str "up"
+        , Space
+        , Str "60%,"
+        , Space
+        , Str "floats"
+        , Space
+        , Str "to"
+        , Space
+        , Str "the"
+        , Space
+        , Str "left"
+        , Space
+        , Str "margin,"
+        , Space
+        , Str "but"
+        , Space
+        , Str "the"
+        , Space
+        , Str "text"
+        , Space
+        , Emph [ Str "inside" ]
+        , Space
+        , Str "it"
+        , Space
+        , Str "is"
+        , Space
+        , Str "centered."
+        ]
+    ]
+, Para
+    [ Str "Curabitur"
+    , Space
+    , Str "pretium"
+    , Space
+    , Str "tincidunt"
+    , Space
+    , Str "lacus."
+    , Space
+    , Str "Nulla"
+    , Space
+    , Str "gravida"
+    , Space
+    , Str "orci"
+    , Space
+    , Str "a"
+    , Space
+    , Str "odio."
+    , Space
+    , Str "Nullam"
+    , Space
+    , Str "varius,"
+    , Space
+    , Str "turpis"
+    , Space
+    , Str "et"
+    , Space
+    , Str "commodo"
+    , Space
+    , Str "pharetra,"
+    , Space
+    , Str "est"
+    , Space
+    , Str "eros"
+    , Space
+    , Str "bibendum"
+    , Space
+    , Str "elit,"
+    , Space
+    , Str "nec"
+    , Space
+    , Str "luctus"
+    , Space
+    , Str "magna"
+    , Space
+    , Str "felis"
+    , Space
+    , Str "sollicitudin"
+    , Space
+    , Str "mauris."
+    , Space
+    , Str "Integer"
+    , Space
+    , Str "in"
+    , Space
+    , Str "mauris"
+    , Space
+    , Str "eu"
+    , Space
+    , Str "nibh"
+    , Space
+    , Str "euismod"
+    , Space
+    , Str "gravida."
+    ]
+]

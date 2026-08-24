@@ -1,9 +1,7 @@
 [ Header
     2
     ( "the-default-pullquote" , [] , [] )
-    [ Str "1."
-    , Space
-    , Str "The"
+    [ Str "The"
     , Space
     , Str "Default"
     , Space
@@ -172,9 +170,7 @@
 , Header
     2
     ( "box-alignment-and-width" , [] , [] )
-    [ Str "2."
-    , Space
-    , Str "Box"
+    [ Str "Box"
     , Space
     , Str "Alignment"
     , Space
@@ -473,9 +469,7 @@
 , Header
     2
     ( "the-typography-engine" , [] , [] )
-    [ Str "3."
-    , Space
-    , Str "The"
+    [ Str "The"
     , Space
     , Str "Typography"
     , Space
@@ -595,9 +589,7 @@
 , Header
     2
     ( "color-parsing-svg-names-and-hex" , [] , [] )
-    [ Str "4."
-    , Space
-    , Str "Color"
+    [ Str "Color"
     , Space
     , Str "Parsing"
     , Space
@@ -752,9 +744,7 @@
 , Header
     2
     ( "the-extreme-stress-test" , [] , [] )
-    [ Str "5."
-    , Space
-    , Str "The"
+    [ Str "The"
     , Space
     , Str "Extreme"
     , Space

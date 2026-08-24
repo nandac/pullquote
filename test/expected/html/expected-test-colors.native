@@ -1,0 +1,327 @@
+[ Header
+    2
+    ( "color-parsing-svg-names-and-hex" , [] , [] )
+    [ Str "Color"
+    , Space
+    , Str "Parsing"
+    , Space
+    , Str "(SVG"
+    , Space
+    , Str "Names"
+    , Space
+    , Str "and"
+    , Space
+    , Str "Hex)"
+    ]
+, Para
+    [ Str "This"
+    , Space
+    , Str "tests"
+    , Space
+    , Str "the"
+    , Space
+    , Str "robustness"
+    , Space
+    , Str "of"
+    , Space
+    , Str "the"
+    , Space
+    , Str "color"
+    , Space
+    , Str "parser,"
+    , Space
+    , Str "routing"
+    , Space
+    , Str "standard"
+    , Space
+    , Str "SVG"
+    , Space
+    , Str "color"
+    , Space
+    , Str "names"
+    , Space
+    , Str "and"
+    , Space
+    , Str "raw"
+    , Space
+    , Str "HTML"
+    , Space
+    , Str "hex"
+    , Space
+    , Str "codes"
+    , Space
+    , Str "to"
+    , Space
+    , Str "the"
+    , Space
+    , Str "backend"
+    , Space
+    , Str "compilers."
+    ]
+, CodeBlock
+    ( "" , [ "markdown" ] , [] )
+    "::: {.pullquote color=\"CadetBlue\" barcolor=\"Thistle\" barwidth=\"8px\"}\nThis quote uses the SVG named color **CadetBlue** for text and the pastel **Thistle** for a thick 8px border.\n:::"
+, Div
+    ( ""
+    , [ "pullquote" ]
+    , [ ( "color" , "CadetBlue" )
+      , ( "barcolor" , "Thistle" )
+      , ( "barwidth" , "8px" )
+      ]
+    )
+    [ Para
+        [ Str "This"
+        , Space
+        , Str "quote"
+        , Space
+        , Str "uses"
+        , Space
+        , Str "the"
+        , Space
+        , Str "SVG"
+        , Space
+        , Str "named"
+        , Space
+        , Str "color"
+        , Space
+        , Strong [ Str "CadetBlue" ]
+        , Space
+        , Str "for"
+        , Space
+        , Str "text"
+        , Space
+        , Str "and"
+        , Space
+        , Str "the"
+        , Space
+        , Str "pastel"
+        , Space
+        , Strong [ Str "Thistle" ]
+        , Space
+        , Str "for"
+        , Space
+        , Str "a"
+        , Space
+        , Str "thick"
+        , Space
+        , Str "8px"
+        , Space
+        , Str "border."
+        ]
+    ]
+, CodeBlock
+    ( "" , [ "markdown" ] , [] )
+    "::: {.pullquote color=\"#827397\" barcolor=\"#E9D8FD\" width=\"70%\"}\nThis quote uses raw Hex codes: **#827397** (Muted Violet) for text and **#E9D8FD** (Pastel Lavender) for the bar.\n:::"
+, Div
+    ( ""
+    , [ "pullquote" ]
+    , [ ( "color" , "#827397" )
+      , ( "barcolor" , "#E9D8FD" )
+      , ( "width" , "70%" )
+      ]
+    )
+    [ Para
+        [ Str "This"
+        , Space
+        , Str "quote"
+        , Space
+        , Str "uses"
+        , Space
+        , Str "raw"
+        , Space
+        , Str "Hex"
+        , Space
+        , Str "codes:"
+        , Space
+        , Strong [ Str "#827397" ]
+        , Space
+        , Str "(Muted"
+        , Space
+        , Str "Violet)"
+        , Space
+        , Str "for"
+        , Space
+        , Str "text"
+        , Space
+        , Str "and"
+        , Space
+        , Strong [ Str "#E9D8FD" ]
+        , Space
+        , Str "(Pastel"
+        , Space
+        , Str "Lavender)"
+        , Space
+        , Str "for"
+        , Space
+        , Str "the"
+        , Space
+        , Str "bar."
+        ]
+    ]
+, Header
+    2
+    ( "color-blending" , [] , [] )
+    [ Str "Color" , Space , Str "Blending" ]
+, Para
+    [ Str "This"
+    , Space
+    , Str "tests"
+    , Space
+    , Str "the"
+    , Space
+    , Str "cross-platform"
+    , Space
+    , Str "color"
+    , Space
+    , Str "mixing"
+    , Space
+    , Str "syntax"
+    , Space
+    , Str "("
+    , Code ( "" , [] , [] ) "color!percentage!mix-color"
+    , Str ")."
+    , Space
+    , Str "If"
+    , Space
+    , Str "the"
+    , Space
+    , Str "mix"
+    , Space
+    , Str "color"
+    , Space
+    , Str "is"
+    , Space
+    , Str "omitted,"
+    , Space
+    , Str "it"
+    , Space
+    , Str "automatically"
+    , Space
+    , Str "defaults"
+    , Space
+    , Str "to"
+    , Space
+    , Str "blending"
+    , Space
+    , Str "with"
+    , Space
+    , Str "white."
+    ]
+, CodeBlock
+    ( "" , [ "markdown" ] , [] )
+    "::: {.pullquote color=\"Teal!100\" barcolor=\"Teal!30\" barwidth=\"6px\"}\nThis quote dynamically blends colors: solid **Teal** for the text, and Teal blended at **30% with white** for a softer matching bar.\n:::"
+, Div
+    ( ""
+    , [ "pullquote" ]
+    , [ ( "color" , "Teal!100" )
+      , ( "barcolor" , "Teal!30" )
+      , ( "barwidth" , "6px" )
+      ]
+    )
+    [ Para
+        [ Str "This"
+        , Space
+        , Str "quote"
+        , Space
+        , Str "dynamically"
+        , Space
+        , Str "blends"
+        , Space
+        , Str "colors:"
+        , Space
+        , Str "solid"
+        , Space
+        , Strong [ Str "Teal" ]
+        , Space
+        , Str "for"
+        , Space
+        , Str "the"
+        , Space
+        , Str "text,"
+        , Space
+        , Str "and"
+        , Space
+        , Str "Teal"
+        , Space
+        , Str "blended"
+        , Space
+        , Str "at"
+        , Space
+        , Strong
+            [ Str "30%" , Space , Str "with" , Space , Str "white" ]
+        , Space
+        , Str "for"
+        , Space
+        , Str "a"
+        , Space
+        , Str "softer"
+        , Space
+        , Str "matching"
+        , Space
+        , Str "bar."
+        ]
+    ]
+, CodeBlock
+    ( "" , [ "markdown" ] , [] )
+    "::: {.pullquote color=\"Indigo!90!Black\" barcolor=\"Indigo!20\" barwidth=\"6px\"}\nThis quote uses a three-part blend for the text (**Indigo mixed at 90% with Black**) and a standard two-part blend for the bar.\n:::"
+, Div
+    ( ""
+    , [ "pullquote" ]
+    , [ ( "color" , "Indigo!90!Black" )
+      , ( "barcolor" , "Indigo!20" )
+      , ( "barwidth" , "6px" )
+      ]
+    )
+    [ Para
+        [ Str "This"
+        , Space
+        , Str "quote"
+        , Space
+        , Str "uses"
+        , Space
+        , Str "a"
+        , Space
+        , Str "three-part"
+        , Space
+        , Str "blend"
+        , Space
+        , Str "for"
+        , Space
+        , Str "the"
+        , Space
+        , Str "text"
+        , Space
+        , Str "("
+        , Strong
+            [ Str "Indigo"
+            , Space
+            , Str "mixed"
+            , Space
+            , Str "at"
+            , Space
+            , Str "90%"
+            , Space
+            , Str "with"
+            , Space
+            , Str "Black"
+            ]
+        , Str ")"
+        , Space
+        , Str "and"
+        , Space
+        , Str "a"
+        , Space
+        , Str "standard"
+        , Space
+        , Str "two-part"
+        , Space
+        , Str "blend"
+        , Space
+        , Str "for"
+        , Space
+        , Str "the"
+        , Space
+        , Str "bar."
+        ]
+    ]
+]

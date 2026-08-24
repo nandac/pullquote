@@ -1,0 +1,240 @@
+[ Header
+    2
+    ( "the-default-pullquote" , [] , [] )
+    [ Str "The"
+    , Space
+    , Str "Default"
+    , Space
+    , Str "Pullquote"
+    ]
+, Para
+    [ Str "This"
+    , Space
+    , Str "test"
+    , Space
+    , Str "checks"
+    , Space
+    , Str "that"
+    , Space
+    , Str "if"
+    , Space
+    , Str "a"
+    , Space
+    , Str "user"
+    , Space
+    , Str "provides"
+    , Space
+    , Str "absolutely"
+    , Space
+    , Str "no"
+    , Space
+    , Str "arguments,"
+    , Space
+    , Str "the"
+    , Space
+    , Str "fallback"
+    , Space
+    , Str "defaults"
+    , Space
+    , Str "(80%"
+    , Space
+    , Str "width,"
+    , Space
+    , Str "dark"
+    , Space
+    , Str "gray"
+    , Space
+    , Str "text,"
+    , Space
+    , Str "light"
+    , Space
+    , Str "gray"
+    , Space
+    , Str "bar,"
+    , Space
+    , Str "italicized"
+    , Space
+    , Str "large"
+    , Space
+    , Str "text,"
+    , Space
+    , Str "centered"
+    , Space
+    , Str "box)"
+    , Space
+    , Str "trigger"
+    , Space
+    , Str "correctly."
+    ]
+, CodeBlock
+    ( "" , [ "markdown" ] , [] )
+    "::: {.pullquote}\n\"Typography is the craft of endowing human language with a durable visual form.\"\n--- Robert Bringhurst\n:::"
+, Div
+    ( "" , [ "pullquote" ] , [] )
+    [ Para
+        [ Quoted
+            DoubleQuote
+            [ Str "Typography"
+            , Space
+            , Str "is"
+            , Space
+            , Str "the"
+            , Space
+            , Str "craft"
+            , Space
+            , Str "of"
+            , Space
+            , Str "endowing"
+            , Space
+            , Str "human"
+            , Space
+            , Str "language"
+            , Space
+            , Str "with"
+            , Space
+            , Str "a"
+            , Space
+            , Str "durable"
+            , Space
+            , Str "visual"
+            , Space
+            , Str "form."
+            ]
+        , SoftBreak
+        , Str "\8212"
+        , Space
+        , Str "Robert"
+        , Space
+        , Str "Bringhurst"
+        ]
+    ]
+, Para
+    [ Str "Here"
+    , Space
+    , Str "is"
+    , Space
+    , Str "some"
+    , Space
+    , Str "standard"
+    , Space
+    , Str "body"
+    , Space
+    , Str "text"
+    , Space
+    , Str "following"
+    , Space
+    , Str "the"
+    , Space
+    , Str "quote"
+    , Space
+    , Str "to"
+    , Space
+    , Str "ensure"
+    , Space
+    , Str "vertical"
+    , Space
+    , Str "spacing"
+    , Space
+    , Str "("
+    , Code ( "" , [] , [] ) "skip"
+    , Space
+    , Str "and"
+    , Space
+    , Code ( "" , [] , [] ) "margins"
+    , Str ")"
+    , Space
+    , Str "is"
+    , Space
+    , Str "rendering"
+    , Space
+    , Str "gracefully"
+    , Space
+    , Str "without"
+    , Space
+    , Str "colliding"
+    , Space
+    , Str "with"
+    , Space
+    , Str "the"
+    , Space
+    , Str "surrounding"
+    , Space
+    , Str "paragraphs."
+    ]
+, Header
+    2
+    ( "the-extreme-stress-test" , [] , [] )
+    [ Str "The"
+    , Space
+    , Str "Extreme"
+    , Space
+    , Str "Stress"
+    , Space
+    , Str "Test"
+    ]
+, Para
+    [ Str "Finally,"
+    , Space
+    , Str "we"
+    , Space
+    , Str "combine"
+    , Space
+    , Str "everything:"
+    , Space
+    , Str "custom"
+    , Space
+    , Str "width,"
+    , Space
+    , Str "extreme"
+    , Space
+    , Str "size,"
+    , Space
+    , Str "custom"
+    , Space
+    , Str "colors,"
+    , Space
+    , Str "custom"
+    , Space
+    , Str "alignments,"
+    , Space
+    , Str "and"
+    , Space
+    , Str "multiple"
+    , Space
+    , Str "font"
+    , Space
+    , Str "styles"
+    , Space
+    , Str "in"
+    , Space
+    , Str "a"
+    , Space
+    , Str "single"
+    , Space
+    , Str "fenced"
+    , Space
+    , Str "Div."
+    ]
+, CodeBlock
+    ( "" , [ "markdown" ] , [] )
+    "::: {.pullquote .pq-weight-bold .pq-family-serif .pq-style-upright size=\"pq-size-3xl\" align=\"pq-align-center\" boxalign=\"pq-box-center\" width=\"95%\" color=\"DarkGoldenrod\" barcolor=\"MidnightBlue\" barwidth=\"12px\"}\nTHE ULTIMATE TEST\n:::"
+, Div
+    ( ""
+    , [ "pullquote"
+      , "pq-weight-bold"
+      , "pq-family-serif"
+      , "pq-style-upright"
+      ]
+    , [ ( "size" , "pq-size-3xl" )
+      , ( "align" , "pq-align-center" )
+      , ( "boxalign" , "pq-box-center" )
+      , ( "width" , "95%" )
+      , ( "color" , "DarkGoldenrod" )
+      , ( "barcolor" , "MidnightBlue" )
+      , ( "barwidth" , "12px" )
+      ]
+    )
+    [ Para
+        [ Str "THE" , Space , Str "ULTIMATE" , Space , Str "TEST" ]
+    ]
+]

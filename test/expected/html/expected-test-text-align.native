@@ -1,0 +1,150 @@
+[ Header
+    2
+    ( "inner-text-alignment" , [] , [] )
+    [ Str "Inner"
+    , Space
+    , Str "Text"
+    , Space
+    , Str "Alignment"
+    ]
+, Para
+    [ Str "This"
+    , Space
+    , Str "tests"
+    , Space
+    , Str "the"
+    , Space
+    , Str "alignment"
+    , Space
+    , Str "of"
+    , Space
+    , Str "the"
+    , Space
+    , Str "text"
+    , Space
+    , Emph [ Str "inside" ]
+    , Space
+    , Str "the"
+    , Space
+    , Str "pullquote"
+    , Space
+    , Str "box,"
+    , Space
+    , Str "independently"
+    , Space
+    , Str "of"
+    , Space
+    , Str "where"
+    , Space
+    , Str "the"
+    , Space
+    , Str "box"
+    , Space
+    , Str "itself"
+    , Space
+    , Str "floats"
+    , Space
+    , Str "on"
+    , Space
+    , Str "the"
+    , Space
+    , Str "page."
+    ]
+, CodeBlock
+    ( "" , [ "markdown" ] , [] )
+    "::: {.pullquote align=\"pq-align-left\"}\nThis text is forced to align to the left edge of the pullquote box.\n:::"
+, Div
+    ( "" , [ "pullquote" ] , [ ( "align" , "pq-align-left" ) ] )
+    [ Para
+        [ Str "This"
+        , Space
+        , Str "text"
+        , Space
+        , Str "is"
+        , Space
+        , Str "forced"
+        , Space
+        , Str "to"
+        , Space
+        , Str "align"
+        , Space
+        , Str "to"
+        , Space
+        , Str "the"
+        , Space
+        , Str "left"
+        , Space
+        , Str "edge"
+        , Space
+        , Str "of"
+        , Space
+        , Str "the"
+        , Space
+        , Str "pullquote"
+        , Space
+        , Str "box."
+        ]
+    ]
+, CodeBlock
+    ( "" , [ "markdown" ] , [] )
+    "::: {.pullquote align=\"pq-align-center\"}\nThis text is centered perfectly within the pullquote box.\n:::"
+, Div
+    ( ""
+    , [ "pullquote" ]
+    , [ ( "align" , "pq-align-center" ) ]
+    )
+    [ Para
+        [ Str "This"
+        , Space
+        , Str "text"
+        , Space
+        , Str "is"
+        , Space
+        , Str "centered"
+        , Space
+        , Str "perfectly"
+        , Space
+        , Str "within"
+        , Space
+        , Str "the"
+        , Space
+        , Str "pullquote"
+        , Space
+        , Str "box."
+        ]
+    ]
+, CodeBlock
+    ( "" , [ "markdown" ] , [] )
+    "::: {.pullquote align=\"pq-align-right\"}\nThis text is flushed to the right edge of the pullquote box.\n:::"
+, Div
+    ( ""
+    , [ "pullquote" ]
+    , [ ( "align" , "pq-align-right" ) ]
+    )
+    [ Para
+        [ Str "This"
+        , Space
+        , Str "text"
+        , Space
+        , Str "is"
+        , Space
+        , Str "flushed"
+        , Space
+        , Str "to"
+        , Space
+        , Str "the"
+        , Space
+        , Str "right"
+        , Space
+        , Str "edge"
+        , Space
+        , Str "of"
+        , Space
+        , Str "the"
+        , Space
+        , Str "pullquote"
+        , Space
+        , Str "box."
+        ]
+    ]
+]

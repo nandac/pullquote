@@ -219,7 +219,7 @@ docs/input-typst.pdf: test/input.md
 		--pdf-engine-opt=--root=. \
 		--output=$@
 
-docs/fonts-and-alignment.lua: $(FILTER_FILE)
+docs/pullquote.lua: $(FILTER_FILE)
 	@mkdir -p docs
 	cp $(FILTER_FILE) $@
 

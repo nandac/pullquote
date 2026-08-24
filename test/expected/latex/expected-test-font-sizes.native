@@ -1,0 +1,203 @@
+[ Header
+    2
+    ( "symmetrical-size-scale" , [] , [] )
+    [ Str "Symmetrical"
+    , Space
+    , Str "Size"
+    , Space
+    , Str "Scale"
+    ]
+, Para
+    [ Str "This"
+    , Space
+    , Str "tests"
+    , Space
+    , Str "the"
+    , Space
+    , Str "new"
+    , Space
+    , Str "balanced"
+    , Space
+    , Str "API"
+    , Space
+    , Str "size"
+    , Space
+    , Str "scale"
+    , Space
+    , Str "(4"
+    , Space
+    , Str "steps"
+    , Space
+    , Str "down,"
+    , Space
+    , Str "4"
+    , Space
+    , Str "steps"
+    , Space
+    , Str "up"
+    , Space
+    , Str "from"
+    , Space
+    , Str "normal)."
+    ]
+, CodeBlock
+    ( "" , [ "markdown" ] , [] )
+    "::: {.pullquote size=\"pq-size-3xs\"}\nThis is extra extra extra small.\n:::"
+, Div
+    ( "" , [ "pullquote" ] , [ ( "size" , "pq-size-3xs" ) ] )
+    [ Para
+        [ Str "This"
+        , Space
+        , Str "is"
+        , Space
+        , Str "extra"
+        , Space
+        , Str "extra"
+        , Space
+        , Str "extra"
+        , Space
+        , Str "small."
+        ]
+    ]
+, CodeBlock
+    ( "" , [ "markdown" ] , [] )
+    "::: {.pullquote size=\"pq-size-2xs\"}\nThis is extra extra small.\n:::"
+, Div
+    ( "" , [ "pullquote" ] , [ ( "size" , "pq-size-2xs" ) ] )
+    [ Para
+        [ Str "This"
+        , Space
+        , Str "is"
+        , Space
+        , Str "extra"
+        , Space
+        , Str "extra"
+        , Space
+        , Str "small."
+        ]
+    ]
+, CodeBlock
+    ( "" , [ "markdown" ] , [] )
+    "::: {.pullquote size=\"pq-size-xs\"}\nThis is extra small.\n:::"
+, Div
+    ( "" , [ "pullquote" ] , [ ( "size" , "pq-size-xs" ) ] )
+    [ Para
+        [ Str "This"
+        , Space
+        , Str "is"
+        , Space
+        , Str "extra"
+        , Space
+        , Str "small."
+        ]
+    ]
+, CodeBlock
+    ( "" , [ "markdown" ] , [] )
+    "::: {.pullquote size=\"pq-size-s\"}\nThis is small.\n:::"
+, Div
+    ( "" , [ "pullquote" ] , [ ( "size" , "pq-size-s" ) ] )
+    [ Para
+        [ Str "This" , Space , Str "is" , Space , Str "small." ]
+    ]
+, CodeBlock
+    ( "" , [ "markdown" ] , [] )
+    "::: {.pullquote size=\"pq-size-normal\"}\nThis is normal size.\n:::"
+, Div
+    ( "" , [ "pullquote" ] , [ ( "size" , "pq-size-normal" ) ] )
+    [ Para
+        [ Str "This"
+        , Space
+        , Str "is"
+        , Space
+        , Str "normal"
+        , Space
+        , Str "size."
+        ]
+    ]
+, CodeBlock
+    ( "" , [ "markdown" ] , [] )
+    "::: {.pullquote size=\"pq-size-l\"}\nThis is large size the default if no size is provided.\n:::"
+, Div
+    ( "" , [ "pullquote" ] , [ ( "size" , "pq-size-l" ) ] )
+    [ Para
+        [ Str "This"
+        , Space
+        , Str "is"
+        , Space
+        , Str "large"
+        , Space
+        , Str "size"
+        , Space
+        , Str "the"
+        , Space
+        , Str "default"
+        , Space
+        , Str "if"
+        , Space
+        , Str "no"
+        , Space
+        , Str "size"
+        , Space
+        , Str "is"
+        , Space
+        , Str "provided."
+        ]
+    ]
+, CodeBlock
+    ( "" , [ "markdown" ] , [] )
+    "::: {.pullquote size=\"pq-size-xl\"}\nThis is extra large size.\n:::"
+, Div
+    ( "" , [ "pullquote" ] , [ ( "size" , "pq-size-xl" ) ] )
+    [ Para
+        [ Str "This"
+        , Space
+        , Str "is"
+        , Space
+        , Str "extra"
+        , Space
+        , Str "large"
+        , Space
+        , Str "size."
+        ]
+    ]
+, CodeBlock
+    ( "" , [ "markdown" ] , [] )
+    "::: {.pullquote size=\"pq-size-2xl\"}\nThis is extra extra large size.\n:::"
+, Div
+    ( "" , [ "pullquote" ] , [ ( "size" , "pq-size-2xl" ) ] )
+    [ Para
+        [ Str "This"
+        , Space
+        , Str "is"
+        , Space
+        , Str "extra"
+        , Space
+        , Str "extra"
+        , Space
+        , Str "large"
+        , Space
+        , Str "size."
+        ]
+    ]
+, CodeBlock
+    ( "" , [ "markdown" ] , [] )
+    "::: {.pullquote size=\"pq-size-3xl\"}\nThis is extra extra extra large size.\n:::"
+, Div
+    ( "" , [ "pullquote" ] , [ ( "size" , "pq-size-3xl" ) ] )
+    [ Para
+        [ Str "This"
+        , Space
+        , Str "is"
+        , Space
+        , Str "extra"
+        , Space
+        , Str "extra"
+        , Space
+        , Str "extra"
+        , Space
+        , Str "large"
+        , Space
+        , Str "size."
+        ]
+    ]
+]
