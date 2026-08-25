@@ -8,7 +8,7 @@
 --- @copyright © 2026 Nandakumar Chandrasekhar
 --- @license   MIT - see LICENSE for details
 --- @version   1.0.0
---- @release   2026-08-23
+--- @release   2026-08-25
 ---
 --- @note      LaTeX output requires \usepackage[most]{tcolorbox} and the custom \begin{pullquote}
 ---            environment defined in the preamble. Typst and HTML outputs are fully standalone
@@ -25,7 +25,7 @@ local List = assert(pandoc.List, 'Cannot find the pandoc.List class')
 local utils = require 'pandoc.utils'
 
 -- ==============================================================================
--- SECTION 1: LOGGING & ERROR HANDLING
+-- SECTION 1: LOGGING, ERROR HANDLING & STATE
 -- ==============================================================================
 
 local function warn(message)
@@ -38,13 +38,25 @@ end
 
 if PANDOC_READER_OPTIONS and PANDOC_READER_OPTIONS.extensions then
   local ext = PANDOC_READER_OPTIONS.extensions
-  if not (ext:includes('fenced_divs') and ext:includes('bracketed_spans')) then
-    warn('Required extensions "fenced_divs" or "bracketed_spans" are disabled.')
+  if not ext:includes('fenced_divs') then
+    warn('Required extension "fenced_divs" is disabled.')
   end
 end
 
+local global_meta = {}
+
+-- Checks the inline div attribute first, then falls back to global metadata
+local function get_attr(el, attr_name, meta_name)
+  if el.attributes[attr_name] then
+    return el.attributes[attr_name]
+  elseif global_meta[meta_name] then
+    return utils.stringify(global_meta[meta_name])
+  end
+  return nil
+end
+
 -- ==============================================================================
--- SECTION 2: DATA DICTIONARIES & STATE CONFIGURATION
+-- SECTION 2: DATA DICTIONARIES & CONFIGURATION
 -- ==============================================================================
 
 local typst_fonts = {
@@ -222,14 +234,15 @@ end
 -- =========================================================================
 
 local function process_pullquote(el)
-  local width    = el.attributes['width']
-  local color    = el.attributes['color']
-  local barwidth = el.attributes['barwidth']
-  local barcolor = el.attributes['barcolor']
-
-  local size_key     = el.attributes['size']
-  local align_key    = el.attributes['align']
-  local boxalign_key = el.attributes['boxalign']
+  -- Use the fallback function to check inline attributes first, then global metadata
+  local width        = get_attr(el, 'width', 'pq-width')
+  local color        = get_attr(el, 'color', 'pq-color')
+  local barwidth     = get_attr(el, 'barwidth', 'pq-barwidth')
+  local barcolor     = get_attr(el, 'barcolor', 'pq-barcolor')
+  local size_key     = get_attr(el, 'size', 'pq-size')
+  local align_key    = get_attr(el, 'align', 'pq-align')
+  local boxalign_key = get_attr(el, 'boxalign', 'pq-boxalign')
+  local raw_skip     = get_attr(el, 'skip', 'pq-skip')
 
   -- Validate attributes against dictionaries
   if size_key and not pq_sizes[size_key] then
@@ -245,7 +258,6 @@ local function process_pullquote(el)
     boxalign_key = nil
   end
 
-  local raw_skip = el.attributes['skip']
   local tex_skip, html_skip, typst_skip = nil, "1.5", "1em"
 
   if raw_skip then
@@ -413,6 +425,12 @@ end
 -- =========================================================================
 
 return {
+  -- Run the Meta filter block first to extract document-level metadata
+  {
+    Meta = function(meta)
+      global_meta = meta
+    end
+  },
   {
     Pandoc = function(doc)
       if doc.meta['pq-family-serif'] then typst_fonts.serif = utils.stringify(doc.meta['pq-family-serif'])
