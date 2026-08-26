@@ -14,6 +14,10 @@ FILTER_FILE := pullquote.lua
 # Core distribution CSS file (hand-authored; not generated)
 CSS_FILE := $(EXT_DIR)/pullquote.css
 
+# Demonstration Document Name (Change this to rename your showcase file)
+DEMO_NAME := pullquote-examples
+DEMO_SRC  := test/$(DEMO_NAME).md
+
 # Allow to use a different pandoc binary, e.g. when testing.
 PANDOC ?= pandoc
 # Allow to adjust the diff command if necessary
@@ -201,15 +205,15 @@ $(PREVIEWS_DIR)/latex/latex-%.pdf: test/fixtures/%.md
 # Documentation System (With Dual-Engine Output Targets)
 # ==============================================================================
 .PHONY: docs
-docs: docs/index.html docs/input-html.html docs/input-latex.pdf docs/input-typst.typ docs/input-typst.pdf docs/pullquote.lua ## Build the standalone docs portal with dual-format PDFs
+docs: docs/index.html docs/$(DEMO_NAME).html docs/$(DEMO_NAME)-latex.pdf docs/$(DEMO_NAME)-typst.pdf docs/pullquote.lua ## Build the standalone docs portal with dual-format PDFs
 
-docs/index.html: README.md test/input.md $(FILTER_FILE) .tools/docs.lua docs/output.md docs/style.css
+docs/index.html: README.md $(DEMO_SRC) $(FILTER_FILE) .tools/docs.lua docs/$(DEMO_NAME)-output.md docs/style.css
 	@mkdir -p docs
-	pandoc \
+	$(PANDOC) \
 		--standalone \
 		--lua-filter=.tools/docs.lua \
-		--metadata=sample-file:test/input.md \
-		--metadata=result-file:docs/output.md \
+		--metadata=sample-file:$(DEMO_SRC) \
+		--metadata=result-file:docs/$(DEMO_NAME)-output.md \
 		--metadata=code-file:$(FILTER_FILE) \
 		--css=style.css \
 		--toc \
@@ -219,36 +223,30 @@ docs/style.css:
 	curl --silent --show-error --output $@ \
 		'https://cdn.jsdelivr.net/gh/kognise/water.css@latest/dist/light.css'
 
-docs/output.md: $(FILTER_FILE) test/input.md
+docs/$(DEMO_NAME)-output.md: $(FILTER_FILE) $(DEMO_SRC)
 	$(PANDOC) \
 		--output=$@ \
 		--lua-filter=$(FILTER_FILE) \
 		--to=markdown \
 		--standalone \
-		test/input.md
+		$(DEMO_SRC)
 
-docs/input-html.html: test/input.md
+docs/$(DEMO_NAME).html: $(DEMO_SRC)
+	@mkdir -p $(@D)
+	@cp test/assets/preview-styles.css $(@D)/ 2>/dev/null || true
 	$(PANDOC) $< \
 		$(DEFAULTS_HTML) \
 		--syntax-highlighting=$(SYNTAX_HIGHLIGHTING) \
 		--output=$@
 
-docs/input-latex.pdf: test/input.md
+docs/$(DEMO_NAME)-latex.pdf: $(DEMO_SRC)
 	$(PANDOC) $< \
 		$(DEFAULTS_LATEX) \
 		--syntax-highlighting=$(SYNTAX_HIGHLIGHTING) \
 		--to=pdf \
 		--output=$@
 
-docs/input-typst.typ: test/input.md
-	$(PANDOC) $< \
-		$(DEFAULTS_TYPST) \
-		--syntax-highlighting=$(SYNTAX_HIGHLIGHTING) \
-		--to=typst \
-		--pdf-engine-opt=--root=. \
-		--output=$@
-
-docs/input-typst.pdf: test/input.md
+docs/$(DEMO_NAME)-typst.pdf: $(DEMO_SRC)
 	$(PANDOC) $< \
 		$(DEFAULTS_TYPST) \
 		--syntax-highlighting=$(SYNTAX_HIGHLIGHTING) \
@@ -266,7 +264,7 @@ docs/pullquote.lua: $(FILTER_FILE)
 # ==============================================================================
 .PHONY: clean
 clean: ## Purge all temporary assets and generated distribution instances
-	rm -f docs/output.md docs/index.html docs/input.html docs/input-latex.pdf docs/input-typst.pdf docs/input-typst.typ docs/style.css docs/pullquote.lua
+	rm -f docs/$(DEMO_NAME)-output.md docs/index.html docs/$(DEMO_NAME).html docs/$(DEMO_NAME)-latex.pdf docs/$(DEMO_NAME)-typst.pdf docs/style.css docs/preview-styles.css docs/pullquote.lua
 	rm -rf $(PREVIEWS_DIR)
 	rm -f $(FILTER_FILE)
 	rm -f error_log.txt
