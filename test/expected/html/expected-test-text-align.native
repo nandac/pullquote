@@ -88,9 +88,9 @@
     ]
 , CodeBlock
     ( "" , [ "markdown" ] , [] )
-    "::: {.pullquote align=\"pq-align-left\"}\nThis text is forced to align to the left edge of the pullquote box. By extending the length of this quote so that it naturally wraps across multiple lines, the ragged right edge becomes immediately apparent, proving that the left alignment is working perfectly.\n:::"
+    "::: {.pullquote pq-text-align=\"left\"}\nThis text is forced to align to the left edge of the pullquote box. By extending the length of this quote so that it naturally wraps across multiple lines, the ragged right edge becomes immediately apparent, proving that the left alignment is working perfectly.\n:::"
 , Div
-    ( "" , [ "pullquote" ] , [ ( "align" , "pq-align-left" ) ] )
+    ( "" , [ "pullquote" ] , [ ( "pq-text-align" , "left" ) ] )
     [ Para
         [ Str "This"
         , Space
@@ -183,11 +183,11 @@
     ]
 , CodeBlock
     ( "" , [ "markdown" ] , [] )
-    "::: {.pullquote align=\"pq-align-center\"}\nThis text is centered perfectly within the pullquote box. By extending the length of this quote so that it naturally wraps across multiple lines, the ragged edges on both the left and right sides become immediately apparent, proving that the center alignment is working perfectly.\n:::"
+    "::: {.pullquote pq-text-align=\"center\"}\nThis text is centered perfectly within the pullquote box. By extending the length of this quote so that it naturally wraps across multiple lines, the ragged edges on both the left and right sides become immediately apparent, proving that the center alignment is working perfectly.\n:::"
 , Div
     ( ""
     , [ "pullquote" ]
-    , [ ( "align" , "pq-align-center" ) ]
+    , [ ( "pq-text-align" , "center" ) ]
     )
     [ Para
         [ Str "This"
@@ -283,12 +283,9 @@
     ]
 , CodeBlock
     ( "" , [ "markdown" ] , [] )
-    "::: {.pullquote align=\"pq-align-right\"}\nThis text is flushed to the right edge of the pullquote box. By extending the length of this quote so that it naturally wraps across multiple lines, the ragged left edge becomes immediately apparent, proving that the right alignment is working perfectly.\n:::"
+    "::: {.pullquote pq-text-align=\"right\"}\nThis text is flushed to the right edge of the pullquote box. By extending the length of this quote so that it naturally wraps across multiple lines, the ragged left edge becomes immediately apparent, proving that the right alignment is working perfectly.\n:::"
 , Div
-    ( ""
-    , [ "pullquote" ]
-    , [ ( "align" , "pq-align-right" ) ]
-    )
+    ( "" , [ "pullquote" ] , [ ( "pq-text-align" , "right" ) ] )
     [ Para
         [ Str "This"
         , Space

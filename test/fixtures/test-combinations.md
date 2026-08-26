@@ -25,12 +25,12 @@ Here is some standard body text following the quote to ensure vertical spacing (
 This tests the `skip` attribute which manipulates line-height (leading) across the different engines.
 
 ```markdown
-::: {.pullquote skip="2.5"}
+::: {.pullquote pq-skip="2.5"}
 This quote has a highly exaggerated skip value of 2.5 applied to it. When this text wraps across multiple lines, you should clearly see a massive amount of vertical space between each line of text, proving the filter handles line-height correctly.
 :::
 ```
 
-::: {.pullquote skip="2.5"}
+::: {.pullquote pq-skip="2.5"}
 This quote has a highly exaggerated skip value of 2.5 applied to it. When this text wraps across multiple lines, you should clearly see a massive amount of vertical space between each line of text, proving the filter handles line-height correctly.
 :::
 
@@ -39,11 +39,11 @@ This quote has a highly exaggerated skip value of 2.5 applied to it. When this t
 Finally, we combine everything: custom width, extreme size, custom colors, custom alignments, and multiple font styles in a single fenced Div.
 
 ```markdown
-::: {.pullquote .pq-weight-bold .pq-family-serif .pq-style-upright size="pq-size-3xl" align="pq-align-center" boxalign="pq-box-center" width="95%" color="DarkGoldenrod" barcolor="MidnightBlue" barwidth="12px"}
+::: {.pullquote pq-weight="bold" pq-family="serif" pq-style="upright" pq-size="3xl" pq-text-align="center" pq-box-align="center" pq-width="95%" pq-color="DarkGoldenrod" pq-bar-color="MidnightBlue" pq-bar-width="12px"}
 THE ULTIMATE TEST
 :::
 ```
 
-::: {.pullquote .pq-weight-bold .pq-family-serif .pq-style-upright size="pq-size-3xl" align="pq-align-center" boxalign="pq-box-center" width="95%" color="DarkGoldenrod" barcolor="MidnightBlue" barwidth="12px"}
+::: {.pullquote pq-weight="bold" pq-family="serif" pq-style="upright" pq-size="3xl" pq-text-align="center" pq-box-align="center" pq-width="95%" pq-color="DarkGoldenrod" pq-bar-color="MidnightBlue" pq-bar-width="12px"}
 THE ULTIMATE TEST
 :::

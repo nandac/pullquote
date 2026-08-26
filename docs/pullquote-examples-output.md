@@ -1,8 +1,8 @@
 ---
-pq-barcolor: CadetBlue
-pq-boxalign: pq-box-center
+pq-bar-color: CadetBlue
+pq-box-align: center
 pq-color: DarkSlateGray
-pq-size: pq-size-l
+pq-size: l
 pq-width: 80%
 title: Demonstration of the Pullquote Filter for Pandoc
 ---
@@ -46,46 +46,51 @@ visual form." --- Robert Bringhurst
 
 The extension provides a sizing scale to adjust the text relative to the
 document's base font size. While the filter supports a full 9-step scale
-for API consistency, the larger sizes below are the most practical for
-pullquotes. If omitted, it defaults to the `pq-size-l` (large) scale.
+(from `3xs` to `3xl`) alongside custom arbitrary units, the larger sizes
+below are the most practical for pullquotes. If omitted, it defaults to
+the `l` (large) scale.
 
 **Rendered Sizing Scale:**
 
-::: {.pullquote size="pq-size-normal"}
-**pq-size-normal:** Best for longer, multi-sentence blockquotes.
+::: {.pullquote pq-size="m"}
+**pq-size="m":** Medium (Base document size)
 :::
 
-::: {.pullquote size="pq-size-l"}
-**pq-size-l:** Large (The Default Size)
+::: {.pullquote pq-size="l"}
+**pq-size="l":** Large (The Default Size)
 :::
 
-::: {.pullquote size="pq-size-xl"}
-**pq-size-xl:** Extra Large
+::: {.pullquote pq-size="xl"}
+**pq-size="xl":** Extra Large
 :::
 
-::: {.pullquote size="pq-size-2xl"}
-**pq-size-2xl:** Extra Extra Large
+::: {.pullquote pq-size="2xl"}
+**pq-size="2xl":** Extra Extra Large
 :::
 
-::: {.pullquote size="pq-size-3xl"}
-**pq-size-3xl:** Extra Extra Extra Large
+::: {.pullquote pq-size="3xl"}
+**pq-size="3xl":** Extra Extra Extra Large
+:::
+
+::: {.pullquote pq-size="24pt"}
+**pq-size="24pt":** Custom Arbitrary Dimensions
 :::
 
 ## Font Weights, Shapes, and Families
 
-The extension provides predefined typographic utility classes. These
+The extension provides predefined typographic utility attributes. These
 styles are mapped to equivalent rendering properties across all formats
 to ensure consistent output, regardless of the underlying engine.
 
 ### Font Weights
 
 ``` markdown
-::: {.pullquote .pq-weight-bold}
+::: {.pullquote pq-weight="bold"}
 This paragraph is in bold weight.
 :::
 ```
 
-::: {.pullquote .pq-weight-bold}
+::: {.pullquote pq-weight="bold"}
 This paragraph is in bold weight.
 :::
 
@@ -95,24 +100,24 @@ By default, pullquotes render in italics. You can override this using
 the style utilities.
 
 ``` markdown
-::: {.pullquote .pq-style-upright}
+::: {.pullquote pq-style="upright"}
 This paragraph is explicitly rendered upright (non-italicized).
 :::
 ```
 
-::: {.pullquote .pq-style-upright}
+::: {.pullquote pq-style="upright"}
 This paragraph is explicitly rendered upright (non-italicized).
 :::
 
 ### Font Families
 
 ``` markdown
-::: {.pullquote .pq-family-sans}
+::: {.pullquote pq-family="sans"}
 This paragraph is in sans-serif.
 :::
 ```
 
-::: {.pullquote .pq-family-sans}
+::: {.pullquote pq-family="sans"}
 This paragraph is in sans-serif.
 :::
 
@@ -124,16 +129,16 @@ they render identically across LaTeX, Typst, and HTML.
 
 ### Basic Color Attributes
 
-Use `color` for the text, `barcolor` for the left border, and `barwidth`
-to adjust the border's thickness.
+Use `pq-color` for the text, `pq-bar-color` for the left border, and
+`pq-bar-width` to adjust the border's thickness.
 
 ``` markdown
-::: {.pullquote color="CadetBlue" barcolor="Thistle" barwidth="8px"}
+::: {.pullquote pq-color="CadetBlue" pq-bar-color="Thistle" pq-bar-width="8px"}
 This quote uses the SVG named color **CadetBlue** for text and the pastel **Thistle** for a thick 8px border.
 :::
 ```
 
-::: {.pullquote color="CadetBlue" barcolor="Thistle" barwidth="8px"}
+::: {.pullquote pq-color="CadetBlue" pq-bar-color="Thistle" pq-bar-width="8px"}
 This quote uses the SVG named color **CadetBlue** for text and the
 pastel **Thistle** for a thick 8px border.
 :::
@@ -144,12 +149,12 @@ The filter fully supports 6-character hex codes and 3-character
 shorthands.
 
 ``` markdown
-::: {.pullquote color="#827397" barcolor="#F00"}
+::: {.pullquote pq-color="#827397" pq-bar-color="#F00"}
 This quote uses raw Hex codes: **#827397** for text and the shorthand **#F00** (Red) for the bar.
 :::
 ```
 
-::: {.pullquote color="#827397" barcolor="#F00"}
+::: {.pullquote pq-color="#827397" pq-bar-color="#F00"}
 This quote uses raw Hex codes: **#827397** for text and the shorthand
 **#F00** (Red) for the bar.
 :::
@@ -161,50 +166,71 @@ maps reliably across Typst, LaTeX, and HTML (which leverages the native
 CSS `color-mix()` function).
 
 ``` markdown
-::: {.pullquote color="Indigo!90!Black" barcolor="Indigo!20" barwidth="6px"}
+::: {.pullquote pq-color="Indigo!90!Black" pq-bar-color="Indigo!20" pq-bar-width="6px"}
 This quote uses a three-part blend for the text (**Indigo mixed at 90% with Black**) and a standard two-part blend with white for the bar.
 :::
 ```
 
-::: {.pullquote color="Indigo!90!Black" barcolor="Indigo!20" barwidth="6px"}
+::: {.pullquote pq-color="Indigo!90!Black" pq-bar-color="Indigo!20" pq-bar-width="6px"}
 This quote uses a three-part blend for the text (**Indigo mixed at 90%
 with Black**) and a standard two-part blend with white for the bar.
 :::
 
 ## Block-Level Positioning and Width
 
-By adjusting `width` and `boxalign`, we can position the entire
+By adjusting `pq-width` and `pq-box-align`, we can position the entire
 pullquote block to the left, center, or right of the page. This shifts
 the block within the standard document flow; the body text will sit
 above and below it rather than wrapping around it.
 
 ``` markdown
-::: {.pullquote width="45%" boxalign="pq-box-right"}
+::: {.pullquote pq-width="45%" pq-box-align="right"}
 This quote takes up 45% of the page width and is aligned flush to the right margin.
 :::
 ```
 
-::: {.pullquote width="45%" boxalign="pq-box-right"}
+::: {.pullquote pq-width="45%" pq-box-align="right"}
 This quote takes up 45% of the page width and is aligned flush to the
 right margin.
 :::
 
-*(Absolute units such as `width="300pt"` or `width="10cm"` are also
-fully supported).*
+*(Absolute units such as `pq-width="300pt"` or `pq-width="10cm"` are
+also fully supported).*
 
 ## Inner Text Alignment
 
-The `align` attribute controls text alignment *within* the Fenced Div.
+The `pq-text-align` attribute controls text alignment *within* the
+Fenced Div.
 
 ``` markdown
-::: {.pullquote align="pq-align-center" width="70%" boxalign="pq-box-left"}
+::: {.pullquote pq-text-align="center" pq-width="70%" pq-box-align="left"}
 This quote takes up 70% of the page and is aligned to the left margin, but the text *inside* the box is centered.
 :::
 ```
 
-::: {.pullquote align="pq-align-center" width="70%" boxalign="pq-box-left"}
+::: {.pullquote pq-text-align="center" pq-width="70%" pq-box-align="left"}
 This quote takes up 70% of the page and is aligned to the left margin,
 but the text *inside* the box is centered.
+:::
+
+## Interline Spacing (Line-Height)
+
+The `pq-skip` attribute allows you to adjust the vertical space between
+lines of text. While casually referred to as leading, `pq-skip`
+technically acts as a multiplier for the engine's interline spacing
+(`line-height` in CSS, `\baselineskip` in LaTeX, and `leading` in
+Typst). This is particularly useful for dense multi-line quotes or when
+using very large custom font sizes.
+
+``` markdown
+::: {.pullquote pq-size="xl" pq-skip="2.0"}
+This quote uses a `pq-skip` value of 2.0, acting as a double-spacing multiplier to let the text breathe.
+:::
+```
+
+::: {.pullquote pq-size="xl" pq-skip="2.0"}
+This quote uses a `pq-skip` value of 2.0, acting as a double-spacing
+multiplier to let the text breathe.
 :::
 
 ## Global Metadata Configuration
@@ -218,10 +244,10 @@ For example, if your document includes the following YAML frontmatter:
 ``` yaml
 ---
 pq-color: "DarkSlateGray"
-pq-barcolor: "CadetBlue"
+pq-bar-color: "CadetBlue"
 pq-width: "80%"
-pq-size: "pq-size-l"
-pq-boxalign: "pq-box-center"
+pq-size: "l"
+pq-box-align: "center"
 ---
 ```
 
@@ -240,17 +266,17 @@ from the YAML frontmatter defined at the top of this document (Centered,
 80% width, Large size, DarkSlateGray text, CadetBlue bar).
 :::
 
-## Combining Multiple Classes and Attributes
+## Combining Multiple Attributes
 
 Multiple typographic utilities and attributes can be combined within the
 same element. Font, size, color, and alignment compose independently.
 
 ``` markdown
-::: {.pullquote .pq-weight-bold .pq-family-serif .pq-style-smallcaps size="pq-size-3xl" align="pq-align-center" boxalign="pq-box-center" width="95%" color="DarkGoldenrod" barcolor="MidnightBlue" barwidth="12px" skip="2.0"}
+::: {.pullquote pq-weight="bold" pq-family="serif" pq-style="smallcaps" pq-size="3xl" pq-text-align="center" pq-box-align="center" pq-width="95%" pq-color="DarkGoldenrod" pq-bar-color="MidnightBlue" pq-bar-width="12px" pq-skip="2.0"}
 The Ultimate Stress Test
 :::
 ```
 
-::: {.pullquote .pq-weight-bold .pq-family-serif .pq-style-smallcaps size="pq-size-3xl" align="pq-align-center" boxalign="pq-box-center" width="95%" color="DarkGoldenrod" barcolor="MidnightBlue" barwidth="12px" skip="2.0"}
+::: {.pullquote pq-weight="bold" pq-family="serif" pq-style="smallcaps" pq-size="3xl" pq-text-align="center" pq-box-align="center" pq-width="95%" pq-color="DarkGoldenrod" pq-bar-color="MidnightBlue" pq-bar-width="12px" pq-skip="2.0"}
 The Ultimate Stress Test
 :::

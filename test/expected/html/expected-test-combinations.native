@@ -199,9 +199,9 @@
     ]
 , CodeBlock
     ( "" , [ "markdown" ] , [] )
-    "::: {.pullquote skip=\"2.5\"}\nThis quote has a highly exaggerated skip value of 2.5 applied to it. When this text wraps across multiple lines, you should clearly see a massive amount of vertical space between each line of text, proving the filter handles line-height correctly.\n:::"
+    "::: {.pullquote pq-skip=\"2.5\"}\nThis quote has a highly exaggerated skip value of 2.5 applied to it. When this text wraps across multiple lines, you should clearly see a massive amount of vertical space between each line of text, proving the filter handles line-height correctly.\n:::"
 , Div
-    ( "" , [ "pullquote" ] , [ ( "skip" , "2.5" ) ] )
+    ( "" , [ "pullquote" ] , [ ( "pq-skip" , "2.5" ) ] )
     [ Para
         [ Str "This"
         , Space
@@ -342,21 +342,20 @@
     ]
 , CodeBlock
     ( "" , [ "markdown" ] , [] )
-    "::: {.pullquote .pq-weight-bold .pq-family-serif .pq-style-upright size=\"pq-size-3xl\" align=\"pq-align-center\" boxalign=\"pq-box-center\" width=\"95%\" color=\"DarkGoldenrod\" barcolor=\"MidnightBlue\" barwidth=\"12px\"}\nTHE ULTIMATE TEST\n:::"
+    "::: {.pullquote pq-weight=\"bold\" pq-family=\"serif\" pq-style=\"upright\" pq-size=\"3xl\" pq-text-align=\"center\" pq-box-align=\"center\" pq-width=\"95%\" pq-color=\"DarkGoldenrod\" pq-bar-color=\"MidnightBlue\" pq-bar-width=\"12px\"}\nTHE ULTIMATE TEST\n:::"
 , Div
     ( ""
-    , [ "pullquote"
-      , "pq-weight-bold"
-      , "pq-family-serif"
-      , "pq-style-upright"
-      ]
-    , [ ( "size" , "pq-size-3xl" )
-      , ( "align" , "pq-align-center" )
-      , ( "boxalign" , "pq-box-center" )
-      , ( "width" , "95%" )
-      , ( "color" , "DarkGoldenrod" )
-      , ( "barcolor" , "MidnightBlue" )
-      , ( "barwidth" , "12px" )
+    , [ "pullquote" ]
+    , [ ( "pq-weight" , "bold" )
+      , ( "pq-family" , "serif" )
+      , ( "pq-style" , "upright" )
+      , ( "pq-size" , "3xl" )
+      , ( "pq-text-align" , "center" )
+      , ( "pq-box-align" , "center" )
+      , ( "pq-width" , "95%" )
+      , ( "pq-color" , "DarkGoldenrod" )
+      , ( "pq-bar-color" , "MidnightBlue" )
+      , ( "pq-bar-width" , "12px" )
       ]
     )
     [ Para

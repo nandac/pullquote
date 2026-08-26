@@ -1,10 +1,10 @@
 ---
 title: "Pullquote Test: Global Metadata Configuration"
 pq-color: "DarkSlateGray"
-pq-barcolor: "CadetBlue"
+pq-bar-color: "CadetBlue"
 pq-width: "70%"
-pq-size: "pq-size-l"
-pq-boxalign: "pq-box-center"
+pq-size: "l"
+pq-box-align: "center"
 ---
 
 ## Global Inheritance

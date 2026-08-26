@@ -134,63 +134,68 @@ visual form.” — Robert Bringhurst</p>
 <h2 id="font-sizing">Font Sizing</h2>
 <p>The extension provides a sizing scale to adjust the text relative to
 the document’s base font size. While the filter supports a full 9-step
-scale for API consistency, the larger sizes below are the most practical
-for pullquotes. If omitted, it defaults to the <code>pq-size-l</code>
-(large) scale.</p>
+scale (from <code>3xs</code> to <code>3xl</code>) alongside custom
+arbitrary units, the larger sizes below are the most practical for
+pullquotes. If omitted, it defaults to the <code>l</code> (large)
+scale.</p>
 <p><strong>Rendered Sizing Scale:</strong></p>
-<div class="pullquote" size="pq-size-normal"
+<div class="pullquote" data-pq-size="m"
 style=" display: block !important; padding-left: 1rem !important; line-height: 1.5 !important; width: 80% !important; color: #2F4F4F !important; border-left: 4px solid #5F9EA0 !important; margin: 1.5rem auto !important; font-size: 1.0em !important; font-style: italic !important;">
-<p><strong>pq-size-normal:</strong> Best for longer, multi-sentence
-blockquotes.</p>
+<p><strong>pq-size=“m”:</strong> Medium (Base document size)</p>
 </div>
-<div class="pullquote" size="pq-size-l"
+<div class="pullquote" data-pq-size="l"
 style=" display: block !important; padding-left: 1rem !important; line-height: 1.5 !important; width: 80% !important; color: #2F4F4F !important; border-left: 4px solid #5F9EA0 !important; margin: 1.5rem auto !important; font-size: 1.2em !important; font-style: italic !important;">
-<p><strong>pq-size-l:</strong> Large (The Default Size)</p>
+<p><strong>pq-size=“l”:</strong> Large (The Default Size)</p>
 </div>
-<div class="pullquote" size="pq-size-xl"
+<div class="pullquote" data-pq-size="xl"
 style=" display: block !important; padding-left: 1rem !important; line-height: 1.5 !important; width: 80% !important; color: #2F4F4F !important; border-left: 4px solid #5F9EA0 !important; margin: 1.5rem auto !important; font-size: 1.44em !important; font-style: italic !important;">
-<p><strong>pq-size-xl:</strong> Extra Large</p>
+<p><strong>pq-size=“xl”:</strong> Extra Large</p>
 </div>
-<div class="pullquote" size="pq-size-2xl"
+<div class="pullquote" data-pq-size="2xl"
 style=" display: block !important; padding-left: 1rem !important; line-height: 1.5 !important; width: 80% !important; color: #2F4F4F !important; border-left: 4px solid #5F9EA0 !important; margin: 1.5rem auto !important; font-size: 1.728em !important; font-style: italic !important;">
-<p><strong>pq-size-2xl:</strong> Extra Extra Large</p>
+<p><strong>pq-size=“2xl”:</strong> Extra Extra Large</p>
 </div>
-<div class="pullquote" size="pq-size-3xl"
+<div class="pullquote" data-pq-size="3xl"
 style=" display: block !important; padding-left: 1rem !important; line-height: 1.5 !important; width: 80% !important; color: #2F4F4F !important; border-left: 4px solid #5F9EA0 !important; margin: 1.5rem auto !important; font-size: 2.0736em !important; font-style: italic !important;">
-<p><strong>pq-size-3xl:</strong> Extra Extra Extra Large</p>
+<p><strong>pq-size=“3xl”:</strong> Extra Extra Extra Large</p>
+</div>
+<div class="pullquote" data-pq-size="24pt"
+style=" display: block !important; padding-left: 1rem !important; line-height: 1.5 !important; width: 80% !important; color: #2F4F4F !important; border-left: 4px solid #5F9EA0 !important; margin: 1.5rem auto !important; font-size: 24pt !important; font-style: italic !important;">
+<p><strong>pq-size=“24pt”:</strong> Custom Arbitrary Dimensions</p>
 </div>
 <h2 id="font-weights-shapes-and-families">Font Weights, Shapes, and
 Families</h2>
-<p>The extension provides predefined typographic utility classes. These
-styles are mapped to equivalent rendering properties across all formats
-to ensure consistent output, regardless of the underlying engine.</p>
+<p>The extension provides predefined typographic utility attributes.
+These styles are mapped to equivalent rendering properties across all
+formats to ensure consistent output, regardless of the underlying
+engine.</p>
 <h3 id="font-weights">Font Weights</h3>
 <div class="sourceCode" id="cb2"><pre
-class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>::: {.pullquote .pq-weight-bold}</span>
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>::: {.pullquote pq-weight=&quot;bold&quot;}</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>This paragraph is in bold weight.</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>:::</span></code></pre></div>
-<div class="pullquote pq-weight-bold"
-style=" display: block !important; padding-left: 1rem !important; line-height: 1.5 !important; width: 80% !important; color: #2F4F4F !important; border-left: 4px solid #5F9EA0 !important; margin: 1.5rem auto !important; font-size: 1.2em !important; font-weight: bold !important;">
+<div class="pullquote" data-pq-weight="bold"
+style=" display: block !important; padding-left: 1rem !important; line-height: 1.5 !important; width: 80% !important; color: #2F4F4F !important; border-left: 4px solid #5F9EA0 !important; margin: 1.5rem auto !important; font-size: 1.2em !important; font-weight: bold !important; font-style: italic !important;">
 <p>This paragraph is in bold weight.</p>
 </div>
 <h3 id="font-styles">Font Styles</h3>
 <p>By default, pullquotes render in italics. You can override this using
 the style utilities.</p>
 <div class="sourceCode" id="cb3"><pre
-class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>::: {.pullquote .pq-style-upright}</span>
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>::: {.pullquote pq-style=&quot;upright&quot;}</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>This paragraph is explicitly rendered upright (non-italicized).</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>:::</span></code></pre></div>
-<div class="pullquote pq-style-upright"
+<div class="pullquote" data-pq-style="upright"
 style=" display: block !important; padding-left: 1rem !important; line-height: 1.5 !important; width: 80% !important; color: #2F4F4F !important; border-left: 4px solid #5F9EA0 !important; margin: 1.5rem auto !important; font-size: 1.2em !important; font-style: normal !important;">
 <p>This paragraph is explicitly rendered upright (non-italicized).</p>
 </div>
 <h3 id="font-families">Font Families</h3>
 <div class="sourceCode" id="cb4"><pre
-class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>::: {.pullquote .pq-family-sans}</span>
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>::: {.pullquote pq-family=&quot;sans&quot;}</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>This paragraph is in sans-serif.</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>:::</span></code></pre></div>
-<div class="pullquote pq-family-sans"
-style=" display: block !important; padding-left: 1rem !important; line-height: 1.5 !important; width: 80% !important; color: #2F4F4F !important; border-left: 4px solid #5F9EA0 !important; margin: 1.5rem auto !important; font-size: 1.2em !important; font-family: sans-serif !important;">
+<div class="pullquote" data-pq-family="sans"
+style=" display: block !important; padding-left: 1rem !important; line-height: 1.5 !important; width: 80% !important; color: #2F4F4F !important; border-left: 4px solid #5F9EA0 !important; margin: 1.5rem auto !important; font-size: 1.2em !important; font-style: italic !important; font-family: sans-serif !important;">
 <p>This paragraph is in sans-serif.</p>
 </div>
 <h2 id="colors-and-borders">Colors and Borders</h2>
@@ -198,15 +203,15 @@ style=" display: block !important; padding-left: 1rem !important; line-height: 1
 its decorative left border. The filter normalizes color inputs to ensure
 they render identically across LaTeX, Typst, and HTML.</p>
 <h3 id="basic-color-attributes">Basic Color Attributes</h3>
-<p>Use <code>color</code> for the text, <code>barcolor</code> for the
-left border, and <code>barwidth</code> to adjust the border’s
+<p>Use <code>pq-color</code> for the text, <code>pq-bar-color</code> for
+the left border, and <code>pq-bar-width</code> to adjust the border’s
 thickness.</p>
 <div class="sourceCode" id="cb5"><pre
-class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>::: {.pullquote color=&quot;CadetBlue&quot; barcolor=&quot;Thistle&quot; barwidth=&quot;8px&quot;}</span>
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>::: {.pullquote pq-color=&quot;CadetBlue&quot; pq-bar-color=&quot;Thistle&quot; pq-bar-width=&quot;8px&quot;}</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>This quote uses the SVG named color **CadetBlue** for text and the pastel **Thistle** for a thick 8px border.</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>:::</span></code></pre></div>
-<div class="pullquote" color="CadetBlue" data-barcolor="Thistle"
-data-barwidth="8px"
+<div class="pullquote" data-pq-color="CadetBlue"
+data-pq-bar-color="Thistle" data-pq-bar-width="8px"
 style=" display: block !important; padding-left: 1rem !important; line-height: 1.5 !important; width: 80% !important; color: #5F9EA0 !important; border-left: 8px solid #D8BFD8 !important; margin: 1.5rem auto !important; font-size: 1.2em !important; font-style: italic !important;">
 <p>This quote uses the SVG named color <strong>CadetBlue</strong> for
 text and the pastel <strong>Thistle</strong> for a thick 8px border.</p>
@@ -215,10 +220,10 @@ text and the pastel <strong>Thistle</strong> for a thick 8px border.</p>
 <p>The filter fully supports 6-character hex codes and 3-character
 shorthands.</p>
 <div class="sourceCode" id="cb6"><pre
-class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>::: {.pullquote color=&quot;#827397&quot; barcolor=&quot;#F00&quot;}</span>
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>::: {.pullquote pq-color=&quot;#827397&quot; pq-bar-color=&quot;#F00&quot;}</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>This quote uses raw Hex codes: **#827397** for text and the shorthand **#F00** (Red) for the bar.</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>:::</span></code></pre></div>
-<div class="pullquote" color="#827397" data-barcolor="#F00"
+<div class="pullquote" data-pq-color="#827397" data-pq-bar-color="#F00"
 style=" display: block !important; padding-left: 1rem !important; line-height: 1.5 !important; width: 80% !important; color: #827397 !important; border-left: 4px solid #FF0000 !important; margin: 1.5rem auto !important; font-size: 1.2em !important; font-style: italic !important;">
 <p>This quote uses raw Hex codes: <strong>#827397</strong> for text and
 the shorthand <strong>#F00</strong> (Red) for the bar.</p>
@@ -228,11 +233,11 @@ the shorthand <strong>#F00</strong> (Red) for the bar.</p>
 syntax. This maps reliably across Typst, LaTeX, and HTML (which
 leverages the native CSS <code>color-mix()</code> function).</p>
 <div class="sourceCode" id="cb7"><pre
-class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>::: {.pullquote color=&quot;Indigo!90!Black&quot; barcolor=&quot;Indigo!20&quot; barwidth=&quot;6px&quot;}</span>
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>::: {.pullquote pq-color=&quot;Indigo!90!Black&quot; pq-bar-color=&quot;Indigo!20&quot; pq-bar-width=&quot;6px&quot;}</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>This quote uses a three-part blend for the text (**Indigo mixed at 90% with Black**) and a standard two-part blend with white for the bar.</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>:::</span></code></pre></div>
-<div class="pullquote" color="Indigo!90!Black" data-barcolor="Indigo!20"
-data-barwidth="6px"
+<div class="pullquote" data-pq-color="Indigo!90!Black"
+data-pq-bar-color="Indigo!20" data-pq-bar-width="6px"
 style=" display: block !important; padding-left: 1rem !important; line-height: 1.5 !important; width: 80% !important; color: color-mix(in srgb, #4B0082 90%, #000000) !important; border-left: 6px solid color-mix(in srgb, #4B0082 20%, #FFFFFF) !important; margin: 1.5rem auto !important; font-size: 1.2em !important; font-style: italic !important;">
 <p>This quote uses a three-part blend for the text (<strong>Indigo mixed
 at 90% with Black</strong>) and a standard two-part blend with white for
@@ -240,33 +245,52 @@ the bar.</p>
 </div>
 <h2 id="block-level-positioning-and-width">Block-Level Positioning and
 Width</h2>
-<p>By adjusting <code>width</code> and <code>boxalign</code>, we can
-position the entire pullquote block to the left, center, or right of the
-page. This shifts the block within the standard document flow; the body
-text will sit above and below it rather than wrapping around it.</p>
+<p>By adjusting <code>pq-width</code> and <code>pq-box-align</code>, we
+can position the entire pullquote block to the left, center, or right of
+the page. This shifts the block within the standard document flow; the
+body text will sit above and below it rather than wrapping around
+it.</p>
 <div class="sourceCode" id="cb8"><pre
-class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>::: {.pullquote width=&quot;45%&quot; boxalign=&quot;pq-box-right&quot;}</span>
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>::: {.pullquote pq-width=&quot;45%&quot; pq-box-align=&quot;right&quot;}</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>This quote takes up 45% of the page width and is aligned flush to the right margin.</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>:::</span></code></pre></div>
-<div class="pullquote" width="45%" data-boxalign="pq-box-right"
+<div class="pullquote" data-pq-width="45%" data-pq-box-align="right"
 style=" display: block !important; padding-left: 1rem !important; line-height: 1.5 !important; width: 45% !important; color: #2F4F4F !important; border-left: 4px solid #5F9EA0 !important; margin: 1.5rem 0 1.5rem auto !important; font-size: 1.2em !important; font-style: italic !important;">
 <p>This quote takes up 45% of the page width and is aligned flush to the
 right margin.</p>
 </div>
-<p><em>(Absolute units such as <code>width="300pt"</code> or
-<code>width="10cm"</code> are also fully supported).</em></p>
+<p><em>(Absolute units such as <code>pq-width="300pt"</code> or
+<code>pq-width="10cm"</code> are also fully supported).</em></p>
 <h2 id="inner-text-alignment">Inner Text Alignment</h2>
-<p>The <code>align</code> attribute controls text alignment
+<p>The <code>pq-text-align</code> attribute controls text alignment
 <em>within</em> the Fenced Div.</p>
 <div class="sourceCode" id="cb9"><pre
-class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>::: {.pullquote align=&quot;pq-align-center&quot; width=&quot;70%&quot; boxalign=&quot;pq-box-left&quot;}</span>
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>::: {.pullquote pq-text-align=&quot;center&quot; pq-width=&quot;70%&quot; pq-box-align=&quot;left&quot;}</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>This quote takes up 70% of the page and is aligned to the left margin, but the text *inside* the box is centered.</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>:::</span></code></pre></div>
-<div class="pullquote" data-align="pq-align-center" width="70%"
-data-boxalign="pq-box-left"
+<div class="pullquote" data-pq-text-align="center" data-pq-width="70%"
+data-pq-box-align="left"
 style=" display: block !important; padding-left: 1rem !important; line-height: 1.5 !important; width: 70% !important; color: #2F4F4F !important; border-left: 4px solid #5F9EA0 !important; margin: 1.5rem auto 1.5rem 0 !important; font-size: 1.2em !important; text-align: center !important; font-style: italic !important;">
 <p>This quote takes up 70% of the page and is aligned to the left
 margin, but the text <em>inside</em> the box is centered.</p>
+</div>
+<h2 id="interline-spacing-line-height">Interline Spacing
+(Line-Height)</h2>
+<p>The <code>pq-skip</code> attribute allows you to adjust the vertical
+space between lines of text. While casually referred to as leading,
+<code>pq-skip</code> technically acts as a multiplier for the engine’s
+interline spacing (<code>line-height</code> in CSS,
+<code>\baselineskip</code> in LaTeX, and <code>leading</code> in Typst).
+This is particularly useful for dense multi-line quotes or when using
+very large custom font sizes.</p>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>::: {.pullquote pq-size=&quot;xl&quot; pq-skip=&quot;2.0&quot;}</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>This quote uses a <span class="in">`pq-skip`</span> value of 2.0, acting as a double-spacing multiplier to let the text breathe.</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>:::</span></code></pre></div>
+<div class="pullquote" data-pq-size="xl" data-pq-skip="2.0"
+style=" display: block !important; padding-left: 1rem !important; line-height: 2.0 !important; width: 80% !important; color: #2F4F4F !important; border-left: 4px solid #5F9EA0 !important; margin: 1.5rem auto !important; font-size: 1.44em !important; font-style: italic !important;">
+<p>This quote uses a <code>pq-skip</code> value of 2.0, acting as a
+double-spacing multiplier to let the text breathe.</p>
 </div>
 <h2 id="global-metadata-configuration">Global Metadata
 Configuration</h2>
@@ -276,40 +300,41 @@ attributes first; if none exist, it falls back to the global
 metadata.</p>
 <p>For example, if your document includes the following YAML
 frontmatter:</p>
-<div class="sourceCode" id="cb10"><pre
-class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pq-color</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;DarkSlateGray&quot;</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">pq-barcolor</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;CadetBlue&quot;</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="fu">pq-width</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;80%&quot;</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">pq-size</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;pq-size-l&quot;</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="fu">pq-boxalign</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;pq-box-center&quot;</span></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pq-color</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;DarkSlateGray&quot;</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">pq-bar-color</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;CadetBlue&quot;</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">pq-width</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;80%&quot;</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="fu">pq-size</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;l&quot;</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="fu">pq-box-align</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;center&quot;</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span></code></pre></div>
 <p>A pullquote with no inline attributes will automatically inherit
 those exact styles:</p>
-<div class="sourceCode" id="cb11"><pre
-class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>::: {.pullquote}</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>This quote has no inline attributes. It inherits its styling entirely from the YAML frontmatter defined at the top of this document.</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>:::</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>::: {.pullquote}</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>This quote has no inline attributes. It inherits its styling entirely from the YAML frontmatter defined at the top of this document.</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>:::</span></code></pre></div>
 <div class="pullquote"
 style=" display: block !important; padding-left: 1rem !important; line-height: 1.5 !important; width: 80% !important; color: #2F4F4F !important; border-left: 4px solid #5F9EA0 !important; margin: 1.5rem auto !important; font-size: 1.2em !important; font-style: italic !important;">
 <p>This quote has no inline attributes. It inherits its styling entirely
 from the YAML frontmatter defined at the top of this document (Centered,
 80% width, Large size, DarkSlateGray text, CadetBlue bar).</p>
 </div>
-<h2 id="combining-multiple-classes-and-attributes">Combining Multiple
-Classes and Attributes</h2>
+<h2 id="combining-multiple-attributes">Combining Multiple
+Attributes</h2>
 <p>Multiple typographic utilities and attributes can be combined within
 the same element. Font, size, color, and alignment compose
 independently.</p>
-<div class="sourceCode" id="cb12"><pre
-class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>::: {.pullquote .pq-weight-bold .pq-family-serif .pq-style-smallcaps size=&quot;pq-size-3xl&quot; align=&quot;pq-align-center&quot; boxalign=&quot;pq-box-center&quot; width=&quot;95%&quot; color=&quot;DarkGoldenrod&quot; barcolor=&quot;MidnightBlue&quot; barwidth=&quot;12px&quot; skip=&quot;2.0&quot;}</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>The Ultimate Stress Test</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>:::</span></code></pre></div>
-<div class="pullquote pq-weight-bold pq-family-serif pq-style-smallcaps"
-size="pq-size-3xl" data-align="pq-align-center"
-data-boxalign="pq-box-center" width="95%" color="DarkGoldenrod"
-data-barcolor="MidnightBlue" data-barwidth="12px" data-skip="2.0"
-style=" display: block !important; padding-left: 1rem !important; line-height: 2.0 !important; width: 95% !important; color: #B8860B !important; border-left: 12px solid #191970 !important; margin: 1.5rem auto !important; font-size: 2.0736em !important; text-align: center !important; font-weight: bold !important; font-family: serif !important; font-variant: small-caps !important;">
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>::: {.pullquote pq-weight=&quot;bold&quot; pq-family=&quot;serif&quot; pq-style=&quot;smallcaps&quot; pq-size=&quot;3xl&quot; pq-text-align=&quot;center&quot; pq-box-align=&quot;center&quot; pq-width=&quot;95%&quot; pq-color=&quot;DarkGoldenrod&quot; pq-bar-color=&quot;MidnightBlue&quot; pq-bar-width=&quot;12px&quot; pq-skip=&quot;2.0&quot;}</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>The Ultimate Stress Test</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>:::</span></code></pre></div>
+<div class="pullquote" data-pq-weight="bold" data-pq-family="serif"
+data-pq-style="smallcaps" data-pq-size="3xl" data-pq-text-align="center"
+data-pq-box-align="center" data-pq-width="95%"
+data-pq-color="DarkGoldenrod" data-pq-bar-color="MidnightBlue"
+data-pq-bar-width="12px" data-pq-skip="2.0"
+style=" display: block !important; padding-left: 1rem !important; line-height: 2.0 !important; width: 95% !important; color: #B8860B !important; border-left: 12px solid #191970 !important; margin: 1.5rem auto !important; font-size: 2.0736em !important; text-align: center !important; font-weight: bold !important; font-variant: small-caps !important; font-family: serif !important;">
 <p>The Ultimate Stress Test</p>
 </div>
 </body>

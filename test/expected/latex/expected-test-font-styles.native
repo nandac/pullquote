@@ -50,9 +50,9 @@
     [ Str "Font" , Space , Str "Weights" ]
 , CodeBlock
     ( "" , [ "markdown" ] , [] )
-    "::: {.pullquote .pq-weight-normal}\nThis is a Normal weight quote.\n:::"
+    "::: {.pullquote pq-weight=\"normal\"}\nThis is a Normal weight quote.\n:::"
 , Div
-    ( "" , [ "pullquote" , "pq-weight-normal" ] , [] )
+    ( "" , [ "pullquote" ] , [ ( "pq-weight" , "normal" ) ] )
     [ Para
         [ Str "This"
         , Space
@@ -69,9 +69,9 @@
     ]
 , CodeBlock
     ( "" , [ "markdown" ] , [] )
-    "::: {.pullquote .pq-weight-medium}\nThis is a Medium-weight quote.\n:::"
+    "::: {.pullquote pq-weight=\"medium\"}\nThis is a Medium-weight quote.\n:::"
 , Div
-    ( "" , [ "pullquote" , "pq-weight-medium" ] , [] )
+    ( "" , [ "pullquote" ] , [ ( "pq-weight" , "medium" ) ] )
     [ Para
         [ Str "This"
         , Space
@@ -86,9 +86,9 @@
     ]
 , CodeBlock
     ( "" , [ "markdown" ] , [] )
-    "::: {.pullquote .pq-weight-bold}\nThis is a Bold weight quote.\n:::"
+    "::: {.pullquote pq-weight=\"bold\"}\nThis is a Bold weight quote.\n:::"
 , Div
-    ( "" , [ "pullquote" , "pq-weight-bold" ] , [] )
+    ( "" , [ "pullquote" ] , [ ( "pq-weight" , "bold" ) ] )
     [ Para
         [ Str "This"
         , Space
@@ -109,9 +109,9 @@
     [ Str "Font" , Space , Str "Families" ]
 , CodeBlock
     ( "" , [ "markdown" ] , [] )
-    "::: {.pullquote .pq-family-serif}\nThis is a Serif quote.\n:::"
+    "::: {.pullquote pq-family=\"serif\"}\nThis is a Serif quote.\n:::"
 , Div
-    ( "" , [ "pullquote" , "pq-family-serif" ] , [] )
+    ( "" , [ "pullquote" ] , [ ( "pq-family" , "serif" ) ] )
     [ Para
         [ Str "This"
         , Space
@@ -126,9 +126,9 @@
     ]
 , CodeBlock
     ( "" , [ "markdown" ] , [] )
-    "::: {.pullquote .pq-family-sans}\nThis is a Sans-Serif quote.\n:::"
+    "::: {.pullquote pq-family=\"sans\"}\nThis is a Sans-Serif quote.\n:::"
 , Div
-    ( "" , [ "pullquote" , "pq-family-sans" ] , [] )
+    ( "" , [ "pullquote" ] , [ ( "pq-family" , "sans" ) ] )
     [ Para
         [ Str "This"
         , Space
@@ -143,9 +143,9 @@
     ]
 , CodeBlock
     ( "" , [ "markdown" ] , [] )
-    "::: {.pullquote .pq-family-mono}\nThis is a Monospace quote.\n:::"
+    "::: {.pullquote pq-family=\"mono\"}\nThis is a Monospace quote.\n:::"
 , Div
-    ( "" , [ "pullquote" , "pq-family-mono" ] , [] )
+    ( "" , [ "pullquote" ] , [ ( "pq-family" , "mono" ) ] )
     [ Para
         [ Str "This"
         , Space
@@ -171,9 +171,9 @@
     ]
 , CodeBlock
     ( "" , [ "markdown" ] , [] )
-    "::: {.pullquote .pq-style-upright}\nThis is an Upright (non-italicized) quote.\n:::"
+    "::: {.pullquote pq-style=\"upright\"}\nThis is an Upright (non-italicized) quote.\n:::"
 , Div
-    ( "" , [ "pullquote" , "pq-style-upright" ] , [] )
+    ( "" , [ "pullquote" ] , [ ( "pq-style" , "upright" ) ] )
     [ Para
         [ Str "This"
         , Space
@@ -190,9 +190,9 @@
     ]
 , CodeBlock
     ( "" , [ "markdown" ] , [] )
-    "::: {.pullquote .pq-style-italic}\nThis is an explicitly Italicized quote (which is the default).\n:::"
+    "::: {.pullquote pq-style=\"italic\"}\nThis is an explicitly Italicized quote (which is the default).\n:::"
 , Div
-    ( "" , [ "pullquote" , "pq-style-italic" ] , [] )
+    ( "" , [ "pullquote" ] , [ ( "pq-style" , "italic" ) ] )
     [ Para
         [ Str "This"
         , Space
@@ -217,9 +217,9 @@
     ]
 , CodeBlock
     ( "" , [ "markdown" ] , [] )
-    "::: {.pullquote .pq-style-emph}\nThis is an Emphasized quote.\n:::"
+    "::: {.pullquote pq-style=\"emph\"}\nThis is an Emphasized quote.\n:::"
 , Div
-    ( "" , [ "pullquote" , "pq-style-emph" ] , [] )
+    ( "" , [ "pullquote" ] , [ ( "pq-style" , "emph" ) ] )
     [ Para
         [ Str "This"
         , Space
@@ -234,9 +234,9 @@
     ]
 , CodeBlock
     ( "" , [ "markdown" ] , [] )
-    "::: {.pullquote .pq-style-slanted}\nThis is a Slanted (oblique) quote.\n:::"
+    "::: {.pullquote pq-style=\"slanted\"}\nThis is a Slanted (oblique) quote.\n:::"
 , Div
-    ( "" , [ "pullquote" , "pq-style-slanted" ] , [] )
+    ( "" , [ "pullquote" ] , [ ( "pq-style" , "slanted" ) ] )
     [ Para
         [ Str "This"
         , Space
@@ -253,9 +253,9 @@
     ]
 , CodeBlock
     ( "" , [ "markdown" ] , [] )
-    "::: {.pullquote .pq-style-smallcaps}\nThis is a Small-Caps quote.\n:::"
+    "::: {.pullquote pq-style=\"smallcaps\"}\nThis is a Small-Caps quote.\n:::"
 , Div
-    ( "" , [ "pullquote" , "pq-style-smallcaps" ] , [] )
+    ( "" , [ "pullquote" ] , [ ( "pq-style" , "smallcaps" ) ] )
     [ Para
         [ Str "This"
         , Space
@@ -274,15 +274,14 @@
     [ Str "4." , Space , Str "Combinations" ]
 , CodeBlock
     ( "" , [ "markdown" ] , [] )
-    "::: {.pullquote .pq-style-smallcaps .pq-weight-bold .pq-family-serif}\nThis is a Bold, Small-Caps, Serif quote.\n:::"
+    "::: {.pullquote pq-style=\"smallcaps\" pq-weight=\"bold\" pq-family=\"serif\"}\nThis is a Bold, Small-Caps, Serif quote.\n:::"
 , Div
     ( ""
-    , [ "pullquote"
-      , "pq-style-smallcaps"
-      , "pq-weight-bold"
-      , "pq-family-serif"
+    , [ "pullquote" ]
+    , [ ( "pq-style" , "smallcaps" )
+      , ( "pq-weight" , "bold" )
+      , ( "pq-family" , "serif" )
       ]
-    , []
     )
     [ Para
         [ Str "This"
@@ -302,15 +301,14 @@
     ]
 , CodeBlock
     ( "" , [ "markdown" ] , [] )
-    "::: {.pullquote .pq-style-upright .pq-weight-medium .pq-family-sans}\nThis is a Medium-weight, Upright, Sans-Serif quote.\n:::"
+    "::: {.pullquote pq-style=\"upright\" pq-weight=\"medium\" pq-family=\"sans\"}\nThis is a Medium-weight, Upright, Sans-Serif quote.\n:::"
 , Div
     ( ""
-    , [ "pullquote"
-      , "pq-style-upright"
-      , "pq-weight-medium"
-      , "pq-family-sans"
+    , [ "pullquote" ]
+    , [ ( "pq-style" , "upright" )
+      , ( "pq-weight" , "medium" )
+      , ( "pq-family" , "sans" )
       ]
-    , []
     )
     [ Para
         [ Str "This"

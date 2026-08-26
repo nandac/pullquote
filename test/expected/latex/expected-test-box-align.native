@@ -98,11 +98,11 @@
     ]
 , CodeBlock
     ( "" , [ "markdown" ] , [] )
-    "::: {.pullquote width=\"45%\" boxalign=\"pq-box-right\"}\nThis quote takes up 45% of the page width and is aligned flush to the right margin.\n:::"
+    "::: {.pullquote pq-width=\"45%\" pq-box-align=\"right\"}\nThis quote takes up 45% of the page width and is aligned flush to the right margin.\n:::"
 , Div
     ( ""
     , [ "pullquote" ]
-    , [ ( "width" , "45%" ) , ( "boxalign" , "pq-box-right" ) ]
+    , [ ( "pq-width" , "45%" ) , ( "pq-box-align" , "right" ) ]
     )
     [ Para
         [ Str "This"
@@ -237,13 +237,13 @@
     ]
 , CodeBlock
     ( "" , [ "markdown" ] , [] )
-    "::: {.pullquote width=\"60%\" boxalign=\"pq-box-left\" align=\"pq-align-center\"}\nThis one takes up 60% and is aligned to the left margin, but the text *inside* it is centered. By adding a bit more length to this sentence, it will naturally wrap across multiple lines, making the ragged edges on both sides visually obvious.\n:::"
+    "::: {.pullquote pq-width=\"60%\" pq-box-align=\"left\" pq-text-align=\"center\"}\nThis one takes up 60% and is aligned to the left margin, but the text *inside* it is centered. By adding a bit more length to this sentence, it will naturally wrap across multiple lines, making the ragged edges on both sides visually obvious.\n:::"
 , Div
     ( ""
     , [ "pullquote" ]
-    , [ ( "width" , "60%" )
-      , ( "boxalign" , "pq-box-left" )
-      , ( "align" , "pq-align-center" )
+    , [ ( "pq-width" , "60%" )
+      , ( "pq-box-align" , "left" )
+      , ( "pq-text-align" , "center" )
       ]
     )
     [ Para
@@ -464,12 +464,12 @@
     ]
 , CodeBlock
     ( "" , [ "markdown" ] , [] )
-    "::: {.pullquote width=\"300pt\" boxalign=\"pq-box-center\"}\nThis quote uses an absolute width of **300pt** rather than a percentage. The filter should pass this absolute unit through to LaTeX, Typst, and HTML without applying the percentage-to-linewidth math.\n:::"
+    "::: {.pullquote pq-width=\"300pt\" pq-box-align=\"center\"}\nThis quote uses an absolute width of **300pt** rather than a percentage. The filter should pass this absolute unit through to LaTeX, Typst, and HTML without applying the percentage-to-linewidth math.\n:::"
 , Div
     ( ""
     , [ "pullquote" ]
-    , [ ( "width" , "300pt" )
-      , ( "boxalign" , "pq-box-center" )
+    , [ ( "pq-width" , "300pt" )
+      , ( "pq-box-align" , "center" )
       ]
     )
     [ Para
