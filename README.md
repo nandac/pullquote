@@ -144,8 +144,8 @@ Apply these key-value attributes globally (in your YAML) or inline on the Fenced
 | Attribute | Description | Default | Valid Inputs |
 | :--- | :--- | :--- | :--- |
 | `pq-width` | Container block width | `100%` | Percentages (`80%`), Absolute (`300pt`) |
-| `pq-color` | Text foreground color | Inherit | Hex, CSS Named, `xcolor` Mix |
-| `pq-bar-color`| Left border color | Inherit | Hex, CSS Named, `xcolor` Mix |
+| `pq-color` | Text foreground color | `#888888` (Neutral grey) | Hex, CSS Named, `xcolor` Mix |
+| `pq-bar-color`| Left border color | `#d9d9d9` (Light neutral grey) | Hex, CSS Named, `xcolor` Mix |
 | `pq-bar-width`| Left border thickness | `4px` / `3pt` | CSS/LaTeX units (`px`, `pt`) |
 | `pq-skip` | Interline spacing multiplier | `1.0` | Decimal (e.g., `1.5`, `2.0`) |
 
@@ -158,7 +158,7 @@ The filter separates the alignment of the text from the positioning of the block
 | Attribute | Valid Inputs | Behavior |
 |--------|--------|--------|
 | `pq-text-align` | `left`, `center`, `right` | Aligns the text *inside* the pullquote box. |
-| `pq-box-align` | `left`, `center`, `right` | Aligns the entire block on the page margin. |
+| `pq-box-align` | `left`, `center`, `right` | Aligns the entire pullquote box on the page. |
 
 ---
 
