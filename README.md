@@ -145,8 +145,8 @@ Apply these key-value attributes globally (in your YAML) or inline on the Fenced
 | :--- | :--- | :--- | :--- |
 | `pq-width` | Container block width | `100%` | Percentages (`80%`), Absolute (`300pt`) |
 | `pq-color` | Text foreground color | `#888888` (Neutral grey) | Hex, CSS Named, `xcolor` Mix |
-| `pq-bar-color`| Left border color | `#d9d9d9` (Light neutral grey) | Hex, CSS Named, `xcolor` Mix |
-| `pq-bar-width`| Left border thickness | `4px` / `3pt` | CSS/LaTeX units (`px`, `pt`) |
+| `pq-bar-color` | Left border color | `#d9d9d9` (Light neutral grey) | Hex, CSS Named, `xcolor` Mix |
+| `pq-bar-width` | Left border thickness | `4px` / `3pt` | CSS/LaTeX units (`px`, `pt`) |
 | `pq-skip` | Interline spacing multiplier | `1.0` | Decimal (e.g., `1.5`, `2.0`) |
 
 ---
@@ -156,7 +156,7 @@ Apply these key-value attributes globally (in your YAML) or inline on the Fenced
 The filter separates the alignment of the text from the positioning of the block itself.
 
 | Attribute | Description | Default | Valid Inputs |
-|:--- |:--- |:--- |:--- |
+| :--- | :--- | :--- | :--- |
 | `pq-text-align` | Aligns text *inside* the pullquote box. | `left` | `left`, `center`, `right` |
 | `pq-box-align` | Aligns the entire pullquote box on the page. | `center` | `left`, `center`, `right` |
 
@@ -179,7 +179,7 @@ Matches the 9-step typographic scale API.
 | `3xs` | `\tiny` | `0.5em` | Extra Extra Extra Small |
 | `2xs` | `\scriptsize` | `0.6667em` | Extra Extra Small |
 | `xs` | `footnotesize` | `0.8333em` | Extra Small |
-| `s` | `\small`| `0.9125em` | Small |
+| `s` | `\small` | `0.9125em` | Small |
 | `m` | `\normalsize` | `1.0em` | Medium (Base document size) |
 | `l` | `\large` | `1.2em` | **Large (Default)** |
 | `xl` | `\Large` | `1.44em` | Extra Large |
