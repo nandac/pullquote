@@ -155,10 +155,10 @@ Apply these key-value attributes globally (in your YAML) or inline on the Fenced
 
 The filter separates the alignment of the text from the positioning of the block itself.
 
-| Attribute | Valid Inputs | Behavior |
-|--------|--------|--------|
-| `pq-text-align` | `left`, `center`, `right` | Aligns the text *inside* the pullquote box. |
-| `pq-box-align` | `left`, `center`, `right` | Aligns the entire pullquote box on the page. |
+| Attribute | Description | Default | Valid Inputs |
+|:--- |:--- |:--- |:--- |
+| `pq-text-align` | Aligns text *inside* the pullquote box. | `left` | `left`, `center`, `right` |
+| `pq-box-align` | Aligns the entire pullquote box on the page. | `center` | `left`, `center`, `right` |
 
 ---
 
@@ -188,11 +188,11 @@ Matches the 9-step typographic scale API.
 
 ### Font Weight, Shape, and Family
 
-| Attribute | Valid Inputs | Description |
-| :--- | :--- | :--- |
-| `pq-weight` | `normal`, `medium`, `bold` | Overrides base weight |
-| `pq-style` | `upright`, `italic`, `slanted`, `smallcaps`, `emph` | Sets font styling *(Defaults to `italic`)* |
-| `pq-family` | `serif`, `sans`, `mono` | Overrides base font family |
+| Attribute | Default | Valid Inputs | Description |
+| :--- | :--- | :--- | :--- |
+| `pq-weight` | `normal` (Inherited) | `normal`, `medium`, `bold` | Overrides base weight |
+| `pq-style` | `italic` | `upright`, `italic`, `slanted`, `smallcaps`, `emph` | Sets font styling |
+| `pq-family` | `serif` (Inherited) | `serif`, `sans`, `mono` | Overrides base font family |
 
 ---
 
