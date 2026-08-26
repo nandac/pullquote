@@ -26,6 +26,16 @@ This quote uses raw Hex codes: **#827397** (Muted Violet) for text and **#E9D8FD
 This quote uses raw Hex codes: **#827397** (Muted Violet) for text and **#E9D8FD** (Pastel Lavender) for the bar.
 :::
 
+```markdown
+::: {.pullquote color="#F00" barcolor="#0F0" width="70%"}
+This quote tests 3-character Hex shorthands: **#F00** (Red) for text and **#0F0** (Green) for the bar. The Lua filter should automatically expand these to 6 characters.
+:::
+```
+
+::: {.pullquote color="#F00" barcolor="#0F0" width="70%"}
+This quote tests 3-character Hex shorthands: **#F00** (Red) for text and **#0F0** (Green) for the bar. The Lua filter should automatically expand these to 6 characters.
+:::
+
 ## Color Blending
 
 This tests the cross-platform color mixing syntax (`color!percentage!mix-color`). If the mix color is omitted, it automatically defaults to blending with white.

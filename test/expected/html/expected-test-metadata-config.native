@@ -1,0 +1,299 @@
+[ Header
+    2
+    ( "global-inheritance" , [] , [] )
+    [ Str "Global" , Space , Str "Inheritance" ]
+, Para
+    [ Str "This"
+    , Space
+    , Str "tests"
+    , Space
+    , Str "the"
+    , Space
+    , Str "fallback"
+    , Space
+    , Str "mechanism"
+    , Space
+    , Str "built"
+    , Space
+    , Str "into"
+    , Space
+    , Str "the"
+    , Space
+    , Str "Lua"
+    , Space
+    , Str "filter."
+    , Space
+    , Str "Because"
+    , Space
+    , Str "this"
+    , Space
+    , Str "pullquote"
+    , Space
+    , Str "has"
+    , Space
+    , Str "no"
+    , Space
+    , Str "inline"
+    , Space
+    , Str "attributes"
+    , Space
+    , Str "attached"
+    , Space
+    , Str "to"
+    , Space
+    , Str "its"
+    , Space
+    , Str "div,"
+    , Space
+    , Str "it"
+    , Space
+    , Str "should"
+    , Space
+    , Str "automatically"
+    , Space
+    , Str "pull"
+    , Space
+    , Str "all"
+    , Space
+    , Str "of"
+    , Space
+    , Str "its"
+    , Space
+    , Str "styling"
+    , Space
+    , Str "from"
+    , Space
+    , Str "the"
+    , Space
+    , Str "YAML"
+    , Space
+    , Str "frontmatter"
+    , Space
+    , Str "(Centered,"
+    , Space
+    , Str "70%"
+    , Space
+    , Str "width,"
+    , Space
+    , Str "Large"
+    , Space
+    , Str "size,"
+    , Space
+    , Str "DarkSlateGray"
+    , Space
+    , Str "text,"
+    , Space
+    , Str "and"
+    , Space
+    , Str "a"
+    , Space
+    , Str "CadetBlue"
+    , Space
+    , Str "bar)."
+    ]
+, CodeBlock
+    ( "" , [ "markdown" ] , [] )
+    "::: {.pullquote}\nThis quote relies entirely on the global YAML metadata for its styling and positioning. By falling back to the document frontmatter, it ensures a consistent design language across the entire project without needing to repeat code.\n:::"
+, Div
+    ( "" , [ "pullquote" ] , [] )
+    [ Para
+        [ Str "This"
+        , Space
+        , Str "quote"
+        , Space
+        , Str "relies"
+        , Space
+        , Str "entirely"
+        , Space
+        , Str "on"
+        , Space
+        , Str "the"
+        , Space
+        , Str "global"
+        , Space
+        , Str "YAML"
+        , Space
+        , Str "metadata"
+        , Space
+        , Str "for"
+        , Space
+        , Str "its"
+        , Space
+        , Str "styling"
+        , Space
+        , Str "and"
+        , Space
+        , Str "positioning."
+        , Space
+        , Str "By"
+        , Space
+        , Str "falling"
+        , Space
+        , Str "back"
+        , Space
+        , Str "to"
+        , Space
+        , Str "the"
+        , Space
+        , Str "document"
+        , Space
+        , Str "frontmatter,"
+        , Space
+        , Str "it"
+        , Space
+        , Str "ensures"
+        , Space
+        , Str "a"
+        , Space
+        , Str "consistent"
+        , Space
+        , Str "design"
+        , Space
+        , Str "language"
+        , Space
+        , Str "across"
+        , Space
+        , Str "the"
+        , Space
+        , Str "entire"
+        , Space
+        , Str "project"
+        , Space
+        , Str "without"
+        , Space
+        , Str "needing"
+        , Space
+        , Str "to"
+        , Space
+        , Str "repeat"
+        , Space
+        , Str "code."
+        ]
+    ]
+, Header
+    2
+    ( "inline-override" , [] , [] )
+    [ Str "Inline" , Space , Str "Override" ]
+, Para
+    [ Str "This"
+    , Space
+    , Str "tests"
+    , Space
+    , Str "the"
+    , Space
+    , Str "exact"
+    , Space
+    , Str "hierarchy"
+    , Space
+    , Str "of"
+    , Space
+    , Str "the"
+    , Space
+    , Str "fallback"
+    , Space
+    , Str "logic."
+    , Space
+    , Str "Inline"
+    , Space
+    , Str "attributes"
+    , Space
+    , Str "should"
+    , Space
+    , Str "always"
+    , Space
+    , Str "win."
+    , Space
+    , Str "Here,"
+    , Space
+    , Str "we"
+    , Space
+    , Str "let"
+    , Space
+    , Str "it"
+    , Space
+    , Str "inherit"
+    , Space
+    , Str "the"
+    , Space
+    , Str "global"
+    , Space
+    , Str "centering"
+    , Space
+    , Str "and"
+    , Space
+    , Str "size,"
+    , Space
+    , Str "but"
+    , Space
+    , Str "we"
+    , Space
+    , Str "explicitly"
+    , Space
+    , Str "override"
+    , Space
+    , Str "the"
+    , Space
+    , Str "width"
+    , Space
+    , Str "and"
+    , Space
+    , Str "the"
+    , Space
+    , Str "colors"
+    , Space
+    , Str "inline."
+    ]
+, CodeBlock
+    ( "" , [ "markdown" ] , [] )
+    "::: {.pullquote width=\"90%\" color=\"Indigo\" barcolor=\"MediumPurple\"}\nThis quote selectively overrides the global width and colors, while successfully retaining the global large size and centered block alignment.\n:::"
+, Div
+    ( ""
+    , [ "pullquote" ]
+    , [ ( "width" , "90%" )
+      , ( "color" , "Indigo" )
+      , ( "barcolor" , "MediumPurple" )
+      ]
+    )
+    [ Para
+        [ Str "This"
+        , Space
+        , Str "quote"
+        , Space
+        , Str "selectively"
+        , Space
+        , Str "overrides"
+        , Space
+        , Str "the"
+        , Space
+        , Str "global"
+        , Space
+        , Str "width"
+        , Space
+        , Str "and"
+        , Space
+        , Str "colors,"
+        , Space
+        , Str "while"
+        , Space
+        , Str "successfully"
+        , Space
+        , Str "retaining"
+        , Space
+        , Str "the"
+        , Space
+        , Str "global"
+        , Space
+        , Str "large"
+        , Space
+        , Str "size"
+        , Space
+        , Str "and"
+        , Space
+        , Str "centered"
+        , Space
+        , Str "block"
+        , Space
+        , Str "alignment."
+        ]
+    ]
+]

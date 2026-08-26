@@ -163,6 +163,131 @@
     ]
 , Header
     2
+    ( "vertical-spacing-skip" , [] , [] )
+    [ Str "Vertical"
+    , Space
+    , Str "Spacing"
+    , Space
+    , Str "(Skip)"
+    ]
+, Para
+    [ Str "This"
+    , Space
+    , Str "tests"
+    , Space
+    , Str "the"
+    , Space
+    , Code ( "" , [] , [] ) "skip"
+    , Space
+    , Str "attribute"
+    , Space
+    , Str "which"
+    , Space
+    , Str "manipulates"
+    , Space
+    , Str "line-height"
+    , Space
+    , Str "(leading)"
+    , Space
+    , Str "across"
+    , Space
+    , Str "the"
+    , Space
+    , Str "different"
+    , Space
+    , Str "engines."
+    ]
+, CodeBlock
+    ( "" , [ "markdown" ] , [] )
+    "::: {.pullquote skip=\"2.5\"}\nThis quote has a highly exaggerated skip value of 2.5 applied to it. When this text wraps across multiple lines, you should clearly see a massive amount of vertical space between each line of text, proving the filter handles line-height correctly.\n:::"
+, Div
+    ( "" , [ "pullquote" ] , [ ( "skip" , "2.5" ) ] )
+    [ Para
+        [ Str "This"
+        , Space
+        , Str "quote"
+        , Space
+        , Str "has"
+        , Space
+        , Str "a"
+        , Space
+        , Str "highly"
+        , Space
+        , Str "exaggerated"
+        , Space
+        , Str "skip"
+        , Space
+        , Str "value"
+        , Space
+        , Str "of"
+        , Space
+        , Str "2.5"
+        , Space
+        , Str "applied"
+        , Space
+        , Str "to"
+        , Space
+        , Str "it."
+        , Space
+        , Str "When"
+        , Space
+        , Str "this"
+        , Space
+        , Str "text"
+        , Space
+        , Str "wraps"
+        , Space
+        , Str "across"
+        , Space
+        , Str "multiple"
+        , Space
+        , Str "lines,"
+        , Space
+        , Str "you"
+        , Space
+        , Str "should"
+        , Space
+        , Str "clearly"
+        , Space
+        , Str "see"
+        , Space
+        , Str "a"
+        , Space
+        , Str "massive"
+        , Space
+        , Str "amount"
+        , Space
+        , Str "of"
+        , Space
+        , Str "vertical"
+        , Space
+        , Str "space"
+        , Space
+        , Str "between"
+        , Space
+        , Str "each"
+        , Space
+        , Str "line"
+        , Space
+        , Str "of"
+        , Space
+        , Str "text,"
+        , Space
+        , Str "proving"
+        , Space
+        , Str "the"
+        , Space
+        , Str "filter"
+        , Space
+        , Str "handles"
+        , Space
+        , Str "line-height"
+        , Space
+        , Str "correctly."
+        ]
+    ]
+, Header
+    2
     ( "the-extreme-stress-test" , [] , [] )
     [ Str "The"
     , Space

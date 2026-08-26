@@ -158,6 +158,71 @@
         , Str "bar."
         ]
     ]
+, CodeBlock
+    ( "" , [ "markdown" ] , [] )
+    "::: {.pullquote color=\"#F00\" barcolor=\"#0F0\" width=\"70%\"}\nThis quote tests 3-character Hex shorthands: **#F00** (Red) for text and **#0F0** (Green) for the bar. The Lua filter should automatically expand these to 6 characters.\n:::"
+, Div
+    ( ""
+    , [ "pullquote" ]
+    , [ ( "color" , "#F00" )
+      , ( "barcolor" , "#0F0" )
+      , ( "width" , "70%" )
+      ]
+    )
+    [ Para
+        [ Str "This"
+        , Space
+        , Str "quote"
+        , Space
+        , Str "tests"
+        , Space
+        , Str "3-character"
+        , Space
+        , Str "Hex"
+        , Space
+        , Str "shorthands:"
+        , Space
+        , Strong [ Str "#F00" ]
+        , Space
+        , Str "(Red)"
+        , Space
+        , Str "for"
+        , Space
+        , Str "text"
+        , Space
+        , Str "and"
+        , Space
+        , Strong [ Str "#0F0" ]
+        , Space
+        , Str "(Green)"
+        , Space
+        , Str "for"
+        , Space
+        , Str "the"
+        , Space
+        , Str "bar."
+        , Space
+        , Str "The"
+        , Space
+        , Str "Lua"
+        , Space
+        , Str "filter"
+        , Space
+        , Str "should"
+        , Space
+        , Str "automatically"
+        , Space
+        , Str "expand"
+        , Space
+        , Str "these"
+        , Space
+        , Str "to"
+        , Space
+        , Str "6"
+        , Space
+        , Str "characters."
+        ]
+    ]
 , Header
     2
     ( "color-blending" , [] , [] )

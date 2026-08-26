@@ -2,7 +2,7 @@ to: latex
 pdf-engine: lualatex
 
 include-in-header:
-  - _extensions/pullquote/pq-preamble.tex
+  - _extensions/pullquote/pullquote.tex
   - test/assets/preview-styles.tex
 
 variables:

@@ -20,6 +20,20 @@ This test checks that if a user provides absolutely no arguments, the fallback d
 
 Here is some standard body text following the quote to ensure vertical spacing (`skip` and `margins`) is rendering gracefully without colliding with the surrounding paragraphs.
 
+## Vertical Spacing (Skip)
+
+This tests the `skip` attribute which manipulates line-height (leading) across the different engines.
+
+```markdown
+::: {.pullquote skip="2.5"}
+This quote has a highly exaggerated skip value of 2.5 applied to it. When this text wraps across multiple lines, you should clearly see a massive amount of vertical space between each line of text, proving the filter handles line-height correctly.
+:::
+```
+
+::: {.pullquote skip="2.5"}
+This quote has a highly exaggerated skip value of 2.5 applied to it. When this text wraps across multiple lines, you should clearly see a massive amount of vertical space between each line of text, proving the filter handles line-height correctly.
+:::
+
 ## The Extreme Stress Test
 
 Finally, we combine everything: custom width, extreme size, custom colors, custom alignments, and multiple font styles in a single fenced Div.

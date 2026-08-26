@@ -40,7 +40,7 @@ header#title-block-header {
 /* ==========================================================================
    Monospace Font Size
    ========================================================================== */
-code, kbd, samp, pre {
+:not(pre) > code, kbd, samp {
   font-size: 1.1em;
   color: #85144b; /* Typst Maroon for inline code */
 }

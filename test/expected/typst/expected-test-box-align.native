@@ -1,7 +1,7 @@
 [ Header
     2
-    ( "floating-layouts" , [] , [] )
-    [ Str "Floating" , Space , Str "Layouts" ]
+    ( "block-level-positioning" , [] , [] )
+    [ Str "Block-Level" , Space , Str "Positioning" ]
 , Para
     [ Str "By"
     , Space
@@ -18,35 +18,87 @@
     , Space
     , Str "can"
     , Space
-    , Str "float"
+    , Str "position"
     , Space
     , Str "the"
     , Space
+    , Str "entire"
+    , Space
     , Str "pullquote"
+    , Space
+    , Str "block"
     , Space
     , Str "to"
     , Space
     , Str "the"
     , Space
-    , Str "side"
+    , Str "left,"
+    , Space
+    , Str "center,"
+    , Space
+    , Str "or"
+    , Space
+    , Str "right"
     , Space
     , Str "of"
     , Space
     , Str "the"
     , Space
-    , Str "page"
+    , Str "page."
     , Space
-    , Str "to"
+    , Str "Note"
     , Space
-    , Str "create"
+    , Str "that"
     , Space
-    , Str "dynamic"
+    , Str "this"
     , Space
-    , Str "layouts."
+    , Str "shifts"
+    , Space
+    , Str "the"
+    , Space
+    , Str "block"
+    , Space
+    , Str "within"
+    , Space
+    , Str "the"
+    , Space
+    , Str "standard"
+    , Space
+    , Str "document"
+    , Space
+    , Str "flow;"
+    , Space
+    , Str "the"
+    , Space
+    , Str "body"
+    , Space
+    , Str "text"
+    , Space
+    , Str "will"
+    , Space
+    , Str "sit"
+    , Space
+    , Str "above"
+    , Space
+    , Str "and"
+    , Space
+    , Str "below"
+    , Space
+    , Str "it"
+    , Space
+    , Str "rather"
+    , Space
+    , Str "than"
+    , Space
+    , Str "wrapping"
+    , Space
+    , Str "around"
+    , Space
+    , Str "it."
     ]
 , CodeBlock
     ( "" , [ "markdown" ] , [] )
-    "::: {.pullquote width=\"45%\" boxalign=\"pq-box-right\"}\nThis quote takes up 45% of the page width and is flushed to the right margin.\n:::"
+    "::: {.pullquote width=\"45%\" boxalign=\"pq-box-right\"}\nThis quote takes up 45% of the page width and is aligned flush to the right margin.\n:::"
 , Div
     ( ""
     , [ "pullquote" ]
@@ -75,7 +127,9 @@
         , Space
         , Str "is"
         , Space
-        , Str "flushed"
+        , Str "aligned"
+        , Space
+        , Str "flush"
         , Space
         , Str "to"
         , Space
@@ -183,7 +237,7 @@
     ]
 , CodeBlock
     ( "" , [ "markdown" ] , [] )
-    "::: {.pullquote width=\"60%\" boxalign=\"pq-box-left\" align=\"pq-align-center\"}\nThis one takes up 60%, floats to the left margin, but the text *inside* it is centered.\n:::"
+    "::: {.pullquote width=\"60%\" boxalign=\"pq-box-left\" align=\"pq-align-center\"}\nThis one takes up 60% and is aligned to the left margin, but the text *inside* it is centered. By adding a bit more length to this sentence, it will naturally wrap across multiple lines, making the ragged edges on both sides visually obvious.\n:::"
 , Div
     ( ""
     , [ "pullquote" ]
@@ -201,9 +255,13 @@
         , Space
         , Str "up"
         , Space
-        , Str "60%,"
+        , Str "60%"
         , Space
-        , Str "floats"
+        , Str "and"
+        , Space
+        , Str "is"
+        , Space
+        , Str "aligned"
         , Space
         , Str "to"
         , Space
@@ -226,6 +284,56 @@
         , Str "is"
         , Space
         , Str "centered."
+        , Space
+        , Str "By"
+        , Space
+        , Str "adding"
+        , Space
+        , Str "a"
+        , Space
+        , Str "bit"
+        , Space
+        , Str "more"
+        , Space
+        , Str "length"
+        , Space
+        , Str "to"
+        , Space
+        , Str "this"
+        , Space
+        , Str "sentence,"
+        , Space
+        , Str "it"
+        , Space
+        , Str "will"
+        , Space
+        , Str "naturally"
+        , Space
+        , Str "wrap"
+        , Space
+        , Str "across"
+        , Space
+        , Str "multiple"
+        , Space
+        , Str "lines,"
+        , Space
+        , Str "making"
+        , Space
+        , Str "the"
+        , Space
+        , Str "ragged"
+        , Space
+        , Str "edges"
+        , Space
+        , Str "on"
+        , Space
+        , Str "both"
+        , Space
+        , Str "sides"
+        , Space
+        , Str "visually"
+        , Space
+        , Str "obvious."
         ]
     ]
 , Para
@@ -292,5 +400,138 @@
     , Str "euismod"
     , Space
     , Str "gravida."
+    ]
+, Header
+    2
+    ( "absolute-width-units" , [] , [] )
+    [ Str "Absolute"
+    , Space
+    , Str "Width"
+    , Space
+    , Str "Units"
+    ]
+, Para
+    [ Str "This"
+    , Space
+    , Str "tests"
+    , Space
+    , Str "using"
+    , Space
+    , Str "absolute"
+    , Space
+    , Str "measurement"
+    , Space
+    , Str "units"
+    , Space
+    , Str "(like"
+    , Space
+    , Code ( "" , [] , [] ) "pt"
+    , Space
+    , Str "or"
+    , Space
+    , Code ( "" , [] , [] ) "cm"
+    , Str ")"
+    , Space
+    , Str "instead"
+    , Space
+    , Str "of"
+    , Space
+    , Str "percentages"
+    , Space
+    , Str "to"
+    , Space
+    , Str "ensure"
+    , Space
+    , Str "the"
+    , Space
+    , Str "filter"
+    , Space
+    , Str "passes"
+    , Space
+    , Str "the"
+    , Space
+    , Str "specific"
+    , Space
+    , Str "unit"
+    , Space
+    , Str "directly"
+    , Space
+    , Str "to"
+    , Space
+    , Str "the"
+    , Space
+    , Str "engines."
+    ]
+, CodeBlock
+    ( "" , [ "markdown" ] , [] )
+    "::: {.pullquote width=\"300pt\" boxalign=\"pq-box-center\"}\nThis quote uses an absolute width of **300pt** rather than a percentage. The filter should pass this absolute unit through to LaTeX, Typst, and HTML without applying the percentage-to-linewidth math.\n:::"
+, Div
+    ( ""
+    , [ "pullquote" ]
+    , [ ( "width" , "300pt" )
+      , ( "boxalign" , "pq-box-center" )
+      ]
+    )
+    [ Para
+        [ Str "This"
+        , Space
+        , Str "quote"
+        , Space
+        , Str "uses"
+        , Space
+        , Str "an"
+        , Space
+        , Str "absolute"
+        , Space
+        , Str "width"
+        , Space
+        , Str "of"
+        , Space
+        , Strong [ Str "300pt" ]
+        , Space
+        , Str "rather"
+        , Space
+        , Str "than"
+        , Space
+        , Str "a"
+        , Space
+        , Str "percentage."
+        , Space
+        , Str "The"
+        , Space
+        , Str "filter"
+        , Space
+        , Str "should"
+        , Space
+        , Str "pass"
+        , Space
+        , Str "this"
+        , Space
+        , Str "absolute"
+        , Space
+        , Str "unit"
+        , Space
+        , Str "through"
+        , Space
+        , Str "to"
+        , Space
+        , Str "LaTeX,"
+        , Space
+        , Str "Typst,"
+        , Space
+        , Str "and"
+        , Space
+        , Str "HTML"
+        , Space
+        , Str "without"
+        , Space
+        , Str "applying"
+        , Space
+        , Str "the"
+        , Space
+        , Str "percentage-to-linewidth"
+        , Space
+        , Str "math."
+        ]
     ]
 ]

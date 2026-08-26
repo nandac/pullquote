@@ -33,7 +33,10 @@ endif
 # Dynamic Test Detection (Driven directly by fixture files)
 # ==============================================================================
 TEST_MDS   := $(wildcard test/fixtures/*.md)
-TEST_NAMES := $(patsubst test/fixtures/%.md,%,$(TEST_MDS))
+ALL_TEST_NAMES := $(patsubst test/fixtures/%.md,%,$(TEST_MDS))
+
+# Filter out the error-testing file so it isn't passed to the AST diff or preview generators
+TEST_NAMES := $(filter-out test-errors, $(ALL_TEST_NAMES))
 DIFF_NAMES := $(TEST_NAMES)
 
 # Reusable Defaults Chaining Profiles
@@ -78,7 +81,7 @@ filter-proxy: $(FILTER_FILE) ## Generate the cross-platform root-level filter pr
 # Testing Rules (Using clean YAML Defaults + Format Overrides)
 # ==============================================================================
 .PHONY: test
-test: $(FILTER_FILE) $(addprefix test-,$(DIFF_NAMES)) ## Run all multi-backend AST differential tests
+test: $(FILTER_FILE) $(addprefix test-,$(DIFF_NAMES)) test-errors ## Run all multi-backend AST differential tests and error tests
 
 test-%: $(FILTER_FILE) test/fixtures/%.md
 	@echo "🧪 Verifying AST layout integrity for case: $*"
@@ -115,6 +118,40 @@ update-%: $(FILTER_FILE) test/fixtures/%.md
 	esac
 	$(PANDOC) test/fixtures/$*.md $(DEFAULTS_HTML) -t json | $(PANDOC) -f json -t native > test/expected/html/expected-$*.native
 
+.PHONY: test-errors
+test-errors: $(FILTER_FILE) test/fixtures/test-errors.md ## Test expected failure states and warnings
+	@echo "🧪 Verifying error handling and graceful failures..."
+	@echo "  Checking fatal error (Invalid Colors)..."
+	@if $(PANDOC) test/fixtures/test-errors.md --lua-filter=$(FILTER_FILE) $(DEFAULTS_HTML) -t html > /dev/null 2> error_log.txt; then \
+		echo "  ❌ FAIL: Pandoc should have crashed on an invalid color, but it succeeded."; \
+		rm error_log.txt; exit 1; \
+	else \
+		if grep -q "CRITICAL ERROR: Undefined color keyword" error_log.txt; then \
+			echo "  ✅ PASS: Caught expected fatal error."; \
+		else \
+			echo "  ❌ FAIL: Pandoc crashed, but not for the expected reason."; \
+			cat error_log.txt; rm error_log.txt; exit 1; \
+		fi \
+	fi
+	@echo "  Checking warnings (Invalid Taxonomy Keys)..."
+	@if grep -q "WARNING: Unknown size class" error_log.txt && \
+	    grep -q "WARNING: Unknown align class" error_log.txt && \
+	    grep -q "WARNING: Unknown boxalign class" error_log.txt; then \
+		echo "  ✅ PASS: Caught all taxonomy fallback warnings."; \
+	else \
+		echo "  ❌ FAIL: Expected taxonomy warnings not found."; \
+		cat error_log.txt; rm error_log.txt; exit 1; \
+	fi
+	@echo "  Checking warnings (Missing fenced_divs extension)..."
+	@$(PANDOC) test/fixtures/test-errors.md --lua-filter=$(FILTER_FILE) -f markdown-fenced_divs -t html > /dev/null 2> error_log.txt || true
+	@if grep -q "WARNING: Required extension \"fenced_divs\" is disabled" error_log.txt; then \
+		echo "  ✅ PASS: Caught missing extension warning."; \
+	else \
+		echo "  ❌ FAIL: Expected fenced_divs warning not found."; \
+		cat error_log.txt; rm error_log.txt; exit 1; \
+	fi
+	@rm -f error_log.txt
+
 
 # ==============================================================================
 # Visual Previews Generation (Segmented Target Directories Layout)
@@ -131,7 +168,7 @@ previews: $(FILTER_FILE) $(PREVIEW_HTMLS) $(PREVIEW_TYPST_PDFS) $(PREVIEW_LATEX_
 
 $(PREVIEWS_DIR)/html/html-%.html: test/fixtures/%.md
 	@mkdir -p $(@D)
-	@cp test/assets/preview-styles.css $(@D)/
+	@cp test/assets/preview-styles.css $(@D)/ 2>/dev/null || true
 	$(PANDOC) $< \
 		$(DEFAULTS_HTML) \
 		--syntax-highlighting=$(SYNTAX_HIGHLIGHTING) \
@@ -232,3 +269,4 @@ clean: ## Purge all temporary assets and generated distribution instances
 	rm -f docs/output.md docs/index.html docs/input.html docs/input-latex.pdf docs/input-typst.pdf docs/input-typst.typ docs/style.css docs/pullquote.lua
 	rm -rf $(PREVIEWS_DIR)
 	rm -f $(FILTER_FILE)
+	rm -f error_log.txt

@@ -49,10 +49,46 @@
     , Str "the"
     , Space
     , Str "page."
+    , Space
+    , Str "By"
+    , Space
+    , Str "using"
+    , Space
+    , Str "longer"
+    , Space
+    , Str "paragraphs"
+    , Space
+    , Str "that"
+    , Space
+    , Str "wrap"
+    , Space
+    , Str "across"
+    , Space
+    , Str "multiple"
+    , Space
+    , Str "lines,"
+    , Space
+    , Str "the"
+    , Space
+    , Str "ragged"
+    , Space
+    , Str "edges"
+    , Space
+    , Str "make"
+    , Space
+    , Str "the"
+    , Space
+    , Str "alignment"
+    , Space
+    , Str "behavior"
+    , Space
+    , Str "clearly"
+    , Space
+    , Str "visible."
     ]
 , CodeBlock
     ( "" , [ "markdown" ] , [] )
-    "::: {.pullquote align=\"pq-align-left\"}\nThis text is forced to align to the left edge of the pullquote box.\n:::"
+    "::: {.pullquote align=\"pq-align-left\"}\nThis text is forced to align to the left edge of the pullquote box. By extending the length of this quote so that it naturally wraps across multiple lines, the ragged right edge becomes immediately apparent, proving that the left alignment is working perfectly.\n:::"
 , Div
     ( "" , [ "pullquote" ] , [ ( "align" , "pq-align-left" ) ] )
     [ Para
@@ -83,11 +119,71 @@
         , Str "pullquote"
         , Space
         , Str "box."
+        , Space
+        , Str "By"
+        , Space
+        , Str "extending"
+        , Space
+        , Str "the"
+        , Space
+        , Str "length"
+        , Space
+        , Str "of"
+        , Space
+        , Str "this"
+        , Space
+        , Str "quote"
+        , Space
+        , Str "so"
+        , Space
+        , Str "that"
+        , Space
+        , Str "it"
+        , Space
+        , Str "naturally"
+        , Space
+        , Str "wraps"
+        , Space
+        , Str "across"
+        , Space
+        , Str "multiple"
+        , Space
+        , Str "lines,"
+        , Space
+        , Str "the"
+        , Space
+        , Str "ragged"
+        , Space
+        , Str "right"
+        , Space
+        , Str "edge"
+        , Space
+        , Str "becomes"
+        , Space
+        , Str "immediately"
+        , Space
+        , Str "apparent,"
+        , Space
+        , Str "proving"
+        , Space
+        , Str "that"
+        , Space
+        , Str "the"
+        , Space
+        , Str "left"
+        , Space
+        , Str "alignment"
+        , Space
+        , Str "is"
+        , Space
+        , Str "working"
+        , Space
+        , Str "perfectly."
         ]
     ]
 , CodeBlock
     ( "" , [ "markdown" ] , [] )
-    "::: {.pullquote align=\"pq-align-center\"}\nThis text is centered perfectly within the pullquote box.\n:::"
+    "::: {.pullquote align=\"pq-align-center\"}\nThis text is centered perfectly within the pullquote box. By extending the length of this quote so that it naturally wraps across multiple lines, the ragged edges on both the left and right sides become immediately apparent, proving that the center alignment is working perfectly.\n:::"
 , Div
     ( ""
     , [ "pullquote" ]
@@ -111,11 +207,83 @@
         , Str "pullquote"
         , Space
         , Str "box."
+        , Space
+        , Str "By"
+        , Space
+        , Str "extending"
+        , Space
+        , Str "the"
+        , Space
+        , Str "length"
+        , Space
+        , Str "of"
+        , Space
+        , Str "this"
+        , Space
+        , Str "quote"
+        , Space
+        , Str "so"
+        , Space
+        , Str "that"
+        , Space
+        , Str "it"
+        , Space
+        , Str "naturally"
+        , Space
+        , Str "wraps"
+        , Space
+        , Str "across"
+        , Space
+        , Str "multiple"
+        , Space
+        , Str "lines,"
+        , Space
+        , Str "the"
+        , Space
+        , Str "ragged"
+        , Space
+        , Str "edges"
+        , Space
+        , Str "on"
+        , Space
+        , Str "both"
+        , Space
+        , Str "the"
+        , Space
+        , Str "left"
+        , Space
+        , Str "and"
+        , Space
+        , Str "right"
+        , Space
+        , Str "sides"
+        , Space
+        , Str "become"
+        , Space
+        , Str "immediately"
+        , Space
+        , Str "apparent,"
+        , Space
+        , Str "proving"
+        , Space
+        , Str "that"
+        , Space
+        , Str "the"
+        , Space
+        , Str "center"
+        , Space
+        , Str "alignment"
+        , Space
+        , Str "is"
+        , Space
+        , Str "working"
+        , Space
+        , Str "perfectly."
         ]
     ]
 , CodeBlock
     ( "" , [ "markdown" ] , [] )
-    "::: {.pullquote align=\"pq-align-right\"}\nThis text is flushed to the right edge of the pullquote box.\n:::"
+    "::: {.pullquote align=\"pq-align-right\"}\nThis text is flushed to the right edge of the pullquote box. By extending the length of this quote so that it naturally wraps across multiple lines, the ragged left edge becomes immediately apparent, proving that the right alignment is working perfectly.\n:::"
 , Div
     ( ""
     , [ "pullquote" ]
@@ -145,6 +313,66 @@
         , Str "pullquote"
         , Space
         , Str "box."
+        , Space
+        , Str "By"
+        , Space
+        , Str "extending"
+        , Space
+        , Str "the"
+        , Space
+        , Str "length"
+        , Space
+        , Str "of"
+        , Space
+        , Str "this"
+        , Space
+        , Str "quote"
+        , Space
+        , Str "so"
+        , Space
+        , Str "that"
+        , Space
+        , Str "it"
+        , Space
+        , Str "naturally"
+        , Space
+        , Str "wraps"
+        , Space
+        , Str "across"
+        , Space
+        , Str "multiple"
+        , Space
+        , Str "lines,"
+        , Space
+        , Str "the"
+        , Space
+        , Str "ragged"
+        , Space
+        , Str "left"
+        , Space
+        , Str "edge"
+        , Space
+        , Str "becomes"
+        , Space
+        , Str "immediately"
+        , Space
+        , Str "apparent,"
+        , Space
+        , Str "proving"
+        , Space
+        , Str "that"
+        , Space
+        , Str "the"
+        , Space
+        , Str "right"
+        , Space
+        , Str "alignment"
+        , Space
+        , Str "is"
+        , Space
+        , Str "working"
+        , Space
+        , Str "perfectly."
         ]
     ]
 ]
