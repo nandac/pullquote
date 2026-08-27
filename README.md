@@ -3,7 +3,7 @@
 Pullquote is a robust, cross-platform Lua filter for Pandoc that brings rich, typographic control to block-level excerpts, ensuring beautiful and consistent results across LaTeX (PDF), Typst (PDF), and HTML formats using a unified, namespaced attribute system (`pq-*`).
 
 * **LaTeX/PDF Output:** Automatically maps `pq-*` attributes to a highly customizable `tcolorbox` environment.
-* **HTML & Typst Output:** Fully standalone, generating native CSS and Typst block styles directly in the rendered markup.
+* **HTML & Typst/PDF Output:** Fully standalone, generating native CSS and Typst block styles directly in the rendered markup.
 
 The repository includes complete specimen documents demonstrating every feature provided by the filter. Each example showcases the exact Markdown syntax used to generate the output, making the specimens useful both as a feature showcase and as a direct library of copy-and-paste examples.
 
@@ -61,7 +61,7 @@ To establish a consistent typographic baseline, you can configure your fonts usi
 
 ### PDF and Typst (YAML Frontmatter)
 
-For LaTeX and Typst outputs, define Pandoc's standard font variables directly in your Markdown frontmatter or defaults file. The Lua filter natively intercepts these metadata variables to map your font families.
+For LaTeX and Typst PDF outputs, define Pandoc's standard font variables directly in your Markdown frontmatter or defaults file. The Lua filter natively intercepts these metadata variables to map your font families.
 
 ```yaml
 metadata:
@@ -106,7 +106,6 @@ You can establish project-wide styling defaults for your pullquotes using YAML f
 
 ```yaml
 ---
-title: My Example Document
 pq-color: "DarkSlateGray"
 pq-bar-color: "CadetBlue"
 pq-width: "80%"
@@ -116,7 +115,7 @@ pq-text-align: "center"
 ---
 ```
 
-### Example: Pandoc Defaults File (`defaults.yaml`)
+### Example: Pandoc Defaults File
 
 ```yaml
 metadata:
@@ -180,7 +179,7 @@ pandoc \
   document.md
 ```
 
-Alternatively, you may specify these options in a Pandoc defaults file to reduce the number of command line arguments.
+You may also specify these options in a Pandoc defaults file to reduce the number of command line arguments.
 
 ---
 
@@ -281,7 +280,7 @@ You are missing the required `tcolorbox` definition. Ensure you have downloaded 
 
 You have provided a color string that the underlying rendering engines cannot parse (like a typo in a Hex code or an invalid color name). The filter intentionally executes a fatal abort to prevent upstream compilation crashes. Correct the color spelling to fix the build.
 
-### My pullquote renders as raw unformatted text (`::: {.pullquote}`)
+### My pullquote renders as raw unformatted text
 
 The Pandoc `fenced_divs` extension is disabled. Enable it by adding `+fenced_divs` to your input format (e.g., `-f markdown+fenced_divs`).
 
