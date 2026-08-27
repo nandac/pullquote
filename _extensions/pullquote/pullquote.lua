@@ -110,15 +110,15 @@ local typst_palette = {
 
 -- Symmetrical 9-point size scale mapped to native relative font sizes
 local pq_sizes = {
-  ['3xs'] = { tex = '\\tiny',         css = '0.5em' },
-  ['2xs'] = { tex = '\\scriptsize',   css = '0.6667em' },
-  ['xs']  = { tex = '\\footnotesize', css = '0.8333em' },
-  ['s']   = { tex = '\\small',        css = '0.9125em' },
-  ['m']   = { tex = '\\normalsize',   css = '1.0em' },
-  ['l']   = { tex = '\\large',        css = '1.2em' },
-  ['xl']  = { tex = '\\Large',        css = '1.44em' },
-  ['2xl'] = { tex = '\\LARGE',        css = '1.728em' },
-  ['3xl'] = { tex = '\\huge',         css = '2.0736em' },
+  ['3xs'] = { tex = '\\tiny',         css = '0.5rem',    typst = '0.5em' },
+  ['2xs'] = { tex = '\\scriptsize',   css = '0.6667rem', typst = '0.6667em' },
+  ['xs']  = { tex = '\\footnotesize', css = '0.8333rem', typst = '0.8333em' },
+  ['s']   = { tex = '\\small',        css = '0.9125rem', typst = '0.9125em' },
+  ['m']   = { tex = '\\normalsize',   css = '1.0rem',    typst = '1.0em' },
+  ['l']   = { tex = '\\large',        css = '1.2rem',    typst = '1.2em' },
+  ['xl']  = { tex = '\\Large',        css = '1.44rem',   typst = '1.44em' },
+  ['2xl'] = { tex = '\\LARGE',        css = '1.728rem',  typst = '1.728em' },
+  ['3xl'] = { tex = '\\huge',         css = '2.0736rem', typst = '2.0736em' },
 }
 
 local pq_text_aligns = {
@@ -252,7 +252,7 @@ local function process_pullquote(el)
     if pq_sizes[raw_size] then
       final_tex_size   = pq_sizes[raw_size].tex
       final_css_size   = pq_sizes[raw_size].css
-      final_typst_size = pq_sizes[raw_size].css
+      final_typst_size = pq_sizes[raw_size].typst -- Updated to pull specific Typst unit
     else
       local num, unit = raw_size:match("^(%d+%.?%d*)([a-zA-Z]+)$")
       if num and (unit == "pt" or unit == "em" or unit == "ex") then
@@ -264,13 +264,13 @@ local function process_pullquote(el)
          warn(string.format('Invalid value "%s" for pq-size. Use standard keys (e.g., xs, s, m, l) or standard units (pt, em, ex). Falling back to default.', raw_size))
          final_tex_size   = pq_sizes['l'].tex
          final_css_size   = pq_sizes['l'].css
-         final_typst_size = pq_sizes['l'].css
+         final_typst_size = pq_sizes['l'].typst -- Updated fallback
       end
     end
   else
     final_tex_size   = pq_sizes['l'].tex
     final_css_size   = pq_sizes['l'].css
-    final_typst_size = pq_sizes['l'].css
+    final_typst_size = pq_sizes['l'].typst -- Updated fallback
   end
 
   -- Calculate line-height/leading across engines (Typst requires slight reduction vs CSS)

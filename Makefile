@@ -204,31 +204,7 @@ $(PREVIEWS_DIR)/latex/latex-%.pdf: test/fixtures/%.md
 # Documentation System (With Dual-Engine Output Targets)
 # ==============================================================================
 .PHONY: docs
-docs: docs/index.html docs/$(DEMO_NAME).html docs/$(DEMO_NAME)-latex.pdf docs/$(DEMO_NAME)-typst.pdf docs/pullquote.lua ## Build the standalone docs portal with dual-format PDFs
-
-docs/index.html: README.md $(DEMO_SRC) $(FILTER_FILE) .tools/docs.lua docs/$(DEMO_NAME)-output.md docs/style.css
-	@mkdir -p docs
-	$(PANDOC) \
-		--standalone \
-		--lua-filter=.tools/docs.lua \
-		--metadata=sample-file:$(DEMO_SRC) \
-		--metadata=result-file:docs/$(DEMO_NAME)-output.md \
-		--metadata=code-file:$(FILTER_FILE) \
-		--css=style.css \
-		--toc \
-		--output=$@ $<
-
-docs/style.css:
-	curl --silent --show-error --output $@ \
-		'https://cdn.jsdelivr.net/gh/kognise/water.css@latest/dist/light.css'
-
-docs/$(DEMO_NAME)-output.md: $(FILTER_FILE) $(DEMO_SRC)
-	$(PANDOC) \
-		--output=$@ \
-		--lua-filter=$(FILTER_FILE) \
-		--to=markdown \
-		--standalone \
-		$(DEMO_SRC)
+docs: docs/$(DEMO_NAME).html docs/$(DEMO_NAME)-latex.pdf docs/$(DEMO_NAME)-typst.pdf docs/pullquote.lua ## Build the standalone docs portal with dual-format PDFs
 
 docs/$(DEMO_NAME).html: $(DEMO_SRC)
 	@mkdir -p $(@D)
@@ -263,7 +239,7 @@ docs/pullquote.lua: $(FILTER_FILE)
 # ==============================================================================
 .PHONY: clean
 clean: ## Purge all temporary assets and generated distribution instances
-	rm -f docs/$(DEMO_NAME)-output.md docs/index.html docs/$(DEMO_NAME).html docs/$(DEMO_NAME)-latex.pdf docs/$(DEMO_NAME)-typst.pdf docs/style.css docs/preview-styles.css docs/pullquote.lua
+	rm -f docs/$(DEMO_NAME).html docs/$(DEMO_NAME)-latex.pdf docs/$(DEMO_NAME)-typst.pdf docs/preview-styles.css docs/pullquote.lua
 	rm -rf $(PREVIEWS_DIR)
 	rm -f $(FILTER_FILE)
 	rm -f error_log.txt

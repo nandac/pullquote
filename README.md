@@ -7,9 +7,9 @@ Pullquote is a robust, cross-platform Lua filter for Pandoc that brings rich, ty
 
 The repository includes complete specimen documents demonstrating every feature provided by the filter. Each example showcases the exact Markdown syntax used to generate the output, making the specimens useful both as a feature showcase and as a direct library of copy-and-paste examples.
 
-* [Live HTML Specimen (Rendered Preview)](docs/pullquote-filter.html)
-* [LaTeX PDF Specimen](docs/pullquote-filter-latex.pdf)
-* [Typst PDF Specimen](docs/pullquote-filter-typst.pdf)
+* [Live HTML Specimen (Rendered Preview)](https://htmlpreview.github.io/?https://github.com/nandac/pullquote/blob/main/docs/pullquote-examples.html)
+* [LaTeX PDF Specimen](https://github.com/nandac/pullquote/blob/main/docs/pullquote-examples-latex.pdf)
+* [Typst PDF Specimen](https://github.com/nandac/pullquote/blob/main/docs/pullquote-examples-typst.pdf)
 
 ## Extension Requirements
 
@@ -19,11 +19,11 @@ The filter relies completely on Pandoc's `fenced_divs` extension, which is enabl
 
 ## Feature Highlights
 
-* **Flexible font sizing** — A symmetrical 9-step scale (`3xs` through `3xl`), plus full support for custom sizes (e.g., `24pt`, `1.5em`).
-* **Font weights, shapes, and families** — bold, medium, italic, slanted, upright, emphasis, serif, sans, mono, and normal.
-* **Color support** — solid CSS3/hex colors with permissive parsing, plus native `xcolor` percentage-based color mixing across all formats.
-* **Alignment and positioning** — separate controls for text alignment *within* the pullquote and horizontal positioning of the pullquote itself on the page.
-* **Interline spacing controls** — native vertical spacing multipliers (adjusting line-height/leading) via the `pq-skip` attribute.
+* **Flexible font sizing:** A symmetrical 9-step scale (`3xs` through `3xl`), plus full support for custom sizes (e.g., `24pt`, `1.5em`).
+* **Font weights, shapes, and families:** Bold, medium, italic, slanted, upright, emphasis, serif, sans, mono, and normal.
+* **Color support:** Solid CSS3/hex colors with permissive parsing, plus native `xcolor` percentage-based color mixing across all formats.
+* **Alignment and positioning:** Separate controls for text alignment *within* the pullquote and horizontal positioning of the pullquote itself on the page.
+* **Interline spacing controls:** Native vertical spacing multipliers (adjusting line-height/leading) via the `pq-skip` attribute.
 
 ## Installation
 
@@ -50,6 +50,53 @@ curl -O https://raw.githubusercontent.com/nandac/pullquote/refs/tags/v1.0.0/_ext
 ```
 
 Unlike Quarto, Pandoc requires you to explicitly pass these assets as arguments during compilation. See the [Compilation and Usage](#compilation-and-usage) section below for exact terminal commands.
+
+## Font Configuration
+
+The pullquote filter uses relative units (e.g., `em`, `rem`) for its sizing scale, meaning pullquotes will automatically scale proportionally to your document's baseline font size across all output formats.
+
+To establish a consistent typographic baseline, you can configure your fonts using standard Pandoc variables and CSS.
+
+> ⚠️ **Font Support Note:** Ensure that your chosen typefaces natively support the specific weights and styles you intend to use (e.g., bold, italic, small caps). If a font lacks these glyphs, the rendering engine (browser, LaTeX, or Typst) may attempt to artificially synthesize them—yielding lower quality approximations—or simply fall back to a default upright shape.
+
+### PDF and Typst (YAML Frontmatter)
+
+For LaTeX and Typst outputs, define Pandoc's standard font variables directly in your Markdown frontmatter or defaults file. The Lua filter natively intercepts these metadata variables to map your font families.
+
+```yaml
+metadata:
+  fontsize: 12pt
+  mainfont: Noto Serif
+  sansfont: Noto Sans
+  monofont: Fira Mono
+  codefont: Fira Mono
+```
+
+### HTML Typography (Custom CSS)
+
+For HTML output, the Lua filter relies on standard CSS inheritance and generic web font families (`serif`, `sans-serif`, `monospace`).
+
+To use custom typefaces, simply load your web fonts and declare your baseline `font-size` and `font-family` on the `body` element in your project's custom stylesheet. The pullquote component will automatically inherit your baseline typography on your `body` tag and scale its `rem`-based sizes accordingly.
+
+```css
+@import url('[https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap](https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap)');
+@import url('[https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap](https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap)');
+@import url('[https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;500;700&display=swap](https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;500;700&display=swap)');
+
+:root {
+  --base-size: 1rem;
+  --mainfont: 'Noto Serif', serif;
+  --sansfont: 'Noto Sans', sans-serif;
+  --monofont: 'Fira Mono', monospace;
+}
+
+body {
+  /* Set the baseline size (maps to pullquote size 'm') */
+  font-size: var(--base-size);
+  /* Un-styled pullquotes will inherit this font */
+  font-family: var(--mainfont);
+}
+```
 
 ## Configuration (Global Metadata)
 
@@ -174,17 +221,17 @@ You can pass any standard physical unit (e.g., `pq-size="24pt"`, `pq-size="1.5em
 **Standard Scale Keys:**
 Matches the 9-step typographic scale API.
 
-| Value | LaTeX Equivalent | Base CSS Size | Description |
+| Value | LaTeX Equivalent | CSS (`rem`) / Typst (`em`) | Description |
 | -------- | -------- | -------- | -------- |
-| `3xs` | `\tiny` | `0.5em` | Extra Extra Extra Small |
-| `2xs` | `\scriptsize` | `0.6667em` | Extra Extra Small |
-| `xs` | `footnotesize` | `0.8333em` | Extra Small |
-| `s` | `\small` | `0.9125em` | Small |
-| `m` | `\normalsize` | `1.0em` | Medium (Base document size) |
-| `l` | `\large` | `1.2em` | **Large (Default)** |
-| `xl` | `\Large` | `1.44em` | Extra Large |
-| `2xl` | `\LARGE` | `1.728em` | Extra Extra Large |
-| `3xl` | `\huge` | `2.0736em` | Extra Extra Extra Large |
+| `3xs` | `\tiny` | `0.5rem` / `0.5em` | Extra Extra Extra Small |
+| `2xs` | `\scriptsize` | `0.6667rem` / `0.6667em` | Extra Extra Small |
+| `xs` | `footnotesize` | `0.8333rem` / `0.8333em` | Extra Small |
+| `s` | `\small` | `0.9125rem` / `0.9125em` | Small |
+| `m` | `\normalsize` | `1.0rem` / `1.0em` | Medium (Base document size) |
+| `l` | `\large` | `1.2rem` / `1.2em` | **Large (Default)** |
+| `xl` | `\Large` | `1.44rem` / `1.44em` | Extra Large |
+| `2xl` | `\LARGE` | `1.728rem` / `1.728em` | Extra Extra Large |
+| `3xl` | `\huge` | `2.0736rem` / `2.0736em` | Extra Extra Extra Large |
 
 ### Font Weight, Shape, and Family
 
