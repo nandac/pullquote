@@ -1,4 +1,3 @@
-
 --- pullquote.lua
 ---
 --- A Pandoc Lua Filter for semantic, multi-format pullquote components.
@@ -8,18 +7,15 @@
 --- @author    Nandakumar Chandrasekhar (nandac)
 --- @copyright © 2026 Nandakumar Chandrasekhar
 --- @license   MIT - see LICENSE for details
---- @version   1.0.0
---- @release   2026-08-26
+--- @version   1.0.1
+--- @release   2026-08-28
 ---
 --- @note      LaTeX output requires pullquote.tex to be included in the document preamble.
 ---            Typst and HTML outputs are fully standalone.
 
 PANDOC_VERSION:must_be_at_least('3.10')
 
-local pandoc_lib = assert(pandoc, 'Cannot find the pandoc library')
-if type(pandoc_lib) ~= 'table' then
-  error('Expected variable pandoc to be a table')
-end
+assert(type(pandoc) == 'table', 'Cannot find the pandoc library')
 
 local List = assert(pandoc.List, 'Cannot find the pandoc.List class')
 local utils = require 'pandoc.utils'
@@ -58,9 +54,12 @@ end
 -- SECTION 2: DATA DICTIONARIES & CONFIGURATION
 -- ==============================================================================
 
+-- Typst bundles Libertinus Serif and DejaVu Sans Mono, but ships no default
+-- sans-serif font. Absent explicit configuration, fall back to a chain of
+-- widely-available sans fonts and let Typst pick the first one it can resolve.
 local typst_fonts = {
   serif = "Libertinus Serif",
-  sans  = "DejaVu Sans Mono",
+  sans  = { "Noto Sans", "DejaVu Sans", "Liberation Sans", "Arial", "Helvetica" },
   mono  = "DejaVu Sans Mono"
 }
 
@@ -108,17 +107,17 @@ local typst_palette = {
   typstolive   = '3D9970', typstgreen   = '2ECC40', typstlime    = '01FF70'
 }
 
--- Symmetrical 9-point size scale mapped to native relative font sizes
+-- Symmetrical 9-point size scale mapped to native relative font multipliers
 local pq_sizes = {
-  ['3xs'] = { tex = '\\tiny',         css = '0.5rem',    typst = '0.5em' },
-  ['2xs'] = { tex = '\\scriptsize',   css = '0.6667rem', typst = '0.6667em' },
-  ['xs']  = { tex = '\\footnotesize', css = '0.8333rem', typst = '0.8333em' },
-  ['s']   = { tex = '\\small',        css = '0.9125rem', typst = '0.9125em' },
-  ['m']   = { tex = '\\normalsize',   css = '1.0rem',    typst = '1.0em' },
-  ['l']   = { tex = '\\large',        css = '1.2rem',    typst = '1.2em' },
-  ['xl']  = { tex = '\\Large',        css = '1.44rem',   typst = '1.44em' },
-  ['2xl'] = { tex = '\\LARGE',        css = '1.728rem',  typst = '1.728em' },
-  ['3xl'] = { tex = '\\huge',         css = '2.0736rem', typst = '2.0736em' },
+  ['3xs'] = { tex = '\\tiny',         scale = '0.5',    typst = '0.5em' },
+  ['2xs'] = { tex = '\\scriptsize',   scale = '0.6667', typst = '0.6667em' },
+  ['xs']  = { tex = '\\footnotesize', scale = '0.8333', typst = '0.8333em' },
+  ['s']   = { tex = '\\small',        scale = '0.9125', typst = '0.9125em' },
+  ['m']   = { tex = '\\normalsize',   scale = '1.0',    typst = '1.0em' },
+  ['l']   = { tex = '\\large',        scale = '1.2',    typst = '1.2em' },
+  ['xl']  = { tex = '\\Large',        scale = '1.44',   typst = '1.44em' },
+  ['2xl'] = { tex = '\\LARGE',        scale = '1.728',  typst = '1.728em' },
+  ['3xl'] = { tex = '\\huge',         scale = '2.0736', typst = '2.0736em' },
 }
 
 local pq_text_aligns = {
@@ -192,6 +191,41 @@ local function resolve_single_color(input)
   return nil, nil, false
 end
 
+local function format_typst_font(font_value)
+  if type(font_value) == 'table' then
+    local quoted = {}
+    for _, name in ipairs(font_value) do
+      table.insert(quoted, '"' .. name .. '"')
+    end
+    return '(' .. table.concat(quoted, ', ') .. ')'
+  end
+  return '"' .. font_value .. '"'
+end
+
+-- Validates a "px"/"pt" dimension string (e.g. pq-bar-width, pq-padding-left).
+-- Returns the value unchanged if valid, or nil (with a warning) otherwise,
+-- letting the caller fall back to its own per-engine default.
+local function validate_px_pt(value, attr_name)
+  if not value then return nil end
+  local num, unit = value:match("^(%d+%.?%d*)(%a+)$")
+  if num and (unit == "px" or unit == "pt") then
+    return value
+  end
+  warn(string.format('Invalid value "%s" for %s. Use a "px" or "pt" unit (e.g., "4px", "3pt"). Falling back to default.', value, attr_name))
+  return nil
+end
+
+-- Converts an already-validated "px"/"pt" dimension to a PDF-safe "pt" value
+-- for the LaTeX and Typst pathways, using the standard 96dpi:72pt ratio
+-- (1px = 0.75pt) rather than a naive suffix swap.
+local function px_to_pt(value)
+  local num, unit = value:match("^(%d+%.?%d*)(%a+)$")
+  if unit == "px" then
+    return string.format("%.4gpt", tonumber(num) * 0.75)
+  end
+  return value
+end
+
 local function format_html_color(c)
   if not c then return nil end
   c = c:match("^%s*(.-)%s*$")
@@ -204,7 +238,7 @@ local function format_html_color(c)
       return string.format("color-mix(in srgb, %s %s%%, %s)", css_c1, pct, css_c2)
     end
   end
-  local css_val, _, is_hex = resolve_single_color(c)
+  local css_val = resolve_single_color(c)
   if css_val then return css_val end
   return c
 end
@@ -236,8 +270,12 @@ local function process_pullquote(el)
   -- Extract all configuration parameters using strict pq- attributes
   local width          = get_attr(el, 'pq-width')
   local color          = get_attr(el, 'pq-color')
-  local barwidth       = get_attr(el, 'pq-bar-width')
+  local barwidth       = validate_px_pt(get_attr(el, 'pq-bar-width'), 'pq-bar-width')
   local barcolor       = get_attr(el, 'pq-bar-color')
+  local paddingleft    = validate_px_pt(get_attr(el, 'pq-padding-left'), 'pq-padding-left')
+  local paddingright   = validate_px_pt(get_attr(el, 'pq-padding-right'), 'pq-padding-right')
+  local paddingtop     = validate_px_pt(get_attr(el, 'pq-padding-top'), 'pq-padding-top')
+  local paddingbottom  = validate_px_pt(get_attr(el, 'pq-padding-bottom'), 'pq-padding-bottom')
   local raw_skip       = get_attr(el, 'pq-skip')
   local raw_size       = get_attr(el, 'pq-size')
   local raw_text_align = get_attr(el, 'pq-text-align')
@@ -246,31 +284,55 @@ local function process_pullquote(el)
   local raw_style      = get_attr(el, 'pq-style')
   local raw_family     = get_attr(el, 'pq-family')
 
+  -- Validate pq-width: must be a percentage (e.g. "80%") or an absolute
+  -- unit (e.g. "300pt"), so the LaTeX percentage-to-linewidth math below
+  -- never runs on a non-numeric value.
+  if width and not width:match("^%d+%.?%d*%%$") and not width:match("^%d+%.?%d*%a+$") then
+    warn(string.format('Invalid value "%s" for pq-width. Use a percentage (e.g., "80%%") or an absolute unit (e.g., "300pt"). Falling back to default.', width))
+    width = nil
+  end
+
+  -- Fetch global or inline HTML unit preference, defaulting to rem
+  local html_unit      = get_attr(el, 'pq-html-unit') or 'rem'
+  if html_unit ~= 'rem' and html_unit ~= 'em' then
+    warn(string.format('Invalid value "%s" for pq-html-unit. Use "rem" or "em". Falling back to "rem".', html_unit))
+    html_unit = 'rem'
+  end
+
   -- Resolve Final Size (Dictionary > Custom Dimension > Default Fallback)
   local final_tex_size, final_css_size, final_typst_size
   if raw_size then
     if pq_sizes[raw_size] then
       final_tex_size   = pq_sizes[raw_size].tex
-      final_css_size   = pq_sizes[raw_size].css
-      final_typst_size = pq_sizes[raw_size].typst -- Updated to pull specific Typst unit
+      final_css_size   = pq_sizes[raw_size].scale .. html_unit
+      final_typst_size = pq_sizes[raw_size].typst
     else
       local num, unit = raw_size:match("^(%d+%.?%d*)([a-zA-Z]+)$")
-      if num and (unit == "pt" or unit == "em" or unit == "ex") then
+      if num and (unit == "pt" or unit == "em" or unit == "ex" or unit == "rem" or unit == "px" or unit == "vw") then
          local lead = tostring(tonumber(num) * 1.2)
-         final_tex_size = string.format("\\fontsize{%s%s}{%s%s}\\selectfont", num, unit, lead, unit)
+
+         -- Safely convert web-specific units for PDF engines
+         local pdf_unit = unit
+         if unit == "rem" or unit == "vw" then
+            pdf_unit = "em"
+         elseif unit == "px" then
+            pdf_unit = "pt"
+         end
+
+         final_tex_size = string.format("\\fontsize{%s%s}{%s%s}\\selectfont", num, pdf_unit, lead, pdf_unit)
          final_css_size = raw_size
-         final_typst_size = raw_size
+         final_typst_size = num .. pdf_unit
       else
-         warn(string.format('Invalid value "%s" for pq-size. Use standard keys (e.g., xs, s, m, l) or standard units (pt, em, ex). Falling back to default.', raw_size))
+         warn(string.format('Invalid value "%s" for pq-size. Use standard keys (e.g., xs, s, m, l) or standard units (pt, em, ex, rem, px, vw). Falling back to default.', raw_size))
          final_tex_size   = pq_sizes['l'].tex
-         final_css_size   = pq_sizes['l'].css
-         final_typst_size = pq_sizes['l'].typst -- Updated fallback
+         final_css_size   = pq_sizes['l'].scale .. html_unit
+         final_typst_size = pq_sizes['l'].typst
       end
     end
   else
     final_tex_size   = pq_sizes['l'].tex
-    final_css_size   = pq_sizes['l'].css
-    final_typst_size = pq_sizes['l'].typst -- Updated fallback
+    final_css_size   = pq_sizes['l'].scale .. html_unit
+    final_typst_size = pq_sizes['l'].typst
   end
 
   -- Calculate line-height/leading across engines (Typst requires slight reduction vs CSS)
@@ -313,9 +375,6 @@ local function process_pullquote(el)
     table.insert(active_typst_fonts, pq_styles[raw_style].typst)
   elseif raw_style then
     warn(string.format('Unknown style value "%s" ignored.', raw_style))
-    table.insert(active_tex_fonts, '\\itshape')
-    table.insert(active_css_fonts, 'font-style: italic !important;')
-    table.insert(active_typst_fonts, '#set text(style: "italic")\n')
   else
     table.insert(active_tex_fonts, '\\itshape')
     table.insert(active_css_fonts, 'font-style: italic !important;')
@@ -325,7 +384,7 @@ local function process_pullquote(el)
   if raw_family and pq_families[raw_family] then
     table.insert(active_tex_fonts, pq_families[raw_family].tex)
     table.insert(active_css_fonts, pq_families[raw_family].css)
-    table.insert(active_typst_fonts, '#set text(font: "' .. typst_fonts[pq_families[raw_family].typst_family] .. '")\n')
+    table.insert(active_typst_fonts, '#set text(font: ' .. format_typst_font(typst_fonts[pq_families[raw_family].typst_family]) .. ')\n')
   elseif raw_family then
     warn(string.format('Unknown family value "%s" ignored.', raw_family))
   end
@@ -362,7 +421,11 @@ local function process_pullquote(el)
     process_tex_color(barcolor, "barcolor", "pqbarcol")
 
     if tex_skip then table.insert(options, "skip=" .. tex_skip) end
-    if barwidth then table.insert(options, "barwidth=" .. barwidth:gsub("px", "pt")) end
+    if barwidth then table.insert(options, "barwidth=" .. px_to_pt(barwidth)) end
+    if paddingleft then table.insert(options, "paddingleft=" .. px_to_pt(paddingleft)) end
+    if paddingright then table.insert(options, "paddingright=" .. px_to_pt(paddingright)) end
+    if paddingtop then table.insert(options, "paddingtop=" .. px_to_pt(paddingtop)) end
+    if paddingbottom then table.insert(options, "paddingbottom=" .. px_to_pt(paddingbottom)) end
 
     local tex_size_str = final_tex_size
     for _, font_cmd in ipairs(active_tex_fonts) do
@@ -389,7 +452,11 @@ local function process_pullquote(el)
 
     local styles = {
       "display: block !important;",
-      "padding-left: 1rem !important;",
+      "box-sizing: border-box !important;",
+      "padding-left: " .. (paddingleft or "1rem") .. " !important;",
+      "padding-right: " .. (paddingright or "0") .. " !important;",
+      "padding-top: " .. (paddingtop or "4px") .. " !important;",
+      "padding-bottom: " .. (paddingbottom or "4px") .. " !important;",
       "line-height: " .. html_skip .. " !important;",
       "width: " .. (width or "80%") .. " !important;",
       "color: " .. final_color .. " !important;",
@@ -419,7 +486,11 @@ local function process_pullquote(el)
     local final_barcolor = barcolor and format_typst_color(barcolor) or 'rgb("#d9d9d9")'
 
     local b_width = width or "80%"
-    local b_stroke = (barwidth and barwidth:gsub("px", "pt") or "4pt") .. " + " .. final_barcolor
+    local b_stroke = (barwidth and px_to_pt(barwidth) or "4pt") .. " + " .. final_barcolor
+    local b_padding_left = paddingleft and px_to_pt(paddingleft) or "12pt"
+    local b_padding_right = paddingright and px_to_pt(paddingright) or "0pt"
+    local b_padding_top = paddingtop and px_to_pt(paddingtop) or "4pt"
+    local b_padding_bottom = paddingbottom and px_to_pt(paddingbottom) or "4pt"
 
     local box_align = "center"
     if raw_box_align then box_align = pq_box_aligns[raw_box_align].typst end
@@ -428,8 +499,8 @@ local function process_pullquote(el)
     if raw_text_align then text_align = pq_text_aligns[raw_text_align].css end
 
     local block_open = string.format(
-      '#align(%s)[\n  #block(width: %s, above: 15pt, below: 15pt, stroke: (left: %s), inset: (left: 12pt, top: 4pt, bottom: 4pt))[\n',
-      box_align, b_width, b_stroke
+      '#align(%s)[\n  #block(width: %s, above: 15pt, below: 15pt, stroke: (left: %s), inset: (left: %s, right: %s, top: %s, bottom: %s))[\n',
+      box_align, b_width, b_stroke, b_padding_left, b_padding_right, b_padding_top, b_padding_bottom
     )
 
     local typst_injections = string.format(
@@ -461,6 +532,8 @@ return {
   },
   {
     Pandoc = function(doc)
+      if not FORMAT:match('typst') then return end
+
       if doc.meta['pq-family-serif'] then typst_fonts.serif = utils.stringify(doc.meta['pq-family-serif'])
       elseif doc.meta['mainfont']    then typst_fonts.serif = utils.stringify(doc.meta['mainfont'])
       else typst_fonts.serif = "Libertinus Serif" end
@@ -472,7 +545,9 @@ return {
 
       if doc.meta['pq-family-sans']  then typst_fonts.sans = utils.stringify(doc.meta['pq-family-sans'])
       elseif doc.meta['sansfont']    then typst_fonts.sans = utils.stringify(doc.meta['sansfont'])
-      else typst_fonts.sans = "DejaVu Sans Mono" end
+      else
+        warn('No sans font configured for Typst output (set "sansfont" or "pq-family-sans" in metadata). Typst has no bundled sans-serif font, so a best-effort fallback chain will be used and may not render as true sans-serif on all systems.')
+      end
     end
   },
   {

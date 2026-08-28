@@ -16,7 +16,21 @@ This should fall back to default sizing and alignment.
 This should fall back to default sizing and alignment.
 :::
 
-## 2. Invalid Colors (Fatal Error)
+## 2. Invalid Dimension & Unit Values (Warnings)
+
+This quote passes malformed dimension and unit values. The filter should log warnings for each invalid attribute and fall back to its default, but it should NOT crash.
+
+```markdown
+::: {.pullquote pq-width="abc%" pq-bar-width="banana" pq-padding-left="orange" pq-padding-right="grape" pq-padding-top="mango" pq-padding-bottom="kiwi" pq-html-unit="bogus"}
+This should fall back to the default width, bar width, padding on every side, and HTML unit.
+:::
+```
+
+::: {.pullquote pq-width="abc%" pq-bar-width="banana" pq-padding-left="orange" pq-padding-right="grape" pq-padding-top="mango" pq-padding-bottom="kiwi" pq-html-unit="bogus"}
+This should fall back to the default width, bar width, padding on every side, and HTML unit.
+:::
+
+## 3. Invalid Colors (Fatal Error)
 
 This tests the `abort()` trigger. Passing an undefined color string that isn't a Hex code or in the CSS/Typst dictionary should instantly halt compilation to prevent generating a corrupted PDF or HTML file.
 

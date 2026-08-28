@@ -10,10 +10,13 @@ The repository includes complete specimen documents demonstrating every feature 
 * [Live HTML Specimen (Rendered Preview)](https://htmlpreview.github.io/?https://github.com/nandac/pullquote/blob/main/docs/pullquote-examples.html)
 * [LaTeX PDF Specimen](https://github.com/nandac/pullquote/blob/main/docs/pullquote-examples-latex.pdf)
 * [Typst PDF Specimen](https://github.com/nandac/pullquote/blob/main/docs/pullquote-examples-typst.pdf)
+* [Changelog](CHANGELOG.md) — release history and notable changes.
 
 ## Extension Requirements
 
-The filter relies completely on Pandoc's `fenced_divs` extension, which is enabled by default in modern Pandoc distributions.
+Requires **Pandoc 3.10 or later**. The filter checks this itself at load time (`PANDOC_VERSION:must_be_at_least('3.10')`) and will halt compilation with a clear error if run under an older release. If you're using Quarto, check your bundled Pandoc version with `quarto check` (or `pandoc --version` from within a Quarto shell) — older Quarto releases bundle a Pandoc version below this filter's minimum.
+
+The filter also relies completely on Pandoc's `fenced_divs` extension, which is enabled by default in modern Pandoc distributions.
 
 > ⚠️ **Important:** In the unlikely event that this extension is explicitly disabled in your workflow, the Lua filter will emit a warning to `stderr` and ignore the custom elements, causing them to appear as unformatted raw text in your rendered output.
 
@@ -24,6 +27,7 @@ The filter relies completely on Pandoc's `fenced_divs` extension, which is enabl
 * **Color support:** Solid CSS3/hex colors with permissive parsing, plus native `xcolor` percentage-based color mixing across all formats.
 * **Alignment and positioning:** Separate controls for text alignment *within* the pullquote and horizontal positioning of the pullquote itself on the page.
 * **Interline spacing controls:** Native vertical spacing multipliers (adjusting line-height/leading) via the `pq-skip` attribute.
+* **Configurable spacing:** Control the padding on each side of the box independently via `pq-padding-left`, `pq-padding-right`, `pq-padding-top`, and `pq-padding-bottom`, and the CSS unit used for HTML scaling via `pq-html-unit`.
 
 ## Installation
 
@@ -43,10 +47,10 @@ Download the filter and the LaTeX preamble directly into your project directory:
 
 ```bash
 # pullquote.lua (Required for all formats)
-curl -O https://raw.githubusercontent.com/nandac/pullquote/refs/tags/v1.0.0/_extensions/pullquote/pullquote.lua
+curl -O https://raw.githubusercontent.com/nandac/pullquote/refs/tags/v1.0.1/_extensions/pullquote/pullquote.lua
 
 # pullquote.tex (Required ONLY for LaTeX output)
-curl -O https://raw.githubusercontent.com/nandac/pullquote/refs/tags/v1.0.0/_extensions/pullquote/pullquote.tex
+curl -O https://raw.githubusercontent.com/nandac/pullquote/refs/tags/v1.0.1/_extensions/pullquote/pullquote.tex
 ```
 
 Unlike Quarto, Pandoc requires you to explicitly pass these assets as arguments during compilation. See the [Compilation and Usage](#compilation-and-usage) section below for exact terminal commands.
@@ -72,16 +76,20 @@ metadata:
   codefont: Fira Mono
 ```
 
+> ⚠️ **Typst Sans-Serif Note:** Typst bundles a default serif font (Libertinus Serif) and a default monospace font (DejaVu Sans Mono), but ships no default sans-serif font. If you use `pq-family="sans"` with Typst output, always set `sansfont` (or `pq-family-sans`) explicitly. Without it, the filter falls back to a best-effort chain of common sans fonts (`Noto Sans`, `DejaVu Sans`, `Liberation Sans`, `Arial`, `Helvetica`) and emits a warning to `stderr`, but rendering as true sans-serif is not guaranteed on every system.
+
 ### HTML Typography (Custom CSS)
 
 For HTML output, the Lua filter relies on standard CSS inheritance and generic web font families (`serif`, `sans-serif`, `monospace`).
 
-To use custom typefaces, simply load your web fonts and declare your baseline `font-size` and `font-family` on the `body` element in your project's custom stylesheet. The pullquote component will automatically inherit your baseline typography on your `body` tag and scale its `rem`-based sizes accordingly.
+To use custom typefaces, simply load your web fonts and declare your baseline `font-size` and `font-family` on the `body` element in your project's custom stylesheet. The pullquote component will automatically inherit this baseline typography and scale its sizes accordingly based on the `pq-html-unit` attribute (which safely defaults to `rem`).
+
+> **Framework Tip:** If you are using a CSS framework that handles responsive typography via cascading `em` units, explicitly set `pq-html-unit: "em"` in your global metadata so the pullquote component properly inherits the framework's mobile resizing rules.
 
 ```css
-@import url('[https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap](https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap)');
-@import url('[https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap](https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap)');
-@import url('[https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;500;700&display=swap](https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;500;700&display=swap)');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;500;700&display=swap');
 
 :root {
   --base-size: 1rem;
@@ -98,6 +106,8 @@ body {
 }
 ```
 
+> ⚠️ **Customization Limit:** For HTML output, the filter writes every style (color, size, spacing, alignment, font family, etc.) directly onto the element's inline `style` attribute with `!important`. This is intentional — it guarantees pullquotes render consistently even inside themes whose own stylesheets use `!important` (common in Bootstrap/Quarto themes and utility-CSS frameworks). One consequence: you cannot override these properties from your own site's stylesheet, even with `!important` of your own — inline styles win that tie-break. Any customization beyond what's shown here must go through a `pq-*` attribute.
+
 ## Configuration (Global Metadata)
 
 You can establish project-wide styling defaults for your pullquotes using YAML frontmatter or a Pandoc defaults file. The filter prioritizes inline attributes applied directly to the Fenced Div, but falls back to this global metadata if inline attributes are absent.
@@ -110,6 +120,7 @@ pq-color: "DarkSlateGray"
 pq-bar-color: "CadetBlue"
 pq-width: "80%"
 pq-size: "l"
+pq-html-unit: "rem"
 pq-box-align: "center"
 pq-text-align: "center"
 ---
@@ -123,6 +134,7 @@ metadata:
   pq-bar-color: "CadetBlue"
   pq-width: "80%"
   pq-size: "l"
+  pq-html-unit: "rem"
   pq-box-align: "center"
   pq-text-align: "center"
 ```
@@ -192,8 +204,13 @@ Apply these key-value attributes globally (in your YAML) or inline on the Fenced
 | `pq-width` | Container block width | `100%` | Percentages (`80%`), Absolute (`300pt`) |
 | `pq-color` | Text foreground color | `#888888` (Neutral grey) | Hex, CSS Named, `xcolor` Mix |
 | `pq-bar-color` | Left border color | `#d9d9d9` (Light neutral grey) | Hex, CSS Named, `xcolor` Mix |
-| `pq-bar-width` | Left border thickness | `4px` / `3pt` | CSS/LaTeX units (`px`, `pt`) |
+| `pq-bar-width` | Left border thickness | `4px` / `4pt` | CSS/LaTeX units (`px`, `pt`) |
+| `pq-padding-left` | Space between the bar and the quote text | `1rem` / `12pt` | CSS/LaTeX units (`px`, `pt`) |
+| `pq-padding-right` | Space on the right edge of the box | `0` | CSS/LaTeX units (`px`, `pt`) |
+| `pq-padding-top` | Space above the quote text | `4px` / `4pt` | CSS/LaTeX units (`px`, `pt`) |
+| `pq-padding-bottom` | Space below the quote text | `4px` / `4pt` | CSS/LaTeX units (`px`, `pt`) |
 | `pq-skip` | Interline spacing multiplier | `1.0` | Decimal (e.g., `1.5`, `2.0`) |
+| `pq-html-unit` | Base CSS unit for scaling (HTML only) | `rem` | `rem`, `em` |
 
 ---
 
@@ -214,17 +231,19 @@ The filter separates the alignment of the text from the positioning of the block
 
 The `pq-size` attribute accepts either a standard scale key or a custom dimension. The filter automatically handles line-height calculations across LaTeX, HTML, and Typst to ensure custom dimensions do not cause text clipping.
 
+For HTML output, sizes scale using the unit defined by `pq-html-unit` (which defaults to `rem` to prevent compounding font sizes in nested layouts). If your layout framework relies on `em` units (like Bulma), simply set `pq-html-unit: "em"` globally.
+
 **Custom Dimensions:**
-You can pass any standard physical unit (e.g., `pq-size="24pt"`, `pq-size="1.5em"`).
+You can pass any standard unit — physical (`pt`) or relative (`em`, `ex`, `rem`, `px`, `vw`) — e.g., `pq-size="24pt"`, `pq-size="1.5em"`, `pq-size="1.2rem"`.
 
 **Standard Scale Keys:**
 Matches the 9-step typographic scale API.
 
-| Value | LaTeX Equivalent | CSS (`rem`) / Typst (`em`) | Description |
+| Value | LaTeX Equivalent | CSS (default `rem`) / Typst (`em`) | Description |
 | -------- | -------- | -------- | -------- |
 | `3xs` | `\tiny` | `0.5rem` / `0.5em` | Extra Extra Extra Small |
 | `2xs` | `\scriptsize` | `0.6667rem` / `0.6667em` | Extra Extra Small |
-| `xs` | `footnotesize` | `0.8333rem` / `0.8333em` | Extra Small |
+| `xs` | `\footnotesize` | `0.8333rem` / `0.8333em` | Extra Small |
 | `s` | `\small` | `0.9125rem` / `0.9125em` | Small |
 | `m` | `\normalsize` | `1.0rem` / `1.0em` | Medium (Base document size) |
 | `l` | `\large` | `1.2rem` / `1.2em` | **Large (Default)** |

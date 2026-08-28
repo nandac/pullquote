@@ -6,6 +6,12 @@
 \usepackage{environ}
 \usepackage{keyval}
 
+% Pandoc's default template loads xcolor (without options) before
+% header-includes run, so PassOptionsToPackage above arrives too late
+% to enable svgnames. Load the SVG color names directly as a fallback;
+% re-running this after a successful svgnames load is harmless.
+\input{svgnam.def}
+
 % --- Define the Keys ---
 \makeatletter
 \define@key{pullquote}{width}{\def\pqwidth{#1}}
@@ -16,6 +22,10 @@
 \define@key{pullquote}{boxalign}{\def\pqboxalign{#1}}
 \define@key{pullquote}{barwidth}{\def\pqbarwidth{#1}}
 \define@key{pullquote}{barcolor}{\def\pqbarcolor{#1}}
+\define@key{pullquote}{paddingleft}{\def\pqpaddingleft{#1}}
+\define@key{pullquote}{paddingright}{\def\pqpaddingright{#1}}
+\define@key{pullquote}{paddingtop}{\def\pqpaddingtop{#1}}
+\define@key{pullquote}{paddingbottom}{\def\pqpaddingbottom{#1}}
 \makeatother
 
 % --- Publicly Sensible Default Values ---
@@ -28,6 +38,10 @@
   \def\pqboxalign{center}%
   \def\pqbarwidth{4pt}%
   \def\pqbarcolor{LightGray}%
+  \def\pqpaddingleft{12pt}%
+  \def\pqpaddingright{0pt}%
+  \def\pqpaddingtop{4pt}%
+  \def\pqpaddingbottom{4pt}%
 }
 
 % --- Environment Definition ---
@@ -43,7 +57,7 @@
     borderline west={\pqbarwidth}{0pt}{\pqbarcolor}, % Explicitly draws ONLY the left bar
     width=\pqwidth,
     \pqboxalign,
-    left=12pt, right=0pt, top=4pt, bottom=4pt,
+    left=\pqpaddingleft, right=\pqpaddingright, top=\pqpaddingtop, bottom=\pqpaddingbottom,
     before skip=15pt, after skip=15pt,
     colupper=\pqcolor,
     before upper={\pqsize\setlength{\baselineskip}{\pqskip}\pqalign},

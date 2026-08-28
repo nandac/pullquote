@@ -146,6 +146,19 @@ test-errors: $(FILTER_FILE) test/fixtures/test-errors.md ## Test expected failur
 		echo "  ❌ FAIL: Expected taxonomy warnings not found."; \
 		cat error_log.txt; rm error_log.txt; exit 1; \
 	fi
+	@echo "  Checking warnings (Invalid Dimension & Unit Values)..."
+	@if grep -q "Invalid value .* for pq-width" error_log.txt && \
+	    grep -q "Invalid value .* for pq-bar-width" error_log.txt && \
+	    grep -q "Invalid value .* for pq-padding-left" error_log.txt && \
+	    grep -q "Invalid value .* for pq-padding-right" error_log.txt && \
+	    grep -q "Invalid value .* for pq-padding-top" error_log.txt && \
+	    grep -q "Invalid value .* for pq-padding-bottom" error_log.txt && \
+	    grep -q "Invalid value .* for pq-html-unit" error_log.txt; then \
+		echo "  ✅ PASS: Caught all dimension/unit fallback warnings."; \
+	else \
+		echo "  ❌ FAIL: Expected dimension/unit warnings not found."; \
+		cat error_log.txt; rm error_log.txt; exit 1; \
+	fi
 	@echo "  Checking warnings (Missing fenced_divs extension)..."
 	@$(PANDOC) test/fixtures/test-errors.md --lua-filter=$(FILTER_FILE) -f markdown-fenced_divs -t html > /dev/null 2> error_log.txt || true
 	@if grep -q "Required extension \"fenced_divs\" is disabled" error_log.txt; then \

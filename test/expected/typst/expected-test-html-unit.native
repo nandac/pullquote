@@ -1,0 +1,290 @@
+[ Header
+    2
+    ( "default-unit-rem" , [] , [] )
+    [ Str "Default"
+    , Space
+    , Str "Unit"
+    , Space
+    , Str "("
+    , Code ( "" , [] , [] ) "rem"
+    , Str ")"
+    ]
+, Para
+    [ Str "This"
+    , Space
+    , Str "tests"
+    , Space
+    , Str "the"
+    , Space
+    , Str "default"
+    , Space
+    , Code ( "" , [] , [] ) "pq-html-unit"
+    , Str ","
+    , Space
+    , Str "which"
+    , Space
+    , Str "scales"
+    , Space
+    , Str "the"
+    , Space
+    , Code ( "" , [] , [] ) "pq-size"
+    , Space
+    , Str "keys"
+    , Space
+    , Str "using"
+    , Space
+    , Str "root-relative"
+    , Space
+    , Code ( "" , [] , [] ) "rem"
+    , Space
+    , Str "units"
+    , Space
+    , Str "for"
+    , Space
+    , Str "HTML"
+    , Space
+    , Str "output."
+    , Space
+    , Str "LaTeX"
+    , Space
+    , Str "and"
+    , Space
+    , Str "Typst"
+    , Space
+    , Str "are"
+    , Space
+    , Str "unaffected"
+    , Space
+    , Str "by"
+    , Space
+    , Str "this"
+    , Space
+    , Str "attribute,"
+    , Space
+    , Str "since"
+    , Space
+    , Str "it"
+    , Space
+    , Str "only"
+    , Space
+    , Str "controls"
+    , Space
+    , Str "CSS"
+    , Space
+    , Str "output."
+    ]
+, CodeBlock
+    ( "" , [ "markdown" ] , [] )
+    "::: {.pullquote pq-size=\"l\"}\nThis quote scales using the default rem unit.\n:::"
+, Div
+    ( "" , [ "pullquote" ] , [ ( "pq-size" , "l" ) ] )
+    [ Para
+        [ Str "This"
+        , Space
+        , Str "quote"
+        , Space
+        , Str "scales"
+        , Space
+        , Str "using"
+        , Space
+        , Str "the"
+        , Space
+        , Str "default"
+        , Space
+        , Str "rem"
+        , Space
+        , Str "unit."
+        ]
+    ]
+, Header
+    2
+    ( "explicit-em-unit" , [] , [] )
+    [ Str "Explicit"
+    , Space
+    , Code ( "" , [] , [] ) "em"
+    , Space
+    , Str "Unit"
+    ]
+, Para
+    [ Str "This"
+    , Space
+    , Str "tests"
+    , Space
+    , Str "overriding"
+    , Space
+    , Code ( "" , [] , [] ) "pq-html-unit"
+    , Space
+    , Str "to"
+    , Space
+    , Code ( "" , [] , [] ) "em"
+    , Str ","
+    , Space
+    , Str "useful"
+    , Space
+    , Str "for"
+    , Space
+    , Str "frameworks"
+    , Space
+    , Str "that"
+    , Space
+    , Str "scale"
+    , Space
+    , Str "typography"
+    , Space
+    , Str "via"
+    , Space
+    , Str "cascading"
+    , Space
+    , Code ( "" , [] , [] ) "em"
+    , Space
+    , Str "units"
+    , Space
+    , Str "rather"
+    , Space
+    , Str "than"
+    , Space
+    , Str "off"
+    , Space
+    , Str "the"
+    , Space
+    , Str "document"
+    , Space
+    , Str "root."
+    ]
+, CodeBlock
+    ( "" , [ "markdown" ] , [] )
+    "::: {.pullquote pq-size=\"l\" pq-html-unit=\"em\"}\nThis quote scales using em units instead of rem.\n:::"
+, Div
+    ( ""
+    , [ "pullquote" ]
+    , [ ( "pq-size" , "l" ) , ( "pq-html-unit" , "em" ) ]
+    )
+    [ Para
+        [ Str "This"
+        , Space
+        , Str "quote"
+        , Space
+        , Str "scales"
+        , Space
+        , Str "using"
+        , Space
+        , Str "em"
+        , Space
+        , Str "units"
+        , Space
+        , Str "instead"
+        , Space
+        , Str "of"
+        , Space
+        , Str "rem."
+        ]
+    ]
+, Header
+    2
+    ( "custom-dimensions-are-unaffected" , [] , [] )
+    [ Str "Custom"
+    , Space
+    , Str "Dimensions"
+    , Space
+    , Str "Are"
+    , Space
+    , Str "Unaffected"
+    ]
+, Para
+    [ Str "This"
+    , Space
+    , Str "tests"
+    , Space
+    , Str "that"
+    , Space
+    , Code ( "" , [] , [] ) "pq-html-unit"
+    , Space
+    , Str "only"
+    , Space
+    , Str "applies"
+    , Space
+    , Str "to"
+    , Space
+    , Str "the"
+    , Space
+    , Str "standard"
+    , Space
+    , Str "scale"
+    , Space
+    , Str "keys"
+    , Space
+    , Str "("
+    , Code ( "" , [] , [] ) "3xs"
+    , Space
+    , Str "through"
+    , Space
+    , Code ( "" , [] , [] ) "3xl"
+    , Str ")."
+    , Space
+    , Str "A"
+    , Space
+    , Str "custom"
+    , Space
+    , Str "dimension"
+    , Space
+    , Str "passed"
+    , Space
+    , Str "directly"
+    , Space
+    , Str "to"
+    , Space
+    , Code ( "" , [] , [] ) "pq-size"
+    , Space
+    , Str "is"
+    , Space
+    , Str "used"
+    , Space
+    , Str "as-is"
+    , Space
+    , Str "and"
+    , Space
+    , Str "ignores"
+    , Space
+    , Code ( "" , [] , [] ) "pq-html-unit"
+    , Space
+    , Str "entirely."
+    ]
+, CodeBlock
+    ( "" , [ "markdown" ] , [] )
+    "::: {.pullquote pq-size=\"2rem\" pq-html-unit=\"em\"}\nThis quote uses a custom 2rem size, unaffected by the em unit setting above.\n:::"
+, Div
+    ( ""
+    , [ "pullquote" ]
+    , [ ( "pq-size" , "2rem" ) , ( "pq-html-unit" , "em" ) ]
+    )
+    [ Para
+        [ Str "This"
+        , Space
+        , Str "quote"
+        , Space
+        , Str "uses"
+        , Space
+        , Str "a"
+        , Space
+        , Str "custom"
+        , Space
+        , Str "2rem"
+        , Space
+        , Str "size,"
+        , Space
+        , Str "unaffected"
+        , Space
+        , Str "by"
+        , Space
+        , Str "the"
+        , Space
+        , Str "em"
+        , Space
+        , Str "unit"
+        , Space
+        , Str "setting"
+        , Space
+        , Str "above."
+        ]
+    ]
+]

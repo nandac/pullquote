@@ -342,20 +342,22 @@
     ]
 , CodeBlock
     ( "" , [ "markdown" ] , [] )
-    "::: {.pullquote pq-weight=\"bold\" pq-family=\"serif\" pq-style=\"upright\" pq-size=\"3xl\" pq-text-align=\"center\" pq-box-align=\"center\" pq-width=\"95%\" pq-color=\"DarkGoldenrod\" pq-bar-color=\"MidnightBlue\" pq-bar-width=\"12px\"}\nTHE ULTIMATE TEST\n:::"
+    "::: {.pullquote pq-weight=\"bold\" pq-family=\"serif\" pq-style=\"slanted\" pq-size=\"3xl\" pq-text-align=\"center\" pq-box-align=\"center\" pq-width=\"95%\" pq-color=\"DarkSlateBlue\" pq-bar-color=\"PowderBlue\" pq-bar-width=\"12px\" pq-padding-left=\"20px\" pq-skip=\"2.0\"}\nTHE ULTIMATE TEST\n:::"
 , Div
     ( ""
     , [ "pullquote" ]
     , [ ( "pq-weight" , "bold" )
       , ( "pq-family" , "serif" )
-      , ( "pq-style" , "upright" )
+      , ( "pq-style" , "slanted" )
       , ( "pq-size" , "3xl" )
       , ( "pq-text-align" , "center" )
       , ( "pq-box-align" , "center" )
       , ( "pq-width" , "95%" )
-      , ( "pq-color" , "DarkGoldenrod" )
-      , ( "pq-bar-color" , "MidnightBlue" )
+      , ( "pq-color" , "DarkSlateBlue" )
+      , ( "pq-bar-color" , "PowderBlue" )
       , ( "pq-bar-width" , "12px" )
+      , ( "pq-padding-left" , "20px" )
+      , ( "pq-skip" , "2.0" )
       ]
     )
     [ Para

@@ -1,0 +1,371 @@
+[ Header
+    2
+    ( "default-padding" , [] , [] )
+    [ Str "Default" , Space , Str "Padding" ]
+, Para
+    [ Str "This"
+    , Space
+    , Str "tests"
+    , Space
+    , Str "the"
+    , Space
+    , Str "default"
+    , Space
+    , Str "spacing"
+    , Space
+    , Str "on"
+    , Space
+    , Str "each"
+    , Space
+    , Str "side"
+    , Space
+    , Str "of"
+    , Space
+    , Str "the"
+    , Space
+    , Str "box"
+    , Space
+    , Str "when"
+    , Space
+    , Str "no"
+    , Space
+    , Str "padding"
+    , Space
+    , Str "attributes"
+    , Space
+    , Str "are"
+    , Space
+    , Str "specified"
+    , Space
+    , Str "("
+    , Code ( "" , [] , [] ) "pq-padding-left"
+    , Space
+    , Str "defaults"
+    , Space
+    , Str "to"
+    , Space
+    , Code ( "" , [] , [] ) "1rem"
+    , Str "/"
+    , Code ( "" , [] , [] ) "12pt"
+    , Str ";"
+    , Space
+    , Code ( "" , [] , [] ) "pq-padding-top"
+    , Str "/"
+    , Code ( "" , [] , [] ) "pq-padding-bottom"
+    , Space
+    , Str "default"
+    , Space
+    , Str "to"
+    , Space
+    , Code ( "" , [] , [] ) "4px"
+    , Str "/"
+    , Code ( "" , [] , [] ) "4pt"
+    , Str ";"
+    , Space
+    , Code ( "" , [] , [] ) "pq-padding-right"
+    , Space
+    , Str "defaults"
+    , Space
+    , Str "to"
+    , Space
+    , Code ( "" , [] , [] ) "0"
+    , Str ")."
+    ]
+, CodeBlock
+    ( "" , [ "markdown" ] , [] )
+    "::: {.pullquote}\nThis pullquote uses the default padding on every side.\n:::"
+, Div
+    ( "" , [ "pullquote" ] , [] )
+    [ Para
+        [ Str "This"
+        , Space
+        , Str "pullquote"
+        , Space
+        , Str "uses"
+        , Space
+        , Str "the"
+        , Space
+        , Str "default"
+        , Space
+        , Str "padding"
+        , Space
+        , Str "on"
+        , Space
+        , Str "every"
+        , Space
+        , Str "side."
+        ]
+    ]
+, Header
+    2
+    ( "custom-left-padding-pixels" , [] , [] )
+    [ Str "Custom"
+    , Space
+    , Str "Left"
+    , Space
+    , Str "Padding"
+    , Space
+    , Str "(Pixels)"
+    ]
+, Para
+    [ Str "This"
+    , Space
+    , Str "tests"
+    , Space
+    , Str "overriding"
+    , Space
+    , Str "the"
+    , Space
+    , Str "left"
+    , Space
+    , Str "padding"
+    , Space
+    , Str "using"
+    , Space
+    , Str "an"
+    , Space
+    , Str "absolute"
+    , Space
+    , Code ( "" , [] , [] ) "px"
+    , Space
+    , Str "value,"
+    , Space
+    , Str "which"
+    , Space
+    , Str "the"
+    , Space
+    , Str "filter"
+    , Space
+    , Str "converts"
+    , Space
+    , Str "to"
+    , Space
+    , Code ( "" , [] , [] ) "pt"
+    , Space
+    , Str "for"
+    , Space
+    , Str "the"
+    , Space
+    , Str "LaTeX"
+    , Space
+    , Str "and"
+    , Space
+    , Str "Typst"
+    , Space
+    , Str "pathways."
+    ]
+, CodeBlock
+    ( "" , [ "markdown" ] , [] )
+    "::: {.pullquote pq-padding-left=\"24px\"}\nThis pullquote has a much wider gap between the bar and the text.\n:::"
+, Div
+    ( ""
+    , [ "pullquote" ]
+    , [ ( "pq-padding-left" , "24px" ) ]
+    )
+    [ Para
+        [ Str "This"
+        , Space
+        , Str "pullquote"
+        , Space
+        , Str "has"
+        , Space
+        , Str "a"
+        , Space
+        , Str "much"
+        , Space
+        , Str "wider"
+        , Space
+        , Str "gap"
+        , Space
+        , Str "between"
+        , Space
+        , Str "the"
+        , Space
+        , Str "bar"
+        , Space
+        , Str "and"
+        , Space
+        , Str "the"
+        , Space
+        , Str "text."
+        ]
+    ]
+, Header
+    2
+    ( "custom-left-padding-points" , [] , [] )
+    [ Str "Custom"
+    , Space
+    , Str "Left"
+    , Space
+    , Str "Padding"
+    , Space
+    , Str "(Points)"
+    ]
+, Para
+    [ Str "This"
+    , Space
+    , Str "tests"
+    , Space
+    , Str "overriding"
+    , Space
+    , Str "the"
+    , Space
+    , Str "left"
+    , Space
+    , Str "padding"
+    , Space
+    , Str "using"
+    , Space
+    , Str "an"
+    , Space
+    , Str "absolute"
+    , Space
+    , Code ( "" , [] , [] ) "pt"
+    , Space
+    , Str "value"
+    , Space
+    , Str "directly,"
+    , Space
+    , Str "primarily"
+    , Space
+    , Str "relevant"
+    , Space
+    , Str "for"
+    , Space
+    , Str "LaTeX"
+    , Space
+    , Str "and"
+    , Space
+    , Str "Typst"
+    , Space
+    , Str "PDF"
+    , Space
+    , Str "output."
+    ]
+, CodeBlock
+    ( "" , [ "markdown" ] , [] )
+    "::: {.pullquote pq-padding-left=\"6pt\"}\nThis pullquote has a tighter gap between the bar and the text.\n:::"
+, Div
+    ( "" , [ "pullquote" ] , [ ( "pq-padding-left" , "6pt" ) ] )
+    [ Para
+        [ Str "This"
+        , Space
+        , Str "pullquote"
+        , Space
+        , Str "has"
+        , Space
+        , Str "a"
+        , Space
+        , Str "tighter"
+        , Space
+        , Str "gap"
+        , Space
+        , Str "between"
+        , Space
+        , Str "the"
+        , Space
+        , Str "bar"
+        , Space
+        , Str "and"
+        , Space
+        , Str "the"
+        , Space
+        , Str "text."
+        ]
+    ]
+, Header
+    2
+    ( "independent-padding-on-every-side" , [] , [] )
+    [ Str "Independent"
+    , Space
+    , Str "Padding"
+    , Space
+    , Str "on"
+    , Space
+    , Str "Every"
+    , Space
+    , Str "Side"
+    ]
+, Para
+    [ Str "This"
+    , Space
+    , Str "tests"
+    , Space
+    , Str "setting"
+    , Space
+    , Code ( "" , [] , [] ) "pq-padding-right"
+    , Str ","
+    , Space
+    , Code ( "" , [] , [] ) "pq-padding-top"
+    , Str ","
+    , Space
+    , Str "and"
+    , Space
+    , Code ( "" , [] , [] ) "pq-padding-bottom"
+    , Space
+    , Str "independently"
+    , Space
+    , Str "of"
+    , Space
+    , Code ( "" , [] , [] ) "pq-padding-left"
+    , Str ","
+    , Space
+    , Str "confirming"
+    , Space
+    , Str "each"
+    , Space
+    , Str "side"
+    , Space
+    , Str "can"
+    , Space
+    , Str "be"
+    , Space
+    , Str "tuned"
+    , Space
+    , Str "separately."
+    ]
+, CodeBlock
+    ( "" , [ "markdown" ] , [] )
+    "::: {.pullquote pq-padding-left=\"12px\" pq-padding-right=\"24px\" pq-padding-top=\"16px\" pq-padding-bottom=\"16px\"}\nThis pullquote has a different padding value set on all four sides of the box.\n:::"
+, Div
+    ( ""
+    , [ "pullquote" ]
+    , [ ( "pq-padding-left" , "12px" )
+      , ( "pq-padding-right" , "24px" )
+      , ( "pq-padding-top" , "16px" )
+      , ( "pq-padding-bottom" , "16px" )
+      ]
+    )
+    [ Para
+        [ Str "This"
+        , Space
+        , Str "pullquote"
+        , Space
+        , Str "has"
+        , Space
+        , Str "a"
+        , Space
+        , Str "different"
+        , Space
+        , Str "padding"
+        , Space
+        , Str "value"
+        , Space
+        , Str "set"
+        , Space
+        , Str "on"
+        , Space
+        , Str "all"
+        , Space
+        , Str "four"
+        , Space
+        , Str "sides"
+        , Space
+        , Str "of"
+        , Space
+        , Str "the"
+        , Space
+        , Str "box."
+        ]
+    ]
+]

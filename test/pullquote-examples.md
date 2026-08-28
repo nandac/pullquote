@@ -61,6 +61,20 @@ The extension provides a sizing scale to adjust the text relative to the documen
 **pq-size="24pt":** Custom Arbitrary Dimensions
 :::
 
+### HTML Sizing Unit
+
+For HTML output only, the `pq-html-unit` attribute controls whether the scale above resolves to root-relative `rem` units (the default) or cascading `em` units — useful if your CSS framework scales typography off `em` rather than the document root. LaTeX and Typst are unaffected, since this attribute only controls CSS unit selection.
+
+```markdown
+::: {.pullquote pq-size="l" pq-html-unit="em"}
+**pq-html-unit="em":** This quote scales using em units instead of the default rem.
+:::
+```
+
+::: {.pullquote pq-size="l" pq-html-unit="em"}
+**pq-html-unit="em":** This quote scales using em units instead of the default rem.
+:::
+
 ## Font Weights, Shapes, and Families
 
 The extension provides predefined typographic utility attributes. These styles are mapped to equivalent rendering properties across all formats to ensure consistent output, regardless of the underlying engine.
@@ -103,6 +117,8 @@ This paragraph is in sans-serif.
 This paragraph is in sans-serif.
 :::
 
+> **Typst Note:** Typst ships no default sans-serif font. If you use `pq-family="sans"` with Typst output, set `sansfont` (or `pq-family-sans`) in your metadata explicitly — otherwise the filter falls back to a best-effort chain (`Noto Sans`, `DejaVu Sans`, `Liberation Sans`, `Arial`, `Helvetica`) and emits a warning to `stderr`.
+
 ## Colors and Borders
 
 This section describes how to apply colors to the pullquote text and its decorative left border. The filter normalizes color inputs to ensure they render identically across LaTeX, Typst, and HTML.
@@ -121,18 +137,44 @@ This quote uses the SVG named color **CadetBlue** for text and the pastel **This
 This quote uses the SVG named color **CadetBlue** for text and the pastel **Thistle** for a thick 8px border.
 :::
 
+### Bar Spacing
+
+The `pq-padding-left` attribute controls the gap between the bar and the quote text, independent of the bar's own thickness (`pq-bar-width`).
+
+```markdown
+::: {.pullquote pq-bar-width="8px" pq-padding-left="24px"}
+This quote widens the gap between the bar and the text using **pq-padding-left="24px"**, independent of the 8px bar thickness.
+:::
+```
+
+::: {.pullquote pq-bar-width="8px" pq-padding-left="24px"}
+This quote widens the gap between the bar and the text using **pq-padding-left="24px"**, independent of the 8px bar thickness.
+:::
+
+The remaining three sides — `pq-padding-right`, `pq-padding-top`, and `pq-padding-bottom` — can each be tuned independently of `pq-padding-left`, giving full control over the box's inner spacing.
+
+```markdown
+::: {.pullquote pq-bar-color="SeaGreen" pq-padding-left="16px" pq-padding-right="16px" pq-padding-top="16px" pq-padding-bottom="16px"}
+This quote sets an even 16px of padding on every side, giving the text room to breathe on all edges rather than just next to the bar.
+:::
+```
+
+::: {.pullquote pq-bar-color="SeaGreen" pq-padding-left="16px" pq-padding-right="16px" pq-padding-top="16px" pq-padding-bottom="16px"}
+This quote sets an even 16px of padding on every side, giving the text room to breathe on all edges rather than just next to the bar.
+:::
+
 ### Hex Codes
 
 The filter fully supports 6-character hex codes and 3-character shorthands.
 
 ```markdown
-::: {.pullquote pq-color="#827397" pq-bar-color="#F00"}
-This quote uses raw Hex codes: **#827397** for text and the shorthand **#F00** (Red) for the bar.
+::: {.pullquote pq-color="#827397" pq-bar-color="#FAA"}
+This quote uses raw Hex codes: **#827397** for text and the shorthand **#FAA** (Soft Coral) for the bar.
 :::
 ```
 
-::: {.pullquote pq-color="#827397" pq-bar-color="#F00"}
-This quote uses raw Hex codes: **#827397** for text and the shorthand **#F00** (Red) for the bar.
+::: {.pullquote pq-color="#827397" pq-bar-color="#FAA"}
+This quote uses raw Hex codes: **#827397** for text and the shorthand **#FAA** (Soft Coral) for the bar.
 :::
 
 ### Color Mixing
@@ -226,11 +268,11 @@ This quote has no inline attributes. It inherits its styling entirely from the Y
 Multiple typographic utilities and attributes can be combined within the same element. Font, size, color, and alignment compose independently.
 
 ```markdown
-::: {.pullquote pq-weight="bold" pq-family="serif" pq-style="smallcaps" pq-size="3xl" pq-text-align="center" pq-box-align="center" pq-width="95%" pq-color="DarkGoldenrod" pq-bar-color="MidnightBlue" pq-bar-width="12px" pq-skip="2.0"}
+::: {.pullquote pq-weight="bold" pq-family="serif" pq-style="slanted" pq-size="3xl" pq-text-align="center" pq-box-align="center" pq-width="95%" pq-color="DarkSlateBlue" pq-bar-color="PowderBlue" pq-bar-width="12px" pq-padding-left="20px" pq-skip="2.0"}
 The Ultimate Stress Test
 :::
 ```
 
-::: {.pullquote pq-weight="bold" pq-family="serif" pq-style="smallcaps" pq-size="3xl" pq-text-align="center" pq-box-align="center" pq-width="95%" pq-color="DarkGoldenrod" pq-bar-color="MidnightBlue" pq-bar-width="12px" pq-skip="2.0"}
+::: {.pullquote pq-weight="bold" pq-family="serif" pq-style="slanted" pq-size="3xl" pq-text-align="center" pq-box-align="center" pq-width="95%" pq-color="DarkSlateBlue" pq-bar-color="PowderBlue" pq-bar-width="12px" pq-padding-left="20px" pq-skip="2.0"}
 The Ultimate Stress Test
 :::
