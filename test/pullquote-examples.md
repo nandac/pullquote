@@ -128,13 +128,13 @@ This section describes how to apply colors to the pullquote text and its decorat
 Use `pq-color` for the text, `pq-bar-color` for the left border, and `pq-bar-width` to adjust the border's thickness.
 
 ```markdown
-::: {.pullquote pq-color="CadetBlue" pq-bar-color="Thistle" pq-bar-width="8px"}
-This quote uses the SVG named color **CadetBlue** for text and the pastel **Thistle** for a thick 8px border.
+::: {.pullquote pq-color="CadetBlue" pq-bar-color="Thistle" pq-bar-width="0.5rem"}
+This quote uses the SVG named color **CadetBlue** for text and the pastel **Thistle** for a thick 0.5rem border.
 :::
 ```
 
-::: {.pullquote pq-color="CadetBlue" pq-bar-color="Thistle" pq-bar-width="8px"}
-This quote uses the SVG named color **CadetBlue** for text and the pastel **Thistle** for a thick 8px border.
+::: {.pullquote pq-color="CadetBlue" pq-bar-color="Thistle" pq-bar-width="0.5rem"}
+This quote uses the SVG named color **CadetBlue** for text and the pastel **Thistle** for a thick 0.5rem border.
 :::
 
 ### Bar Spacing
@@ -142,25 +142,25 @@ This quote uses the SVG named color **CadetBlue** for text and the pastel **This
 The `pq-padding-left` attribute controls the gap between the bar and the quote text, independent of the bar's own thickness (`pq-bar-width`).
 
 ```markdown
-::: {.pullquote pq-bar-width="8px" pq-padding-left="24px"}
-This quote widens the gap between the bar and the text using **pq-padding-left="24px"**, independent of the 8px bar thickness.
+::: {.pullquote pq-bar-width="0.5rem" pq-padding-left="1.5rem"}
+This quote widens the gap between the bar and the text using **pq-padding-left="1.5rem"**, independent of the 0.5rem bar thickness.
 :::
 ```
 
-::: {.pullquote pq-bar-width="8px" pq-padding-left="24px"}
-This quote widens the gap between the bar and the text using **pq-padding-left="24px"**, independent of the 8px bar thickness.
+::: {.pullquote pq-bar-width="0.5rem" pq-padding-left="1.5rem"}
+This quote widens the gap between the bar and the text using **pq-padding-left="1.5rem"**, independent of the 0.5rem bar thickness.
 :::
 
 The remaining three sides — `pq-padding-right`, `pq-padding-top`, and `pq-padding-bottom` — can each be tuned independently of `pq-padding-left`, giving full control over the box's inner spacing.
 
 ```markdown
-::: {.pullquote pq-bar-color="SeaGreen" pq-padding-left="16px" pq-padding-right="16px" pq-padding-top="16px" pq-padding-bottom="16px"}
-This quote sets an even 16px of padding on every side, giving the text room to breathe on all edges rather than just next to the bar.
+::: {.pullquote pq-bar-color="SeaGreen" pq-padding-left="1rem" pq-padding-right="1rem" pq-padding-top="1rem" pq-padding-bottom="1rem"}
+This quote sets an even 1rem of padding on every side, giving the text room to breathe on all edges rather than just next to the bar.
 :::
 ```
 
-::: {.pullquote pq-bar-color="SeaGreen" pq-padding-left="16px" pq-padding-right="16px" pq-padding-top="16px" pq-padding-bottom="16px"}
-This quote sets an even 16px of padding on every side, giving the text room to breathe on all edges rather than just next to the bar.
+::: {.pullquote pq-bar-color="SeaGreen" pq-padding-left="1rem" pq-padding-right="1rem" pq-padding-top="1rem" pq-padding-bottom="1rem"}
+This quote sets an even 1rem of padding on every side, giving the text room to breathe on all edges rather than just next to the bar.
 :::
 
 ### Hex Codes
@@ -182,12 +182,12 @@ This quote uses raw Hex codes: **#827397** for text and the shorthand **#FAA** (
 The extension supports LaTeX’s `xcolor` percentage-mixing syntax. This maps reliably across Typst, LaTeX, and HTML (which leverages the native CSS `color-mix()` function).
 
 ```markdown
-::: {.pullquote pq-color="Indigo!90!Black" pq-bar-color="Indigo!20" pq-bar-width="6px"}
+::: {.pullquote pq-color="Indigo!90!Black" pq-bar-color="Indigo!20" pq-bar-width="0.375rem"}
 This quote uses a three-part blend for the text (**Indigo mixed at 90% with Black**) and a standard two-part blend with white for the bar.
 :::
 ```
 
-::: {.pullquote pq-color="Indigo!90!Black" pq-bar-color="Indigo!20" pq-bar-width="6px"}
+::: {.pullquote pq-color="Indigo!90!Black" pq-bar-color="Indigo!20" pq-bar-width="0.375rem"}
 This quote uses a three-part blend for the text (**Indigo mixed at 90% with Black**) and a standard two-part blend with white for the bar.
 :::
 
@@ -268,11 +268,11 @@ This quote has no inline attributes. It inherits its styling entirely from the Y
 Multiple typographic utilities and attributes can be combined within the same element. Font, size, color, and alignment compose independently.
 
 ```markdown
-::: {.pullquote pq-weight="bold" pq-family="serif" pq-style="slanted" pq-size="3xl" pq-text-align="center" pq-box-align="center" pq-width="95%" pq-color="DarkSlateBlue" pq-bar-color="PowderBlue" pq-bar-width="12px" pq-padding-left="20px" pq-skip="2.0"}
+::: {.pullquote pq-weight="bold" pq-family="serif" pq-style="slanted" pq-size="3xl" pq-text-align="center" pq-box-align="center" pq-width="95%" pq-color="DarkSlateBlue" pq-bar-color="PowderBlue" pq-bar-width="0.75rem" pq-padding-left="1.25rem" pq-skip="2.0"}
 The Ultimate Stress Test
 :::
 ```
 
-::: {.pullquote pq-weight="bold" pq-family="serif" pq-style="slanted" pq-size="3xl" pq-text-align="center" pq-box-align="center" pq-width="95%" pq-color="DarkSlateBlue" pq-bar-color="PowderBlue" pq-bar-width="12px" pq-padding-left="20px" pq-skip="2.0"}
+::: {.pullquote pq-weight="bold" pq-family="serif" pq-style="slanted" pq-size="3xl" pq-text-align="center" pq-box-align="center" pq-width="95%" pq-color="DarkSlateBlue" pq-bar-color="PowderBlue" pq-bar-width="0.75rem" pq-padding-left="1.25rem" pq-skip="2.0"}
 The Ultimate Stress Test
 :::

@@ -60,7 +60,13 @@
     left=\pqpaddingleft, right=\pqpaddingright, top=\pqpaddingtop, bottom=\pqpaddingbottom,
     before skip=15pt, after skip=15pt,
     colupper=\pqcolor,
-    before upper={\pqsize\setlength{\baselineskip}{\pqskip}\pqalign},
+    % tcolorbox resets \parskip inside the box regardless of the
+    % parskip package loaded by the surrounding document, which
+    % otherwise collapses multi-paragraph content with no visible
+    % break. Restore half a (possibly pq-skip-adjusted) baselineskip
+    % as the paragraph gap; a full baselineskip reads as double-spaced
+    % on top of the existing interline gap.
+    before upper={\pqsize\setlength{\baselineskip}{\pqskip}\setlength{\parskip}{0.5\baselineskip}\pqalign},
   ]
    \BODY
   \end{tcolorbox}

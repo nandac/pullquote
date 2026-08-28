@@ -44,7 +44,7 @@
     , Space
     , Str "to"
     , Space
-    , Code ( "" , [] , [] ) "1rem"
+    , Code ( "" , [] , [] ) "1em"
     , Str "/"
     , Code ( "" , [] , [] ) "12pt"
     , Str ";"
@@ -57,7 +57,7 @@
     , Space
     , Str "to"
     , Space
-    , Code ( "" , [] , [] ) "4px"
+    , Code ( "" , [] , [] ) "0.25em"
     , Str "/"
     , Code ( "" , [] , [] ) "4pt"
     , Str ";"
@@ -70,6 +70,58 @@
     , Space
     , Code ( "" , [] , [] ) "0"
     , Str ")."
+    , Space
+    , Str "HTML"
+    , Space
+    , Str "padding"
+    , Space
+    , Str "defaults"
+    , Space
+    , Str "deliberately"
+    , Space
+    , Str "use"
+    , Space
+    , Code ( "" , [] , [] ) "em"
+    , Space
+    , Str "rather"
+    , Space
+    , Str "than"
+    , Space
+    , Str "a"
+    , Space
+    , Str "fixed"
+    , Space
+    , Code ( "" , [] , [] ) "px"
+    , Space
+    , Str "value,"
+    , Space
+    , Str "so"
+    , Space
+    , Str "the"
+    , Space
+    , Str "gap"
+    , Space
+    , Str "around"
+    , Space
+    , Str "the"
+    , Space
+    , Str "text"
+    , Space
+    , Str "scales"
+    , Space
+    , Str "with"
+    , Space
+    , Str "whichever"
+    , Space
+    , Code ( "" , [] , [] ) "pq-size"
+    , Space
+    , Str "the"
+    , Space
+    , Str "pullquote"
+    , Space
+    , Str "itself"
+    , Space
+    , Str "uses."
     ]
 , CodeBlock
     ( "" , [ "markdown" ] , [] )
@@ -366,6 +418,236 @@
         , Str "the"
         , Space
         , Str "box."
+        ]
+    ]
+, Header
+    2
+    ( "padding-with-multi-paragraph-content" , [] , [] )
+    [ Str "Padding"
+    , Space
+    , Str "with"
+    , Space
+    , Str "Multi-Paragraph"
+    , Space
+    , Str "Content"
+    ]
+, Para
+    [ Str "This"
+    , Space
+    , Str "tests"
+    , Space
+    , Str "that"
+    , Space
+    , Str "padding"
+    , Space
+    , Str "is"
+    , Space
+    , Str "applied"
+    , Space
+    , Str "once"
+    , Space
+    , Str "to"
+    , Space
+    , Str "the"
+    , Space
+    , Str "outer"
+    , Space
+    , Str "edges"
+    , Space
+    , Str "of"
+    , Space
+    , Str "the"
+    , Space
+    , Str "box,"
+    , Space
+    , Str "not"
+    , Space
+    , Str "per"
+    , Space
+    , Str "paragraph,"
+    , Space
+    , Str "when"
+    , Space
+    , Str "a"
+    , Space
+    , Str "pullquote"
+    , Space
+    , Str "contains"
+    , Space
+    , Str "multiple"
+    , Space
+    , Str "paragraphs"
+    , Space
+    , Str "of"
+    , Space
+    , Str "body"
+    , Space
+    , Str "text."
+    ]
+, CodeBlock
+    ( "" , [ "markdown" ] , [] )
+    "::: {.pullquote pq-padding-left=\"20px\" pq-padding-right=\"20px\" pq-padding-top=\"16px\" pq-padding-bottom=\"16px\"}\nThis is the first paragraph inside a multi-paragraph pullquote. The configured padding should apply once, at the outer edges of the whole box.\n\nThis is a second paragraph in the same pullquote. There should be normal paragraph spacing between it and the paragraph above, without any extra padding applied around each individual paragraph.\n\nA third paragraph confirms the bar and box padding both span the full height of the block, not just the first paragraph.\n:::"
+, Div
+    ( ""
+    , [ "pullquote" ]
+    , [ ( "pq-padding-left" , "20px" )
+      , ( "pq-padding-right" , "20px" )
+      , ( "pq-padding-top" , "16px" )
+      , ( "pq-padding-bottom" , "16px" )
+      ]
+    )
+    [ Para
+        [ Str "This"
+        , Space
+        , Str "is"
+        , Space
+        , Str "the"
+        , Space
+        , Str "first"
+        , Space
+        , Str "paragraph"
+        , Space
+        , Str "inside"
+        , Space
+        , Str "a"
+        , Space
+        , Str "multi-paragraph"
+        , Space
+        , Str "pullquote."
+        , Space
+        , Str "The"
+        , Space
+        , Str "configured"
+        , Space
+        , Str "padding"
+        , Space
+        , Str "should"
+        , Space
+        , Str "apply"
+        , Space
+        , Str "once,"
+        , Space
+        , Str "at"
+        , Space
+        , Str "the"
+        , Space
+        , Str "outer"
+        , Space
+        , Str "edges"
+        , Space
+        , Str "of"
+        , Space
+        , Str "the"
+        , Space
+        , Str "whole"
+        , Space
+        , Str "box."
+        ]
+    , Para
+        [ Str "This"
+        , Space
+        , Str "is"
+        , Space
+        , Str "a"
+        , Space
+        , Str "second"
+        , Space
+        , Str "paragraph"
+        , Space
+        , Str "in"
+        , Space
+        , Str "the"
+        , Space
+        , Str "same"
+        , Space
+        , Str "pullquote."
+        , Space
+        , Str "There"
+        , Space
+        , Str "should"
+        , Space
+        , Str "be"
+        , Space
+        , Str "normal"
+        , Space
+        , Str "paragraph"
+        , Space
+        , Str "spacing"
+        , Space
+        , Str "between"
+        , Space
+        , Str "it"
+        , Space
+        , Str "and"
+        , Space
+        , Str "the"
+        , Space
+        , Str "paragraph"
+        , Space
+        , Str "above,"
+        , Space
+        , Str "without"
+        , Space
+        , Str "any"
+        , Space
+        , Str "extra"
+        , Space
+        , Str "padding"
+        , Space
+        , Str "applied"
+        , Space
+        , Str "around"
+        , Space
+        , Str "each"
+        , Space
+        , Str "individual"
+        , Space
+        , Str "paragraph."
+        ]
+    , Para
+        [ Str "A"
+        , Space
+        , Str "third"
+        , Space
+        , Str "paragraph"
+        , Space
+        , Str "confirms"
+        , Space
+        , Str "the"
+        , Space
+        , Str "bar"
+        , Space
+        , Str "and"
+        , Space
+        , Str "box"
+        , Space
+        , Str "padding"
+        , Space
+        , Str "both"
+        , Space
+        , Str "span"
+        , Space
+        , Str "the"
+        , Space
+        , Str "full"
+        , Space
+        , Str "height"
+        , Space
+        , Str "of"
+        , Space
+        , Str "the"
+        , Space
+        , Str "block,"
+        , Space
+        , Str "not"
+        , Space
+        , Str "just"
+        , Space
+        , Str "the"
+        , Space
+        , Str "first"
+        , Space
+        , Str "paragraph."
         ]
     ]
 ]

@@ -202,26 +202,32 @@ local function format_typst_font(font_value)
   return '"' .. font_value .. '"'
 end
 
--- Validates a "px"/"pt" dimension string (e.g. pq-bar-width, pq-padding-left).
--- Returns the value unchanged if valid, or nil (with a warning) otherwise,
--- letting the caller fall back to its own per-engine default.
+-- Validates a "px"/"pt"/"rem"/"em" dimension string (e.g. pq-bar-width,
+-- pq-padding-left). Returns the value unchanged if valid, or nil (with a
+-- warning) otherwise, letting the caller fall back to its own per-engine
+-- default.
 local function validate_px_pt(value, attr_name)
   if not value then return nil end
   local num, unit = value:match("^(%d+%.?%d*)(%a+)$")
-  if num and (unit == "px" or unit == "pt") then
+  if num and (unit == "px" or unit == "pt" or unit == "rem" or unit == "em") then
     return value
   end
-  warn(string.format('Invalid value "%s" for %s. Use a "px" or "pt" unit (e.g., "4px", "3pt"). Falling back to default.', value, attr_name))
+  warn(string.format('Invalid value "%s" for %s. Use a "px", "pt", "rem", or "em" unit (e.g., "4px", "3pt", "0.25rem"). Falling back to default.', value, attr_name))
   return nil
 end
 
--- Converts an already-validated "px"/"pt" dimension to a PDF-safe "pt" value
--- for the LaTeX and Typst pathways, using the standard 96dpi:72pt ratio
--- (1px = 0.75pt) rather than a naive suffix swap.
+-- Converts an already-validated px/pt/rem/em dimension to a PDF-safe value
+-- for the LaTeX and Typst pathways. "px" uses the standard 96dpi:72pt ratio
+-- (1px = 0.75pt) rather than a naive suffix swap; "rem" maps directly to
+-- "em" (both LaTeX and Typst resolve "em" natively against the current font
+-- size, so no numeric conversion is needed, mirroring how pq-size already
+-- treats rem for PDF output); "pt"/"em" pass through unchanged.
 local function px_to_pt(value)
   local num, unit = value:match("^(%d+%.?%d*)(%a+)$")
   if unit == "px" then
     return string.format("%.4gpt", tonumber(num) * 0.75)
+  elseif unit == "rem" then
+    return num .. "em"
   end
   return value
 end
@@ -453,14 +459,14 @@ local function process_pullquote(el)
     local styles = {
       "display: block !important;",
       "box-sizing: border-box !important;",
-      "padding-left: " .. (paddingleft or "1rem") .. " !important;",
+      "padding-left: " .. (paddingleft or "1em") .. " !important;",
       "padding-right: " .. (paddingright or "0") .. " !important;",
-      "padding-top: " .. (paddingtop or "4px") .. " !important;",
-      "padding-bottom: " .. (paddingbottom or "4px") .. " !important;",
+      "padding-top: " .. (paddingtop or "0.25em") .. " !important;",
+      "padding-bottom: " .. (paddingbottom or "0.25em") .. " !important;",
       "line-height: " .. html_skip .. " !important;",
       "width: " .. (width or "80%") .. " !important;",
       "color: " .. final_color .. " !important;",
-      "border-left: " .. (barwidth or "4px") .. " solid " .. final_barcolor .. " !important;"
+      "border-left: " .. (barwidth or "0.25rem") .. " solid " .. final_barcolor .. " !important;"
     }
 
     local margin = "1.5rem auto"
@@ -473,6 +479,16 @@ local function process_pullquote(el)
 
     for _, font_rule in ipairs(active_css_fonts) do
       table.insert(styles, font_rule)
+    end
+
+    -- Handle paragraph margins to prevent stacking with custom padding
+    if #el.content == 1 and el.content[1].t == 'Para' then
+      -- For a single paragraph, simply strip the <p> tags entirely
+      el.content[1] = pandoc.Plain(el.content[1].content)
+    elseif #el.content > 1 then
+      -- For multiple paragraphs, safely inject a scoped <style> block to neutralize outer margins
+      local css_fix = '<style>.pullquote p:first-of-type { margin-top: 0 !important; } .pullquote p:last-of-type { margin-bottom: 0 !important; }</style>'
+      el.content:insert(1, pandoc.RawBlock('html', css_fix))
     end
 
     el.attributes['style'] = (el.attributes['style'] or "") .. " " .. table.concat(styles, " ")

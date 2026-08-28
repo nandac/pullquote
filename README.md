@@ -201,15 +201,17 @@ Apply these key-value attributes globally (in your YAML) or inline on the Fenced
 
 | Attribute | Description | Default | Valid Inputs |
 | :--- | :--- | :--- | :--- |
-| `pq-width` | Container block width | `100%` | Percentages (`80%`), Absolute (`300pt`) |
+| `pq-width` | Container block width | `80%` | Percentages (`80%`), Absolute (`300pt`) |
 | `pq-color` | Text foreground color | `#888888` (Neutral grey) | Hex, CSS Named, `xcolor` Mix |
 | `pq-bar-color` | Left border color | `#d9d9d9` (Light neutral grey) | Hex, CSS Named, `xcolor` Mix |
-| `pq-bar-width` | Left border thickness | `4px` / `4pt` | CSS/LaTeX units (`px`, `pt`) |
-| `pq-padding-left` | Space between the bar and the quote text | `1rem` / `12pt` | CSS/LaTeX units (`px`, `pt`) |
-| `pq-padding-right` | Space on the right edge of the box | `0` | CSS/LaTeX units (`px`, `pt`) |
-| `pq-padding-top` | Space above the quote text | `4px` / `4pt` | CSS/LaTeX units (`px`, `pt`) |
-| `pq-padding-bottom` | Space below the quote text | `4px` / `4pt` | CSS/LaTeX units (`px`, `pt`) |
+| `pq-bar-width` | Left border thickness | `0.25rem` / `4pt` | CSS/LaTeX units (`px`, `pt`, `rem`, `em`) |
+| `pq-padding-left` | Space between the bar and the quote text | `1em` (HTML) / `12pt` | CSS/LaTeX units (`px`, `pt`, `rem`, `em`) |
+| `pq-padding-right` | Space on the right edge of the box | `0` | CSS/LaTeX units (`px`, `pt`, `rem`, `em`) |
+| `pq-padding-top` | Space above the quote text | `0.25em` (HTML) / `4pt` | CSS/LaTeX units (`px`, `pt`, `rem`, `em`) |
+| `pq-padding-bottom` | Space below the quote text | `0.25em` (HTML) / `4pt` | CSS/LaTeX units (`px`, `pt`, `rem`, `em`) |
 | `pq-skip` | Interline spacing multiplier | `1.0` | Decimal (e.g., `1.5`, `2.0`) |
+
+> **Why `em` for padding but `rem` for the bar?** For HTML, `pq-padding-*` defaults use `em`, which CSS resolves against the pullquote's *own* font-size — so the gap around the text automatically grows or shrinks with whatever `pq-size` you choose. `pq-bar-width` stays `rem` (root-relative): a bar is a structural accent rule, not text-adjacent spacing, so it intentionally doesn't scale with the quote's own font size. (LaTeX/Typst keep fixed `pt` defaults for all of these either way, since their box-frame dimensions are resolved in the surrounding document's font context before the quote's own size is applied, so an `em`-based default wouldn't track `pq-size` the way it does in HTML.)
 | `pq-html-unit` | Base CSS unit for scaling (HTML only) | `rem` | `rem`, `em` |
 
 ---
