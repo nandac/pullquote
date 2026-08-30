@@ -16,54 +16,54 @@ This pullquote uses the default padding on every side.
 This pullquote uses the default padding on every side.
 :::
 
-## Custom Left Padding (Pixels)
+## Wide Left Padding
 
-This tests overriding the left padding using an absolute `px` value, which the filter converts to `pt` for the LaTeX and Typst pathways.
+This tests a deliberately exaggerated `pq-padding-left` value, so the gap between the bar and the text is unmistakably wider than the default when comparing previews side by side.
 
 ```markdown
-::: {.pullquote pq-padding-left="24px"}
-This pullquote has a much wider gap between the bar and the text.
+::: {.pullquote pq-padding-left="60px"}
+This pullquote pushes the text far away from the bar with a 60px left padding — an extreme value chosen to make the difference from the default obvious at a glance.
 :::
 ```
 
-::: {.pullquote pq-padding-left="24px"}
-This pullquote has a much wider gap between the bar and the text.
+::: {.pullquote pq-padding-left="60px"}
+This pullquote pushes the text far away from the bar with a 60px left padding — an extreme value chosen to make the difference from the default obvious at a glance.
 :::
 
-## Custom Left Padding (Points)
+## Tight Left Padding
 
-This tests overriding the left padding using an absolute `pt` value directly, primarily relevant for LaTeX and Typst PDF output.
+This tests a deliberately minimal `pq-padding-left` value, so the text sits almost flush against the bar — the opposite extreme from the previous example, and again clearly distinct from the default.
 
 ```markdown
-::: {.pullquote pq-padding-left="6pt"}
-This pullquote has a tighter gap between the bar and the text.
+::: {.pullquote pq-padding-left="2pt"}
+This pullquote crowds the text right up against the bar with a 2pt left padding, the tightest gap the filter allows before the text and bar would visually merge.
 :::
 ```
 
-::: {.pullquote pq-padding-left="6pt"}
-This pullquote has a tighter gap between the bar and the text.
+::: {.pullquote pq-padding-left="2pt"}
+This pullquote crowds the text right up against the bar with a 2pt left padding, the tightest gap the filter allows before the text and bar would visually merge.
 :::
 
 ## Independent Padding on Every Side
 
-This tests setting `pq-padding-right`, `pq-padding-top`, and `pq-padding-bottom` independently of `pq-padding-left`, confirming each side can be tuned separately.
+This tests setting `pq-padding-left`, `pq-padding-right`, `pq-padding-top`, and `pq-padding-bottom` to four deliberately mismatched values, so the box reads as visibly lopsided rather than evenly padded — confirming each side is tuned independently rather than sharing a single value.
 
 ```markdown
-::: {.pullquote pq-padding-left="12px" pq-padding-right="24px" pq-padding-top="16px" pq-padding-bottom="16px"}
-This pullquote has a different padding value set on all four sides of the box.
+::: {.pullquote pq-padding-left="4px" pq-padding-right="60px" pq-padding-top="2px" pq-padding-bottom="40px"}
+This pullquote is crowded against the bar and the top edge, but has generous room on the right and at the bottom — four different padding values, deliberately mismatched so the asymmetry is obvious.
 :::
 ```
 
-::: {.pullquote pq-padding-left="12px" pq-padding-right="24px" pq-padding-top="16px" pq-padding-bottom="16px"}
-This pullquote has a different padding value set on all four sides of the box.
+::: {.pullquote pq-padding-left="4px" pq-padding-right="60px" pq-padding-top="2px" pq-padding-bottom="40px"}
+This pullquote is crowded against the bar and the top edge, but has generous room on the right and at the bottom — four different padding values, deliberately mismatched so the asymmetry is obvious.
 :::
 
 ## Padding with Multi-Paragraph Content
 
-This tests that padding is applied once to the outer edges of the box, not per paragraph, when a pullquote contains multiple paragraphs of body text.
+This tests that padding is applied once to the outer edges of the box, not per paragraph, when a pullquote contains multiple paragraphs of body text. A generous, even padding is used so the outer margin is clearly visible around all three paragraphs.
 
 ```markdown
-::: {.pullquote pq-padding-left="20px" pq-padding-right="20px" pq-padding-top="16px" pq-padding-bottom="16px"}
+::: {.pullquote pq-padding-left="32px" pq-padding-right="32px" pq-padding-top="24px" pq-padding-bottom="24px"}
 This is the first paragraph inside a multi-paragraph pullquote. The configured padding should apply once, at the outer edges of the whole box.
 
 This is a second paragraph in the same pullquote. There should be normal paragraph spacing between it and the paragraph above, without any extra padding applied around each individual paragraph.
@@ -72,7 +72,7 @@ A third paragraph confirms the bar and box padding both span the full height of 
 :::
 ```
 
-::: {.pullquote pq-padding-left="20px" pq-padding-right="20px" pq-padding-top="16px" pq-padding-bottom="16px"}
+::: {.pullquote pq-padding-left="32px" pq-padding-right="32px" pq-padding-top="24px" pq-padding-bottom="24px"}
 This is the first paragraph inside a multi-paragraph pullquote. The configured padding should apply once, at the outer edges of the whole box.
 
 This is a second paragraph in the same pullquote. There should be normal paragraph spacing between it and the paragraph above, without any extra padding applied around each individual paragraph.

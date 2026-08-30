@@ -47,10 +47,10 @@ Download the filter and the LaTeX preamble directly into your project directory:
 
 ```bash
 # pullquote.lua (Required for all formats)
-curl -O https://raw.githubusercontent.com/nandac/pullquote/refs/tags/v1.0.1/_extensions/pullquote/pullquote.lua
+curl -O https://raw.githubusercontent.com/nandac/pullquote/refs/tags/v1.1.0/_extensions/pullquote/pullquote.lua
 
 # pullquote.tex (Required ONLY for LaTeX output)
-curl -O https://raw.githubusercontent.com/nandac/pullquote/refs/tags/v1.0.1/_extensions/pullquote/pullquote.tex
+curl -O https://raw.githubusercontent.com/nandac/pullquote/refs/tags/v1.1.0/_extensions/pullquote/pullquote.tex
 ```
 
 Unlike Quarto, Pandoc requires you to explicitly pass these assets as arguments during compilation. See the [Compilation and Usage](#compilation-and-usage) section below for exact terminal commands.
@@ -75,6 +75,16 @@ metadata:
   monofont: Fira Mono
   codefont: Fira Mono
 ```
+
+For **Typst output specifically**, `pq-family="serif"`/`"sans"`/`"mono"` resolves the actual font name through `pq-family-serif`/`pq-family-sans`/`pq-family-mono` first, falling back to `mainfont`/`sansfont`/`monofont` (or `codefont` for mono) if unset. Most projects never need the `pq-family-*` keys — they're a narrow escape hatch for when you want a pullquote's Typst font to differ from the rest of the document, e.g.:
+
+```yaml
+metadata:
+  mainfont: Noto Serif      # used document-wide, and by pullquotes with pq-family="serif"
+  pq-family-serif: Playfair Display  # overrides the font for pullquotes only
+```
+
+LaTeX and HTML are unaffected by `pq-family-*` — they always use `mainfont`/`sansfont`/`monofont` (LaTeX) or generic CSS font families (HTML).
 
 > ⚠️ **Typst Sans-Serif Note:** Typst bundles a default serif font (Libertinus Serif) and a default monospace font (DejaVu Sans Mono), but ships no default sans-serif font. If you use `pq-family="sans"` with Typst output, always set `sansfont` (or `pq-family-sans`) explicitly. Without it, the filter falls back to a best-effort chain of common sans fonts (`Noto Sans`, `DejaVu Sans`, `Liberation Sans`, `Arial`, `Helvetica`) and emits a warning to `stderr`, but rendering as true sans-serif is not guaranteed on every system.
 
@@ -204,14 +214,14 @@ Apply these key-value attributes globally (in your YAML) or inline on the Fenced
 | `pq-width` | Container block width | `80%` | Percentages (`80%`), Absolute (`300pt`) |
 | `pq-color` | Text foreground color | `#888888` (Neutral grey) | Hex, CSS Named, `xcolor` Mix |
 | `pq-bar-color` | Left border color | `#d9d9d9` (Light neutral grey) | Hex, CSS Named, `xcolor` Mix |
-| `pq-bar-width` | Left border thickness | `0.25rem` / `4pt` | CSS/LaTeX units (`px`, `pt`, `rem`, `em`) |
+| `pq-bar-width` | Left border thickness | `0.25em` (HTML) / `4pt` | CSS/LaTeX units (`px`, `pt`, `rem`, `em`) |
 | `pq-padding-left` | Space between the bar and the quote text | `1em` (HTML) / `12pt` | CSS/LaTeX units (`px`, `pt`, `rem`, `em`) |
 | `pq-padding-right` | Space on the right edge of the box | `0` | CSS/LaTeX units (`px`, `pt`, `rem`, `em`) |
 | `pq-padding-top` | Space above the quote text | `0.25em` (HTML) / `4pt` | CSS/LaTeX units (`px`, `pt`, `rem`, `em`) |
 | `pq-padding-bottom` | Space below the quote text | `0.25em` (HTML) / `4pt` | CSS/LaTeX units (`px`, `pt`, `rem`, `em`) |
 | `pq-skip` | Interline spacing multiplier | `1.0` | Decimal (e.g., `1.5`, `2.0`) |
 
-> **Why `em` for padding but `rem` for the bar?** For HTML, `pq-padding-*` defaults use `em`, which CSS resolves against the pullquote's *own* font-size — so the gap around the text automatically grows or shrinks with whatever `pq-size` you choose. `pq-bar-width` stays `rem` (root-relative): a bar is a structural accent rule, not text-adjacent spacing, so it intentionally doesn't scale with the quote's own font size. (LaTeX/Typst keep fixed `pt` defaults for all of these either way, since their box-frame dimensions are resolved in the surrounding document's font context before the quote's own size is applied, so an `em`-based default wouldn't track `pq-size` the way it does in HTML.)
+> **Why `em` for both padding and the bar?** For HTML, `pq-padding-*` and `pq-bar-width` both default to `em`, which CSS resolves against the pullquote's *own* font-size — so the gap around the text and the bar's thickness both grow or shrink with whatever `pq-size` you choose. A fixed size looks disproportionate at the extremes: a flat 4px bar reads as too heavy next to `pq-size="3xs"` text and too thin next to `pq-size="3xl"` text. (LaTeX/Typst keep fixed `pt` defaults for all of these either way, since their box-frame dimensions are resolved in the surrounding document's font context before the quote's own size is applied, so an `em`-based default wouldn't track `pq-size` the way it does in HTML.)
 | `pq-html-unit` | Base CSS unit for scaling (HTML only) | `rem` | `rem`, `em` |
 
 ---

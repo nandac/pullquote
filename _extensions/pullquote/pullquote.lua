@@ -7,8 +7,8 @@
 --- @author    Nandakumar Chandrasekhar (nandac)
 --- @copyright © 2026 Nandakumar Chandrasekhar
 --- @license   MIT - see LICENSE for details
---- @version   1.0.1
---- @release   2026-08-28
+--- @version   1.1.0
+--- @release   2026-08-31
 ---
 --- @note      LaTeX output requires pullquote.tex to be included in the document preamble.
 ---            Typst and HTML outputs are fully standalone.
@@ -466,7 +466,7 @@ local function process_pullquote(el)
       "line-height: " .. html_skip .. " !important;",
       "width: " .. (width or "80%") .. " !important;",
       "color: " .. final_color .. " !important;",
-      "border-left: " .. (barwidth or "0.25rem") .. " solid " .. final_barcolor .. " !important;"
+      "border-left: " .. (barwidth or "0.25em") .. " solid " .. final_barcolor .. " !important;"
     }
 
     local margin = "1.5rem auto"

@@ -1,6 +1,6 @@
 title: pullquote
 author: Nandakumar Chandrasekhar
-version: 1.0.1
+version: 1.1.0
 
 contributes:
   filters:
@@ -8,4 +8,4 @@ contributes:
 
   formats:
     pdf:
-      include-in-header: pq-preamble.tex
+      include-in-header: pullquote.tex
