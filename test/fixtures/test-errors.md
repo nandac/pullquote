@@ -49,11 +49,11 @@ This should fall back to the best-effort sans-serif chain for Typst output.
 This tests the `abort()` trigger. Passing an undefined color string that isn't a Hex code or in the CSS/Typst dictionary should instantly halt compilation to prevent generating a corrupted PDF or HTML file.
 
 ```markdown
-::: {.pullquote pq-color="MadeUpPurple"}
+::: {.pullquote pq-text-color="MadeUpPurple"}
 This text will never render because the filter will crash first.
 :::
 ```
 
-::: {.pullquote pq-color="MadeUpPurple"}
+::: {.pullquote pq-text-color="MadeUpPurple"}
 This text will never render because the filter will crash first.
 :::

@@ -51,7 +51,7 @@ Initial public release of the `pullquote` Pandoc Lua filter.
 
 - Semantic `.pullquote` fenced-div syntax that renders to HTML, LaTeX/PDF, and Typst from the same Markdown source.
 - Unified, namespaced attribute API (`pq-*`) for inline configuration with fallback to global document metadata.
-- Core layout attributes: `pq-width`, `pq-color`, `pq-bar-color`, `pq-bar-width`, and `pq-skip` (interline spacing multiplier).
+- Core layout attributes: `pq-width`, `pq-text-color`, `pq-bar-color`, `pq-bar-width`, and `pq-skip` (interline spacing multiplier).
 - Typography attributes: `pq-weight`, `pq-style`, and `pq-family`.
 - Symmetrical 9-step t-shirt sizing scale (`3xs` through `3xl`, featuring `m` as medium) alongside custom unit parsing via the `pq-size` attribute.
 - Dual-alignment control via `pq-text-align` (inner text) and `pq-box-align` (block positioning).

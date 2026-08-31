@@ -1,6 +1,6 @@
 ---
 title: "Pullquote Test: Global Metadata Configuration"
-pq-color: "DarkSlateGray"
+pq-text-color: "DarkSlateGray"
 pq-bar-color: "CadetBlue"
 pq-width: "70%"
 pq-size: "l"

@@ -296,7 +296,7 @@ end
 local function process_pullquote(el)
   -- Extract all configuration parameters using strict pq- attributes
   local width          = get_attr(el, 'pq-width')
-  local color          = get_attr(el, 'pq-color')
+  local color          = get_attr(el, 'pq-text-color')
   local barwidth       = validate_px_pt(get_attr(el, 'pq-bar-width'), 'pq-bar-width')
   local barcolor       = get_attr(el, 'pq-bar-color')
   local paddingleft    = validate_px_pt(get_attr(el, 'pq-padding-left'), 'pq-padding-left')

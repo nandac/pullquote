@@ -1,6 +1,6 @@
 ---
 title: Demonstration of the Pullquote Filter for Pandoc
-pq-color: "DarkSlateGray"
+pq-text-color: "DarkSlateGray"
 pq-bar-color: "CadetBlue"
 pq-width: "80%"
 pq-size: "l"
@@ -163,15 +163,15 @@ This section describes how to apply colors to the pullquote text and its decorat
 
 ### Basic Color Attributes
 
-Use `pq-color` for the text, `pq-bar-color` for the left border, and `pq-bar-width` to adjust the border's thickness.
+Use `pq-text-color` for the text, `pq-bar-color` for the left border, and `pq-bar-width` to adjust the border's thickness.
 
 ```markdown
-::: {.pullquote pq-color="CadetBlue" pq-bar-color="Thistle" pq-bar-width="0.5rem"}
+::: {.pullquote pq-text-color="CadetBlue" pq-bar-color="Thistle" pq-bar-width="0.5rem"}
 This quote uses the SVG named color **CadetBlue** for text and the pastel **Thistle** for a thick 0.5rem border.
 :::
 ```
 
-::: {.pullquote pq-color="CadetBlue" pq-bar-color="Thistle" pq-bar-width="0.5rem"}
+::: {.pullquote pq-text-color="CadetBlue" pq-bar-color="Thistle" pq-bar-width="0.5rem"}
 This quote uses the SVG named color **CadetBlue** for text and the pastel **Thistle** for a thick 0.5rem border.
 :::
 
@@ -206,12 +206,12 @@ This quote sets an even 1rem of padding on every side, giving the text room to b
 The filter fully supports 6-character hex codes and 3-character shorthands.
 
 ```markdown
-::: {.pullquote pq-color="#827397" pq-bar-color="#FAA"}
+::: {.pullquote pq-text-color="#827397" pq-bar-color="#FAA"}
 This quote uses raw Hex codes: **#827397** for text and the shorthand **#FAA** (Soft Coral) for the bar.
 :::
 ```
 
-::: {.pullquote pq-color="#827397" pq-bar-color="#FAA"}
+::: {.pullquote pq-text-color="#827397" pq-bar-color="#FAA"}
 This quote uses raw Hex codes: **#827397** for text and the shorthand **#FAA** (Soft Coral) for the bar.
 :::
 
@@ -220,12 +220,12 @@ This quote uses raw Hex codes: **#827397** for text and the shorthand **#FAA** (
 The extension supports LaTeX’s `xcolor` percentage-mixing syntax. This maps reliably across Typst, LaTeX, and HTML (which leverages the native CSS `color-mix()` function).
 
 ```markdown
-::: {.pullquote pq-color="Indigo!90!Black" pq-bar-color="Indigo!20" pq-bar-width="0.375rem"}
+::: {.pullquote pq-text-color="Indigo!90!Black" pq-bar-color="Indigo!20" pq-bar-width="0.375rem"}
 This quote uses a three-part blend for the text (**Indigo mixed at 90% with Black**) and a standard two-part blend with white for the bar.
 :::
 ```
 
-::: {.pullquote pq-color="Indigo!90!Black" pq-bar-color="Indigo!20" pq-bar-width="0.375rem"}
+::: {.pullquote pq-text-color="Indigo!90!Black" pq-bar-color="Indigo!20" pq-bar-width="0.375rem"}
 This quote uses a three-part blend for the text (**Indigo mixed at 90% with Black**) and a standard two-part blend with white for the bar.
 :::
 
@@ -281,7 +281,7 @@ For example, if your document includes the following YAML frontmatter:
 
 ```yaml
 ---
-pq-color: "DarkSlateGray"
+pq-text-color: "DarkSlateGray"
 pq-bar-color: "CadetBlue"
 pq-width: "80%"
 pq-size: "l"
@@ -306,11 +306,11 @@ This quote has no inline attributes. It inherits its styling entirely from the Y
 Multiple typographic utilities and attributes can be combined within the same element. Font, size, color, and alignment compose independently.
 
 ```markdown
-::: {.pullquote pq-weight="bold" pq-family="serif" pq-style="slanted" pq-size="3xl" pq-text-align="center" pq-box-align="center" pq-width="95%" pq-color="DarkSlateBlue" pq-bar-color="PowderBlue" pq-bar-width="0.75rem" pq-padding-left="1.25rem" pq-skip="2.0"}
+::: {.pullquote pq-weight="bold" pq-family="serif" pq-style="slanted" pq-size="3xl" pq-text-align="center" pq-box-align="center" pq-width="95%" pq-text-color="DarkSlateBlue" pq-bar-color="PowderBlue" pq-bar-width="0.75rem" pq-padding-left="1.25rem" pq-skip="2.0"}
 The Ultimate Stress Test
 :::
 ```
 
-::: {.pullquote pq-weight="bold" pq-family="serif" pq-style="slanted" pq-size="3xl" pq-text-align="center" pq-box-align="center" pq-width="95%" pq-color="DarkSlateBlue" pq-bar-color="PowderBlue" pq-bar-width="0.75rem" pq-padding-left="1.25rem" pq-skip="2.0"}
+::: {.pullquote pq-weight="bold" pq-family="serif" pq-style="slanted" pq-size="3xl" pq-text-align="center" pq-box-align="center" pq-width="95%" pq-text-color="DarkSlateBlue" pq-bar-color="PowderBlue" pq-bar-width="0.75rem" pq-padding-left="1.25rem" pq-skip="2.0"}
 The Ultimate Stress Test
 :::
