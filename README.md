@@ -18,6 +18,7 @@ Requires **Pandoc 3.10 or later** and the `fenced_divs` extension (enabled by de
 ### Quarto
 
 Install the extension via terminal. Quarto handles all asset registration automatically:
+
 ```bash
 quarto add nandac/pullquote
 ```
