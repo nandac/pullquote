@@ -10,7 +10,6 @@ The repository includes complete specimen documents demonstrating every feature 
 * [Live HTML Specimen (Rendered Preview)](https://htmlpreview.github.io/?https://github.com/nandac/pullquote/blob/main/docs/pullquote-examples.html)
 * [LaTeX PDF Specimen](https://github.com/nandac/pullquote/blob/main/docs/pullquote-examples-latex.pdf)
 * [Typst PDF Specimen](https://github.com/nandac/pullquote/blob/main/docs/pullquote-examples-typst.pdf)
-* [Changelog](CHANGELOG.md) — release history and notable changes.
 
 ## Extension Requirements
 
@@ -329,6 +328,10 @@ You've set `pq-family` to a font name that isn't installed on your system (or yo
 ### My pullquote renders as raw unformatted text
 
 The Pandoc `fenced_divs` extension is disabled. Enable it by adding `+fenced_divs` to your input format (e.g., `-f markdown+fenced_divs`).
+
+## Changelog
+
+See the [CHANGELOG](CHANGELOG.md) for release history and notable changes to the filter.
 
 ## License
 
