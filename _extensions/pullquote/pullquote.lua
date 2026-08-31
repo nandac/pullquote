@@ -63,6 +63,12 @@ local typst_fonts = {
   mono  = "DejaVu Sans Mono"
 }
 
+-- Populated from mainfont/sansfont/monofont/codefont (if set) so HTML's
+-- serif/sans/mono keywords resolve to the document's actual configured font,
+-- not just the bare generic CSS keyword. Left nil per-key when unset, so
+-- resolve_html_family() falls back to the generic keyword alone.
+local html_fonts = {}
+
 local css_colors = {
   aliceblue = 'F0F8FF', antiquewhite = 'FAEBD7', aqua = '00FFFF', aquamarine = '7FFFD4', azure = 'F0FFFF',
   beige = 'F5F5DC', bisque = 'FFE4C4', black = '000000', blanchedalmond = 'FFEBCD', blue = '0000FF',
@@ -147,10 +153,25 @@ local pq_styles = {
 }
 
 local pq_families = {
-  ['mono']  = { tex = '\\ttfamily', css = 'font-family: monospace !important;',  typst_family = 'mono' },
-  ['sans']  = { tex = '\\sffamily', css = 'font-family: sans-serif !important;', typst_family = 'sans' },
-  ['serif'] = { tex = '\\rmfamily', css = 'font-family: serif !important;',      typst_family = 'serif' }
+  ['mono']  = { tex = '\\ttfamily', css_generic = 'monospace',  typst_family = 'mono' },
+  ['sans']  = { tex = '\\sffamily', css_generic = 'sans-serif', typst_family = 'sans' },
+  ['serif'] = { tex = '\\rmfamily', css_generic = 'serif',      typst_family = 'serif' }
 }
+
+-- Resolves a serif/sans/mono family to a CSS font-family declaration. Uses
+-- the actual configured mainfont/sansfont/monofont (via html_fonts) when
+-- available, with the generic CSS keyword as a fallback — both as the
+-- trailing chain fallback when a specific font is set, and as the sole
+-- value when it's not, mirroring how LaTeX/Typst already resolve these
+-- to the document's real configured font rather than a generic category.
+local function resolve_html_family(key)
+  local generic = pq_families[key].css_generic
+  local actual = html_fonts[key]
+  if actual then
+    return string.format('font-family: "%s", %s !important;', actual, generic)
+  end
+  return string.format('font-family: %s !important;', generic)
+end
 
 -- ==============================================================================
 -- SECTION 3: COLOR PARSING & HELPER FUNCTIONS
@@ -288,7 +309,7 @@ local function process_pullquote(el)
   local raw_box_align  = get_attr(el, 'pq-box-align')
   local raw_weight     = get_attr(el, 'pq-weight')
   local raw_style      = get_attr(el, 'pq-style')
-  local raw_family     = get_attr(el, 'pq-family')
+  local raw_family     = get_attr(el, 'pq-family') or 'serif'
 
   -- Validate pq-width: must be a percentage (e.g. "80%") or an absolute
   -- unit (e.g. "300pt"), so the LaTeX percentage-to-linewidth math below
@@ -387,12 +408,21 @@ local function process_pullquote(el)
     table.insert(active_typst_fonts, '#set text(style: "italic")\n')
   end
 
-  if raw_family and pq_families[raw_family] then
+  if pq_families[raw_family] then
     table.insert(active_tex_fonts, pq_families[raw_family].tex)
-    table.insert(active_css_fonts, pq_families[raw_family].css)
+    table.insert(active_css_fonts, resolve_html_family(raw_family))
     table.insert(active_typst_fonts, '#set text(font: ' .. format_typst_font(typst_fonts[pq_families[raw_family].typst_family]) .. ')\n')
-  elseif raw_family then
-    warn(string.format('Unknown family value "%s" ignored.', raw_family))
+  else
+    -- Any value other than serif/sans/mono is treated as a literal font
+    -- name (or comma-separated chain for HTML), applied directly across
+    -- all three engines. If the named font isn't actually available,
+    -- LaTeX's fontspec raises its own compile error and Typst warns and
+    -- substitutes a fallback — expected native engine behavior, not
+    -- something this filter validates. HTML chains a generic serif
+    -- fallback, per standard CSS practice.
+    table.insert(active_tex_fonts, '\\fontspec{' .. raw_family .. '}')
+    table.insert(active_css_fonts, string.format('font-family: "%s", serif !important;', raw_family))
+    table.insert(active_typst_fonts, '#set text(font: ' .. format_typst_font(raw_family) .. ')\n')
   end
 
   -------------------------------------------------------------------------
@@ -548,21 +578,25 @@ return {
   },
   {
     Pandoc = function(doc)
+      if FORMAT:match('html') then
+        if doc.meta['mainfont'] then html_fonts.serif = utils.stringify(doc.meta['mainfont']) end
+        if doc.meta['sansfont'] then html_fonts.sans = utils.stringify(doc.meta['sansfont']) end
+        if doc.meta['codefont']     then html_fonts.mono = utils.stringify(doc.meta['codefont'])
+        elseif doc.meta['monofont'] then html_fonts.mono = utils.stringify(doc.meta['monofont']) end
+      end
+
       if not FORMAT:match('typst') then return end
 
-      if doc.meta['pq-family-serif'] then typst_fonts.serif = utils.stringify(doc.meta['pq-family-serif'])
-      elseif doc.meta['mainfont']    then typst_fonts.serif = utils.stringify(doc.meta['mainfont'])
+      if doc.meta['mainfont']    then typst_fonts.serif = utils.stringify(doc.meta['mainfont'])
       else typst_fonts.serif = "Libertinus Serif" end
 
-      if doc.meta['pq-family-mono']  then typst_fonts.mono = utils.stringify(doc.meta['pq-family-mono'])
-      elseif doc.meta['codefont']    then typst_fonts.mono = utils.stringify(doc.meta['codefont'])
+      if doc.meta['codefont']    then typst_fonts.mono = utils.stringify(doc.meta['codefont'])
       elseif doc.meta['monofont']    then typst_fonts.mono = utils.stringify(doc.meta['monofont'])
       else typst_fonts.mono = "DejaVu Sans Mono" end
 
-      if doc.meta['pq-family-sans']  then typst_fonts.sans = utils.stringify(doc.meta['pq-family-sans'])
-      elseif doc.meta['sansfont']    then typst_fonts.sans = utils.stringify(doc.meta['sansfont'])
+      if doc.meta['sansfont']    then typst_fonts.sans = utils.stringify(doc.meta['sansfont'])
       else
-        warn('No sans font configured for Typst output (set "sansfont" or "pq-family-sans" in metadata). Typst has no bundled sans-serif font, so a best-effort fallback chain will be used and may not render as true sans-serif on all systems.')
+        warn('No sans font configured for Typst output (set "sansfont" in metadata). Typst has no bundled sans-serif font, so a best-effort fallback chain will be used and may not render as true sans-serif on all systems.')
       end
     end
   },

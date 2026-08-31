@@ -109,6 +109,35 @@
     [ Str "Font" , Space , Str "Families" ]
 , CodeBlock
     ( "" , [ "markdown" ] , [] )
+    "::: {.pullquote}\nThis is an un-styled quote, which should default pq-family to serif.\n:::"
+, Div
+    ( "" , [ "pullquote" ] , [] )
+    [ Para
+        [ Str "This"
+        , Space
+        , Str "is"
+        , Space
+        , Str "an"
+        , Space
+        , Str "un-styled"
+        , Space
+        , Str "quote,"
+        , Space
+        , Str "which"
+        , Space
+        , Str "should"
+        , Space
+        , Str "default"
+        , Space
+        , Str "pq-family"
+        , Space
+        , Str "to"
+        , Space
+        , Str "serif."
+        ]
+    ]
+, CodeBlock
+    ( "" , [ "markdown" ] , [] )
     "::: {.pullquote pq-family=\"serif\"}\nThis is a Serif quote.\n:::"
 , Div
     ( "" , [ "pullquote" ] , [ ( "pq-family" , "serif" ) ] )
@@ -156,6 +185,44 @@
         , Str "Monospace"
         , Space
         , Str "quote."
+        ]
+    ]
+, CodeBlock
+    ( "" , [ "markdown" ] , [] )
+    "::: {.pullquote pq-family=\"Libre Baskerville\"}\nThis is a quote using a literal custom font name, not one of serif/sans/mono.\n:::"
+, Div
+    ( ""
+    , [ "pullquote" ]
+    , [ ( "pq-family" , "Libre Baskerville" ) ]
+    )
+    [ Para
+        [ Str "This"
+        , Space
+        , Str "is"
+        , Space
+        , Str "a"
+        , Space
+        , Str "quote"
+        , Space
+        , Str "using"
+        , Space
+        , Str "a"
+        , Space
+        , Str "literal"
+        , Space
+        , Str "custom"
+        , Space
+        , Str "font"
+        , Space
+        , Str "name,"
+        , Space
+        , Str "not"
+        , Space
+        , Str "one"
+        , Space
+        , Str "of"
+        , Space
+        , Str "serif/sans/mono."
         ]
     ]
 , Header

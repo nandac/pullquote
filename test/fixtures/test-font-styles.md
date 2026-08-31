@@ -41,6 +41,16 @@ This is a Bold weight quote.
 ### Font Families
 
 ```markdown
+::: {.pullquote}
+This is an un-styled quote, which should default pq-family to serif.
+:::
+```
+
+::: {.pullquote}
+This is an un-styled quote, which should default pq-family to serif.
+:::
+
+```markdown
 ::: {.pullquote pq-family="serif"}
 This is a Serif quote.
 :::
@@ -68,6 +78,16 @@ This is a Monospace quote.
 
 ::: {.pullquote pq-family="mono"}
 This is a Monospace quote.
+:::
+
+```markdown
+::: {.pullquote pq-family="Libre Baskerville"}
+This is a quote using a literal custom font name, not one of serif/sans/mono.
+:::
+```
+
+::: {.pullquote pq-family="Libre Baskerville"}
+This is a quote using a literal custom font name, not one of serif/sans/mono.
 :::
 
 ### Font Styles and Variants

@@ -30,7 +30,21 @@ This should fall back to the default width, bar width, padding on every side, an
 This should fall back to the default width, bar width, padding on every side, and HTML unit.
 :::
 
-## 3. Invalid Colors (Fatal Error)
+## 3. Missing Typst Sans-Serif Font (Warning)
+
+This tests that Typst output warns when a pullquote uses `pq-family="sans"` and no `sansfont` is configured in metadata, falling back to a best-effort font chain instead of crashing. This warning only fires for Typst output, since Typst is the only one of the three engines with no bundled sans-serif font.
+
+```markdown
+::: {.pullquote pq-family="sans"}
+This should fall back to the best-effort sans-serif chain for Typst output.
+:::
+```
+
+::: {.pullquote pq-family="sans"}
+This should fall back to the best-effort sans-serif chain for Typst output.
+:::
+
+## 4. Invalid Colors (Fatal Error)
 
 This tests the `abort()` trigger. Passing an undefined color string that isn't a Hex code or in the CSS/Typst dictionary should instantly halt compilation to prevent generating a corrupted PDF or HTML file.
 

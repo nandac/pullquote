@@ -107,17 +107,55 @@ This paragraph is explicitly rendered upright (non-italicized).
 
 ### Font Families
 
+`pq-family="serif"`/`"sans"`/`"mono"` resolves to the same `mainfont`/`sansfont`/`monofont` (or `codefont` for mono) across LaTeX, Typst, and HTML, so a pullquote always matches the rest of your document — there's no separate font to configure per format.
+
 ```markdown
+::: {.pullquote pq-family="serif"}
+This paragraph is in serif.
+:::
+
 ::: {.pullquote pq-family="sans"}
 This paragraph is in sans-serif.
+:::
+
+::: {.pullquote pq-family="mono"}
+This paragraph is in monospace.
 :::
 ```
 
+::: {.pullquote pq-family="serif"}
+This paragraph is in serif.
+:::
+
 ::: {.pullquote pq-family="sans"}
 This paragraph is in sans-serif.
 :::
 
-> **Typst Note:** Typst ships no default sans-serif font. If you use `pq-family="sans"` with Typst output, set `sansfont` (or `pq-family-sans`) in your metadata explicitly — otherwise the filter falls back to a best-effort chain (`Noto Sans`, `DejaVu Sans`, `Liberation Sans`, `Arial`, `Helvetica`) and emits a warning to `stderr`.
+::: {.pullquote pq-family="mono"}
+This paragraph is in monospace.
+:::
+
+`pq-family` defaults to `serif` when omitted, so an un-styled pullquote already matches your document's `mainfont` without needing `pq-family="serif"` explicitly.
+
+### Custom Font Names
+
+Any value other than `serif`, `sans`, or `mono` is treated as a literal font name, applied directly instead of going through `mainfont`/`sansfont`/`monofont` — useful for giving one specific pullquote its own distinct look, independent of the rest of the document.
+
+```markdown
+::: {.pullquote pq-family="Libre Baskerville"}
+This pullquote uses a specific display font, independent of the document's mainfont.
+:::
+```
+
+::: {.pullquote pq-family="Libre Baskerville"}
+This pullquote uses a specific display font, independent of the document's mainfont.
+:::
+
+> **No Font Validation:** The filter does not check whether the named font actually exists — if it isn't available, LaTeX's `fontspec` raises a hard compile error, while Typst warns and substitutes a fallback. Neither is caught by this filter; both are the engine's own native behavior.
+
+<!-- -->
+
+> **Typst Note:** Typst ships no default sans-serif font. If you use `pq-family="sans"` with Typst output, set `sansfont` in your metadata explicitly — otherwise the filter falls back to a best-effort chain (`Noto Sans`, `DejaVu Sans`, `Liberation Sans`, `Arial`, `Helvetica`) and emits a warning to `stderr`.
 
 ## Colors and Borders
 

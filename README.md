@@ -18,12 +18,12 @@ Requires **Pandoc 3.10 or later**. The filter checks this itself at load time (`
 
 The filter also relies completely on Pandoc's `fenced_divs` extension, which is enabled by default in modern Pandoc distributions.
 
-> ⚠️ **Important:** In the unlikely event that this extension is explicitly disabled in your workflow, the Lua filter will emit a warning to `stderr` and ignore the custom elements, causing them to appear as unformatted raw text in your rendered output.
+> **Important:** In the unlikely event that this extension is explicitly disabled in your workflow, the Lua filter will emit a warning to `stderr` and ignore the custom elements, causing them to appear as unformatted raw text in your rendered output.
 
 ## Feature Highlights
 
 * **Flexible font sizing:** A symmetrical 9-step scale (`3xs` through `3xl`), plus full support for custom sizes (e.g., `24pt`, `1.5em`).
-* **Font weights, shapes, and families:** Bold, medium, italic, slanted, upright, emphasis, serif, sans, mono, and normal.
+* **Font weights, shapes, and families:** Bold, medium, italic, slanted, upright, emphasis, serif, sans, mono, and normal — or any literal font name via `pq-family`, applied independently of the rest of the document.
 * **Color support:** Solid CSS3/hex colors with permissive parsing, plus native `xcolor` percentage-based color mixing across all formats.
 * **Alignment and positioning:** Separate controls for text alignment *within* the pullquote and horizontal positioning of the pullquote itself on the page.
 * **Interline spacing controls:** Native vertical spacing multipliers (adjusting line-height/leading) via the `pq-skip` attribute.
@@ -61,7 +61,7 @@ The pullquote filter uses relative units (e.g., `em`, `rem`) for its sizing scal
 
 To establish a consistent typographic baseline, you can configure your fonts using standard Pandoc variables and CSS.
 
-> ⚠️ **Font Support Note:** Ensure that your chosen typefaces natively support the specific weights and styles you intend to use (e.g., bold, italic, small caps). If a font lacks these glyphs, the rendering engine (browser, LaTeX, or Typst) may attempt to artificially synthesize them—yielding lower quality approximations—or simply fall back to a default upright shape.
+> **Font Support Note:** Ensure that your chosen typefaces natively support the specific weights and styles you intend to use (e.g., bold, italic, small caps). If a font lacks these glyphs, the rendering engine (browser, LaTeX, or Typst) may attempt to artificially synthesize them—yielding lower quality approximations—or simply fall back to a default upright shape.
 
 ### PDF and Typst (YAML Frontmatter)
 
@@ -76,47 +76,41 @@ metadata:
   codefont: Fira Mono
 ```
 
-For **Typst output specifically**, `pq-family="serif"`/`"sans"`/`"mono"` resolves the actual font name through `pq-family-serif`/`pq-family-sans`/`pq-family-mono` first, falling back to `mainfont`/`sansfont`/`monofont` (or `codefont` for mono) if unset. Most projects never need the `pq-family-*` keys — they're a narrow escape hatch for when you want a pullquote's Typst font to differ from the rest of the document, e.g.:
+`pq-family="serif"`/`"sans"`/`"mono"` resolves to the same `mainfont`/`sansfont`/`monofont` (or `codefont` for mono) across all three output formats, so a pullquote always matches the rest of your document — there's no separate Typst-specific font override to configure.
 
-```yaml
-metadata:
-  mainfont: Noto Serif      # used document-wide, and by pullquotes with pq-family="serif"
-  pq-family-serif: Playfair Display  # overrides the font for pullquotes only
-```
-
-LaTeX and HTML are unaffected by `pq-family-*` — they always use `mainfont`/`sansfont`/`monofont` (LaTeX) or generic CSS font families (HTML).
-
-> ⚠️ **Typst Sans-Serif Note:** Typst bundles a default serif font (Libertinus Serif) and a default monospace font (DejaVu Sans Mono), but ships no default sans-serif font. If you use `pq-family="sans"` with Typst output, always set `sansfont` (or `pq-family-sans`) explicitly. Without it, the filter falls back to a best-effort chain of common sans fonts (`Noto Sans`, `DejaVu Sans`, `Liberation Sans`, `Arial`, `Helvetica`) and emits a warning to `stderr`, but rendering as true sans-serif is not guaranteed on every system.
+> **Typst Sans-Serif Note:** Typst bundles a default serif font (Libertinus Serif) and a default monospace font (DejaVu Sans Mono), but ships no default sans-serif font. If you use `pq-family="sans"` with Typst output, always set `sansfont` explicitly. Without it, the filter falls back to a best-effort chain of common sans fonts (`Noto Sans`, `DejaVu Sans`, `Liberation Sans`, `Arial`, `Helvetica`) and emits a warning to `stderr`, but rendering as true sans-serif is not guaranteed on every system.
 
 ### HTML Typography (Custom CSS)
 
-For HTML output, the Lua filter relies on standard CSS inheritance and generic web font families (`serif`, `sans-serif`, `monospace`).
+For HTML output, pullquote font *sizing* scales via CSS `rem`/`em` units (see `pq-html-unit` below), and `pq-family`'s `serif`/`sans`/`mono` keywords resolve to the same `mainfont`/`sansfont`/`monofont` metadata variables used by [PDF and Typst](#pdf-and-typst-yaml-frontmatter) above — set those once and they cover all three output formats.
 
-To use custom typefaces, simply load your web fonts and declare your baseline `font-size` and `font-family` on the `body` element in your project's custom stylesheet. The pullquote component will automatically inherit this baseline typography and scale its sizes accordingly based on the `pq-html-unit` attribute (which safely defaults to `rem`).
+> **Metadata, Not Just CSS:** The filter only reads Pandoc's `mainfont`/`sansfont`/`monofont`/`codefont` *metadata* variables — the same YAML keys shown above — not your project's stylesheet. Loading a webfont and declaring it in your own CSS isn't enough on its own: if you don't also set the matching metadata variable, an un-styled pullquote (or one using `pq-family="serif"`/`"sans"`/`"mono"`) falls back to the generic `serif`/`sans-serif`/`monospace` CSS keyword instead of your webfont, even if the rest of your page correctly uses it.
 
-> **Framework Tip:** If you are using a CSS framework that handles responsive typography via cascading `em` units, explicitly set `pq-html-unit: "em"` in your global metadata so the pullquote component properly inherits the framework's mobile resizing rules.
+To use custom typefaces, load your web fonts, declare your baseline `font-size` on `body`, and set the matching metadata so the filter picks up the same fonts automatically:
+
+```yaml
+metadata:
+  mainfont: Noto Serif
+  sansfont: Noto Sans
+  monofont: Fira Mono
+```
 
 ```css
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;500;700&display=swap');
 
-:root {
-  --base-size: 1rem;
-  --mainfont: 'Noto Serif', serif;
-  --sansfont: 'Noto Sans', sans-serif;
-  --monofont: 'Fira Mono', monospace;
-}
-
 body {
-  /* Set the baseline size (maps to pullquote size 'm') */
-  font-size: var(--base-size);
-  /* Un-styled pullquotes will inherit this font */
-  font-family: var(--mainfont);
+  font-size: 1rem; /* Baseline size (maps to pullquote size 'm') */
+  font-family: 'Noto Serif', serif;
 }
 ```
 
-> ⚠️ **Customization Limit:** For HTML output, the filter writes every style (color, size, spacing, alignment, font family, etc.) directly onto the element's inline `style` attribute with `!important`. This is intentional — it guarantees pullquotes render consistently even inside themes whose own stylesheets use `!important` (common in Bootstrap/Quarto themes and utility-CSS frameworks). One consequence: you cannot override these properties from your own site's stylesheet, even with `!important` of your own — inline styles win that tie-break. Any customization beyond what's shown here must go through a `pq-*` attribute.
+> **Framework Tip:** If you are using a CSS framework that handles responsive typography via cascading `em` units, explicitly set `pq-html-unit: "em"` in your global metadata so the pullquote component properly inherits the framework's mobile resizing rules.
+
+<!-- -->
+
+> **Customization Limit:** For HTML output, the filter writes every style (color, size, spacing, alignment, font family, etc.) directly onto the element's inline `style` attribute with `!important`. This is intentional — it guarantees pullquotes render consistently even inside themes whose own stylesheets use `!important` (common in Bootstrap/Quarto themes and utility-CSS frameworks). One consequence: you cannot override these properties from your own site's stylesheet, even with `!important` of your own — inline styles win that tie-break. Any customization beyond what's shown here must go through a `pq-*` attribute.
 
 ## Configuration (Global Metadata)
 
@@ -269,7 +263,24 @@ Matches the 9-step typographic scale API.
 | :--- | :--- | :--- | :--- |
 | `pq-weight` | `normal` (Inherited) | `normal`, `medium`, `bold` | Overrides base weight |
 | `pq-style` | `italic` | `upright`, `italic`, `slanted`, `smallcaps`, `emph` | Sets font styling |
-| `pq-family` | `serif` (Inherited) | `serif`, `sans`, `mono` | Overrides base font family |
+| `pq-family` | `serif` | `serif`, `sans`, `mono`, or any literal font name | Sets font family (see below) |
+
+---
+
+#### `pq-family`: Font Chaining
+
+`pq-family` works like a CSS font-family chain, and defaults to `serif` (it does not need to be set explicitly to get a serif pullquote).
+
+* **`serif`, `sans`, or `mono`** resolve to whatever the *whole document* already uses for that category — `mainfont`, `sansfont`, and `monofont`/`codefont` respectively (the same variables from [Font Configuration](#font-configuration) above) — identically across LaTeX, Typst, and HTML. If the relevant variable isn't set, it falls back to the engine's own generic default (a plain CSS `serif`/`sans-serif`/`monospace` keyword for HTML; `Libertinus Serif`/best-effort chain/`DejaVu Sans Mono` for Typst; whatever LaTeX's default document font is for `\rmfamily`/`\sffamily`/`\ttfamily`).
+* **Any other value** is treated as a literal font name (or, for HTML, a comma-separated fallback chain), applied directly instead of going through `mainfont`/`sansfont`/`monofont` at all — e.g. `pq-family="Playfair Display"` renders that pullquote in Playfair Display specifically, regardless of what the rest of the document uses.
+
+```markdown
+::: {.pullquote pq-family="Playfair Display"}
+This pullquote uses a specific display font, independent of the document's mainfont.
+:::
+```
+
+> **No Font Validation:** The filter does not check whether a `pq-family` font name actually exists — it passes the value straight through to each engine. If the font isn't available, LaTeX's `fontspec` raises a hard compile error (`Package fontspec Error: The font "..." cannot be found`), while Typst emits a warning and substitutes its own fallback, still producing a PDF. Both are the engines' own native behavior, not something this filter validates or catches.
 
 ---
 
@@ -297,7 +308,7 @@ The filter natively supports LaTeX's `xcolor` percentage syntax. This translates
 | Shading | `BaseColor!Percentage!black` | Blends with black. |
 | Two-Color Mix | `BaseColor!Percentage!MixColor` | Blends two specific colors. |
 
-> ⚠️ **Strict Casing Rule:** Mixed color definitions are case-sensitive. The core LaTeX colors (`black`, `white`, etc.) must be written in **lowercase**. Conversely, CSS3 named colors must be written in **PascalCase** to maintain cross-backend compatibility.
+> **Strict Casing Rule:** Mixed color definitions are case-sensitive. The core LaTeX colors (`black`, `white`, etc.) must be written in **lowercase**. Conversely, CSS3 named colors must be written in **PascalCase** to maintain cross-backend compatibility.
 
 ---
 
@@ -310,6 +321,10 @@ You are missing the required `tcolorbox` definition. Ensure you have downloaded 
 ### The filter throws a "CRITICAL ERROR: Undefined color keyword" and crashes
 
 You have provided a color string that the underlying rendering engines cannot parse (like a typo in a Hex code or an invalid color name). The filter intentionally executes a fatal abort to prevent upstream compilation crashes. Correct the color spelling to fix the build.
+
+### LaTeX PDF compilation fails with "Package fontspec Error: The font ... cannot be found"
+
+You've set `pq-family` to a font name that isn't installed on your system (or your document's `mainfont`/`sansfont`/`monofont` points to one that isn't). Unlike other `pq-*` attributes, `pq-family` values other than `serif`/`sans`/`mono` aren't validated by the filter — the name is passed straight through to LaTeX's `fontspec` package, which raises this error when it can't resolve it. Typst handles the same situation more gracefully (a warning plus a substituted fallback, not a hard failure), but LaTeX always requires the font to actually be installed. Correct the font name, or install the missing font, to fix the build.
 
 ### My pullquote renders as raw unformatted text
 

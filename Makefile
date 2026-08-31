@@ -85,7 +85,7 @@ filter-proxy: $(FILTER_FILE) ## Generate the cross-platform root-level filter pr
 # Testing Rules (Using clean YAML Defaults + Format Overrides)
 # ==============================================================================
 .PHONY: test
-test: $(FILTER_FILE) $(addprefix test-,$(DIFF_NAMES)) test-errors ## Run all multi-backend AST differential tests and error tests
+test: $(FILTER_FILE) $(addprefix test-,$(DIFF_NAMES)) test-errors test-family ## Run all multi-backend AST differential tests and error tests
 
 test-%: $(FILTER_FILE) test/fixtures/%.md
 	@echo "🧪 Verifying AST layout integrity for case: $*"
@@ -167,7 +167,43 @@ test-errors: $(FILTER_FILE) test/fixtures/test-errors.md ## Test expected failur
 		echo "  ❌ FAIL: Expected fenced_divs warning not found."; \
 		cat error_log.txt; rm error_log.txt; exit 1; \
 	fi
+	@echo "  Checking warnings (Typst Missing Sans-Serif Font)..."
+	@$(PANDOC) test/fixtures/test-errors.md --lua-filter=$(FILTER_FILE) -t typst > /dev/null 2> error_log.txt || true
+	@if grep -q "No sans font configured for Typst output" error_log.txt; then \
+		echo "  ✅ PASS: Caught Typst missing sans-serif font warning."; \
+	else \
+		echo "  ❌ FAIL: Expected Typst sans-serif warning not found."; \
+		cat error_log.txt; rm error_log.txt; exit 1; \
+	fi
 	@rm -f error_log.txt
+
+.PHONY: test-family
+test-family: $(FILTER_FILE) test/fixtures/test-font-styles.md ## Verify pq-family resolves through mainfont/sansfont/monofont, and that literal font names pass through unmodified
+	@echo "🧪 Verifying pq-family font resolution..."
+	@echo "  Checking HTML: serif/sans/mono resolve to the configured mainfont/sansfont/monofont, and literal font names pass through..."
+	@$(PANDOC) test/fixtures/test-font-styles.md --lua-filter=$(FILTER_FILE) $(DEFAULTS_HTML) -t html > family_check.txt 2>/dev/null
+	@if grep -qF 'font-family: &quot;Noto Serif&quot;, serif' family_check.txt && \
+	    grep -qF 'font-family: &quot;Noto Sans&quot;, sans-serif' family_check.txt && \
+	    grep -qF 'font-family: &quot;Fira Mono&quot;, monospace' family_check.txt && \
+	    grep -qF 'font-family: &quot;Libre Baskerville&quot;, serif' family_check.txt; then \
+		echo "  ✅ PASS: HTML font-family resolution is correct."; \
+	else \
+		echo "  ❌ FAIL: Expected font-family values not found in HTML output."; \
+		rm -f family_check.txt; exit 1; \
+	fi
+	@rm -f family_check.txt
+	@echo "  Checking LaTeX: literal custom font names use fontspec..."
+	@if $(PANDOC) test/fixtures/test-font-styles.md --lua-filter=$(FILTER_FILE) $(DEFAULTS_LATEX) -t latex 2>/dev/null | grep -qF '\fontspec{Libre Baskerville}'; then \
+		echo "  ✅ PASS: LaTeX uses fontspec for the literal custom font name."; \
+	else \
+		echo "  ❌ FAIL: Expected fontspec{Libre Baskerville} not found in LaTeX output."; exit 1; \
+	fi
+	@echo "  Checking Typst: literal custom font names are set directly..."
+	@if $(PANDOC) test/fixtures/test-font-styles.md --lua-filter=$(FILTER_FILE) $(DEFAULTS_TYPST) -t typst 2>/dev/null | grep -qF '#set text(font: "Libre Baskerville")'; then \
+		echo "  ✅ PASS: Typst sets the literal custom font name directly."; \
+	else \
+		echo "  ❌ FAIL: Expected #set text(font: \"Libre Baskerville\") not found in Typst output."; exit 1; \
+	fi
 
 # ==============================================================================
 # Visual Previews Generation (Segmented Target Directories Layout)
