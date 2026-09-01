@@ -11,44 +11,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- `pq-html-unit` attribute to control the CSS unit used for `pq-size` scale keys on HTML output (`rem` or `em`; defaults to `rem`, validated against that allow-list).
-- `pq-size` custom-dimension parsing now also accepts `rem`, `px`, and `vw` (v1.0.0 supported only `pt`, `em`, `ex`), with automatic conversion to PDF-safe equivalents for LaTeX and Typst output.
-- `pq-padding-left`, `pq-padding-right`, `pq-padding-top`, and `pq-padding-bottom` attributes to control the box's inner spacing on each side independently (`px`/`pt`/`rem`/`em` units; defaults are `1em`/`12pt` for the left side, `0` for the right side, and `0.25em`/`4pt` for top and bottom).
-- Test fixtures `test-padding.md` and `test-html-unit.md` covering the new padding attributes and `pq-html-unit`, plus their expected AST snapshots.
-- A render-level check in `test-errors.md`/the `Makefile` for the Typst missing-sans-serif-font warning — previously untested by automation, since it only fires when rendering to Typst, a code path the AST-diff suite's `-t json` pipeline never exercises.
-- A new `make test-family` render-content check (folded into `make test`), verifying `pq-family`'s `serif`/`sans`/`mono` keywords resolve to the actual configured `mainfont`/`sansfont`/`monofont` in generated HTML, and that a literal custom font name produces `\fontspec{...}` (LaTeX), the matching `font-family` (HTML), and `#set text(font: ...)` (Typst). Like the Typst sans-serif check above, none of this was previously testable via the AST-diff suite, since it asserts on actual rendered content, not just document structure.
-- `pq-family` now accepts an arbitrary literal font name in addition to `serif`/`sans`/`mono` (e.g. `pq-family="Playfair Display"`), applied directly via `\fontspec` (LaTeX), `font-family` (HTML), and `#set text(font: ...)` (Typst) — bypassing `mainfont`/`sansfont`/`monofont` entirely for that one pullquote. The value is validated against a safe character set (letters, digits, spaces, hyphens, apostrophes) and aborts with a clear error otherwise, both to keep it safe to splice unescaped into LaTeX's `\fontspec{...}` keyval option and because it means a CSS-style comma-separated fallback list (e.g. `"Playfair Display, Georgia"`) isn't supported — it isn't split into a chain for any of the three backends, so it's rejected up front instead of silently resolving to one broken literal name. Beyond that character check, the name isn't validated against installed fonts: an unresolvable name surfaces as LaTeX's own hard `fontspec` compile error, or as a soft warning-and-substitute in Typst — both native engine behavior, not something this filter checks. `pullquote.tex` now loads `fontspec` itself, guarded to XeLaTeX/LuaLaTeX only, since `fontspec` doesn't work under `pdflatex` (Pandoc's default engine) — a literal `pq-family` value requires compiling with `--pdf-engine=lualatex` or `xelatex`.
-- Hex colors now also accept 4- and 8-digit forms with an alpha channel (`#RGBA`/`#RRGGBBAA`), rendered natively for HTML/Typst; LaTeX's `HTML` color model has no transparency channel, so the alpha channel is dropped there.
-- `pullquote.sty`, a standalone LaTeX package for the `\pullquote` environment aimed at plain (pdf/Xe/Lua)LaTeX documents with no Pandoc or Quarto involved. It defines the same environment and keys (`width`, `color`, `size`, `skip`, `align`, `boxalign`, `barwidth`, `barcolor`, `paddingleft`/`paddingright`/`paddingtop`/`paddingbottom`) as `_extensions/pullquote/pullquote.tex`, the file the Lua filter's LaTeX output already targets — the two are kept in sync as separate files rather than shared, since the Quarto file is loaded via Pandoc's `--include-in-header` (a raw preamble insert) rather than a package lookup. Lives at the repository root rather than inside `_extensions/pullquote/`, since `quarto add` copies that directory verbatim and `pullquote.sty` plays no part in the Quarto/Pandoc pipeline. See `test/pullquote-standalone-example.tex` for a minimal compilable demo, now built by `make docs` into `docs/pullquote-standalone-example.pdf`, the fourth rendered specimen linked from the README, alongside `docs/pullquote.lua`/`docs/pullquote.sty` local convenience copies — both `.gitignore`d, unlike the specimen itself, since neither is referenced by anything else under `docs/` and both would just be committed duplicates of files already tracked elsewhere in the repo.
+- `pq-html-unit` attribute to control the CSS unit used for scaling (`rem` or `em`).
+- `pq-size` custom dimensions now support `rem`, `px`, and `vw` (with automatic conversion to PDF-safe equivalents for LaTeX/Typst).
+- `pq-padding-left`, `-right`, `-top`, and `-bottom` attributes for independent inner-spacing control.
+- Literal font name support for `pq-family` (e.g., `pq-family="Playfair Display"`), applied directly via `\fontspec`, CSS `font-family`, and Typst `#set text`.
+- Support for 4- and 8-digit hex colors with alpha channels (transparency renders natively in HTML/Typst, ignored in LaTeX).
+- Standalone `pullquote.sty` package for plain LaTeX environments bypassing Pandoc/Quarto.
+- Expanded test coverage for padding attributes, HTML units, Typst font warnings, and literal font rendering.
 
 ### Changed
 
-- `pq-bar-width`'s default changed from a fixed `4px`/`4pt` (v1.0.0) to `0.25em` for HTML and `4pt` for LaTeX/Typst, so the bar's thickness scales with whatever `pq-size` the pullquote uses instead of staying a constant size regardless of the text size around it — a flat size looked too heavy against small text and too thin against large text.
-- `pq-bar-width` now validates its value against a `px`/`pt`/`rem`/`em` allow-list, instead of accepting any string unchecked as in v1.0.0 (which could pass a typo straight through to `tcolorbox`/Typst and fail with an obscure downstream compile error).
-- `pq-bar-width`'s `px`→`pt` conversion for the LaTeX/Typst pathways now applies the correct 96dpi:72pt ratio (`24px` → `18pt`) instead of v1.0.0's naive suffix swap (`24px` → `24pt`, 33% too large).
-- The bundled `test/pullquote-examples.md` specimen now uses `rem`/`em` throughout instead of `px`, to model scalable units as best practice; the `px`-specific test fixtures under `test/fixtures/` intentionally keep `px` values, since they're testing that exact conversion.
-- `pq-family` now defaults explicitly to `"serif"` instead of applying no override at all when omitted. Previously, an un-styled pullquote simply inherited whatever font was already active at that point in the document; now it explicitly resolves through the same logic as `pq-family="serif"` (see below).
-- HTML's `pq-family="serif"`/`"sans"`/`"mono"` now resolve to the actual configured `mainfont`/`sansfont`/`monofont`/`codefont` metadata (falling back to the generic `serif`/`sans-serif`/`monospace` CSS keyword only when that variable is unset), instead of always emitting the bare generic keyword regardless of configuration — bringing HTML in line with how LaTeX/Typst already resolved these. This was necessary as a companion to the default-value change above: without it, an un-styled pullquote on a page with a custom serif webfont would have silently stopped matching that font, forcing the browser's generic default serif instead (confirmed by rendering a page with a `mainfont`-configured webfont before and after).
+- `pq-bar-width` default changed to `0.25em` (HTML) and `4pt` (LaTeX/Typst) for proportional scaling.
+- `pq-bar-width` now strictly validates against an allowed list of units (`px`/`pt`/`rem`/`em`).
+- `px`-to-`pt` conversions for LaTeX/Typst now use the accurate 96dpi:72pt ratio (1px = 0.75pt).
+- `pq-family` now explicitly defaults to `"serif"` instead of inheriting the surrounding un-styled font.
+- HTML `pq-family` keyword resolution (`serif`/`sans`/`mono`) now reads Pandoc's standard `mainfont`/`sansfont`/`monofont` metadata to ensure consistency across PDF and HTML outputs.
+- Bundled specimen documents updated to use scalable `rem`/`em` units by default.
 
 ### Fixed
 
-- Typst output defaulted its sans-serif font to `DejaVu Sans Mono` (a monospace font) in v1.0.0; it now uses a fallback chain (`Noto Sans`, `DejaVu Sans`, `Liberation Sans`, `Arial`, `Helvetica`) and warns to `stderr` when compiling to Typst without an explicit sans font configured (`sansfont`).
-- `pullquote.tex`: the `svgnames` `xcolor` option (used for the default `DarkGray`/`LightGray` colors) never actually took effect under Pandoc, because Pandoc's default LaTeX template loads `xcolor` before `--include-in-header` content runs, so `\PassOptionsToPackage{svgnames}{xcolor}` arrived too late. This broke LaTeX/PDF compilation with `Undefined color 'DarkGray'` for any document using the defaults since v1.0.0. Fixed by loading the SVG color definitions directly (`\input{svgnam.def}`).
-- The README's example CSS `@import` URLs had markdown-link syntax accidentally left around them since v1.0.0 (e.g. `url('[https://...](https://...)')`), producing invalid CSS; cleaned up to plain URLs.
-- `pq-width` no longer crashes with a raw Lua stack trace on a malformed percentage (e.g. `"abc%"`), a bug present since v1.0.0; it now warns and falls back to the default, consistent with how other invalid attribute values are handled.
-- `pq-style` now behaves consistently with `pq-weight`/`pq-family` on an unrecognized value: it warns and inherits the surrounding formatting instead of also force-applying the italic default (v1.0.0's `pq-style` was the only one of the three that force-applied a fallback).
-- LaTeX output was silently collapsing multi-paragraph pullquotes into one continuous block of text, with no visible break between paragraphs (unlike HTML and Typst, which both render normal paragraph spacing) — present since v1.0.0's `pullquote.tex`. The cause was `tcolorbox` itself resetting `\parskip` inside the box, independent of the `parskip` package loaded by the surrounding document. Fixed by restoring a paragraph gap of half the box's own (`pq-skip`-adjusted) `\baselineskip` inside the `before upper` hook — a full `\baselineskip` looked like double-spacing when combined with the existing interline gap.
-- HTML output was missing `box-sizing: border-box` since v1.0.0, so any non-zero padding expanded the rendered box wider than its declared `pq-width` instead of being subtracted from it, unlike LaTeX/Typst — most visible now that every side of the padding is independently configurable. Fixed by setting `box-sizing: border-box` on the pullquote's inline style.
-- `_extension.yml` declared `include-in-header: pq-preamble.tex` for PDF output since v1.0.0, but no such file has ever existed in the extension — only `pullquote.tex` does. This broke the Quarto installation path entirely: `quarto add nandac/pullquote` followed by any LaTeX/PDF render would fail looking for a nonexistent file, contradicting the README's claim that Quarto "automatically handles asset registration." Fixed by correcting the filename. Not covered by CI, since `.github/workflows/ci.yaml` only exercises the raw Pandoc CLI path, never the Quarto extension mechanism.
-- An unresolved color name (not a known CSS keyword and not valid hex) only reliably aborted compilation when it was made up entirely of letters/digits/hyphens — a bug present since v1.0.0. Anything else (a typo with a space, like `"totally bogus"`) silently reached the output as invalid CSS, an undefined Typst variable, or, for LaTeX, was spliced raw into `xcolor`'s own color option. It now aborts unconditionally and identically across HTML, LaTeX, and Typst, since this filter has no per-format color vocabulary — only the single shared CSS/hex/mixing syntax documented in the README.
-- Malformed color-mix syntax (e.g. `red!!blue`, or a negative/decimal percentage) silently fell through to being emitted as an invalid raw color string for HTML/Typst, with no warning — a bug present since v1.0.0. It now warns and falls back to the default color.
-- `pq-width` accepted any alphabetic unit suffix with no allow-list (e.g. `pq-width="20rem"`, `pq-width="10vh"`) — a bug present since v1.0.0. It's now validated against `px`/`pt`/`rem`/`em`/`cm`/`mm`/`in`, and `px`/`rem` absolute values are converted to PDF-safe `pt`/`em` for LaTeX/Typst (previously passed through unconverted, breaking both PDF backends for any non-percentage width using a web-only unit); `pt`/`em`/`cm`/`mm`/`in` are native LaTeX/Typst lengths and pass straight through, as documented in the bundled `pullquote-examples.md` specimen (`pq-width="300pt"`/`"10cm"`).
-- `pq-skip` accepted any non-numeric string unvalidated (e.g. `pq-skip="normal"`, a valid CSS `line-height` keyword), passing it straight through to LaTeX's `\setlength` and Typst's `#set par(leading: ...)`, both of which require an actual length — a bug present since v1.0.0. It's now validated against the same `px`/`pt`/`rem`/`em` allow-list used elsewhere, with a warning and fallback to the default on anything else; a validated `px`/`rem` length (e.g. `pq-skip="1.5rem"`) is now also converted to PDF-safe `pt`/`em` for LaTeX/Typst, like every other px/pt/rem/em attribute, instead of being spliced in unconverted and breaking both PDF backends. Separately, the Typst leading formula subtracted `1.0` from the multiplier (`num - 1.0`), so the documented default of `pq-skip="1"` collapsed Typst's line spacing to `0em` while LaTeX/HTML rendered normally for the same input, and any multiplier below `1.0` went negative — also present since v1.0.0. The multiplier is now applied directly as the leading value, matching the `1em` fallback already used when `pq-skip` is omitted.
-- `pq-size`'s custom-dimension parsing accepted `0` (e.g. `pq-size="0px"`), silently rendering invisible zero-height text in all three engines with no warning — a bug present since v1.0.0. It's now rejected with the same warning as any other invalid `pq-size` value, falling back to the default.
+- LaTeX `svgnames` color definitions now load correctly via `\input{svgnam.def}`, resolving "Undefined color" errors under default Pandoc templates.
+- Multi-paragraph pullquotes in LaTeX now render with proper paragraph spacing inside the `tcolorbox`.
+- HTML output now applies `box-sizing: border-box` to prevent custom padding from expanding the container width.
+- Quarto extension installation path fixed by correcting the PDF include reference to `pullquote.tex` in `_extension.yml`.
+- Typst output now includes a sans-serif fallback chain and emits a warning if `sansfont` is unconfigured.
+- `pq-width` strictly validates length units and no longer crashes on malformed percentages.
+- `pq-skip` validates units, converts `px`/`rem` to PDF-safe equivalents, and fixes the Typst leading calculation.
+- `pq-style` warns and inherits surrounding formatting on invalid values instead of forcing italics.
+- Unresolved color names and malformed `xcolor` mixing syntax now strictly abort compilation or fall back safely across all formats.
+- `pq-size` custom-dimension parsing safely rejects `0` values.
+- README CSS `@import` URLs cleaned of invalid markdown link syntax.
 
 ### Removed
 
-- `pq-family-serif`, `pq-family-mono`, and `pq-family-sans` metadata overrides (present since v1.0.0, but never documented in the README). Typst font mapping now uses only the standard `mainfont`/`sansfont`/`monofont`/`codefont` variables — the same ones LaTeX already uses — so a pullquote's font always matches the rest of the document, with no separate Typst-specific override to configure. The one genuine gap this was working around (Typst has no bundled sans-serif font) is still handled: the fallback chain and warning when `sansfont` is unset are unchanged.
+- Undocumented `pq-family-serif`, `pq-family-sans`, and `pq-family-mono` metadata overrides (the filter now relies exclusively on Pandoc's standard font variables).
 
 ## [1.0.0] — 2026-08-27
 
@@ -56,18 +52,18 @@ Initial public release of the `pullquote` Pandoc Lua filter.
 
 ### Added
 
-- Semantic `.pullquote` fenced-div syntax that renders to HTML, LaTeX/PDF, and Typst from the same Markdown source.
+- Semantic `.pullquote` fenced-div syntax rendering to HTML, LaTeX/PDF, and Typst from the same Markdown source.
 - Unified, namespaced attribute API (`pq-*`) for inline configuration with fallback to global document metadata.
-- Core layout attributes: `pq-width`, `pq-text-color`, `pq-bar-color`, `pq-bar-width`, and `pq-skip` (interline spacing multiplier).
+- Core layout attributes: `pq-width`, `pq-text-color`, `pq-bar-color`, `pq-bar-width`, and `pq-skip`.
 - Typography attributes: `pq-weight`, `pq-style`, and `pq-family`.
-- Symmetrical 9-step t-shirt sizing scale (`3xs` through `3xl`, featuring `m` as medium) alongside custom unit parsing via the `pq-size` attribute.
+- Symmetrical 9-step t-shirt sizing scale (`3xs` through `3xl`) alongside custom unit parsing via `pq-size`.
 - Dual-alignment control via `pq-text-align` (inner text) and `pq-box-align` (block positioning).
-- Color resolution supporting CSS named colors, 3/6-digit hex codes, and cross-platform color-mixing syntax (e.g. `Maroon!30`), rendered natively for LaTeX (`xcolor`), HTML (`color-mix`), and Typst (`color.mix`).
-- Document-metadata font mapping (`pq-family-serif`, `pq-family-sans`, `pq-family-mono`, and fallback to `mainfont`/`sansfont`/`monofont`/`codefont`) for Typst output.
-- LaTeX preamble (`pullquote.tex`) defining the `pullquote` `tcolorbox` environment with keyval options.
+- Color resolution supporting CSS named colors, hex codes, and cross-platform color-mixing syntax (e.g. `Maroon!30`).
+- Document-metadata font mapping for Typst output.
+- LaTeX preamble (`pullquote.tex`) defining the `pullquote` `tcolorbox` environment.
 - Fully standalone Typst code generation (no external preamble required).
-- Pandoc extension manifest (`_extension.yml`) for installation via `pandoc-ext`/`quarto`-style extension tooling.
-- Robust `Makefile` providing multi-backend AST differential testing (`make test`), artifact previews (`make previews`), and standalone documentation generation (`make docs`).
+- Pandoc extension manifest (`_extension.yml`) for `pandoc-ext`/`quarto`-style installation.
+- Robust `Makefile` for multi-backend AST testing, artifact previews, and documentation generation.
 
 [1.1.0]: https://github.com/nandac/pullquote/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/nandac/pullquote/releases/tag/v1.0.0

@@ -1,111 +1,61 @@
 # Pandoc Pullquote Filter
 
-Pullquote is a robust, cross-platform Lua filter for Pandoc that brings rich, typographic control to block-level excerpts. It ensures beautiful and consistent results across LaTeX (PDF), Typst (PDF), and HTML formats using a unified, namespaced attribute system (`pq-*`).
+A robust, cross-platform Lua filter for Pandoc that brings rich typographic control to block-level excerpts. It ensures beautiful and consistent results across LaTeX (PDF), Typst (PDF), and HTML formats using a unified, namespaced attribute system (`pq-*`).
 
-* **LaTeX/PDF Output:** Automatically maps `pq-*` attributes to a highly customizable `tcolorbox` environment.
-* **HTML & Typst/PDF Output:** Fully standalone, generating native CSS and Typst block styles directly in the rendered markup.
+* **LaTeX/PDF:** Automatically maps `pq-*` attributes to a highly customizable `tcolorbox` environment.
+* **HTML & Typst/PDF:** Fully standalone, generating native CSS and Typst block styles directly in the rendered markup.
 
-* [Live HTML Specimen (Rendered Preview)](https://htmlpreview.github.io/?https://github.com/nandac/pullquote/blob/main/docs/pullquote-examples.html)
-* [LaTeX PDF Specimen](https://github.com/nandac/pullquote/blob/main/docs/pullquote-examples-latex.pdf)
-* [Typst PDF Specimen](https://github.com/nandac/pullquote/blob/main/docs/pullquote-examples-typst.pdf)
-* [Plain LaTeX Specimen (`pullquote.sty`, no Pandoc/Quarto)](https://github.com/nandac/pullquote/blob/main/docs/pullquote-standalone-example.pdf)
+**Live Previews:** [HTML](https://htmlpreview.github.io/?https://github.com/nandac/pullquote/blob/main/docs/pullquote-examples.html) | [LaTeX PDF](https://github.com/nandac/pullquote/blob/main/docs/pullquote-examples-latex.pdf) | [Typst PDF](https://github.com/nandac/pullquote/blob/main/docs/pullquote-examples-typst.pdf) | [Plain LaTeX](https://github.com/nandac/pullquote/blob/main/docs/pullquote-standalone-example.pdf)
 
 ---
 
-## Installation & Requirements
+## Installation
 
-Requires **Pandoc 3.10 or later** and the `fenced_divs` extension (enabled by default). The filter will halt compilation with a clear error if run under an older release.
+Requires **Pandoc 3.10+** and the `fenced_divs` extension (enabled by default).
 
 ### Quarto
-
-Install the extension via terminal. Quarto handles all asset registration automatically:
-
+Quarto handles all asset registration automatically:
 ```bash
 quarto add nandac/pullquote
 ```
 
 ### Pandoc
-
-Download the Lua filter (and the LaTeX preamble) directly into your project directory:
-
+Download the Lua filter and the LaTeX preamble into your project directory:
 ```bash
-# pullquote.lua (Required for all formats)
 curl -O "https://raw.githubusercontent.com/nandac/pullquote/refs/tags/v1.1.0/_extensions/pullquote/pullquote.lua"
-
-# pullquote.tex (Required ONLY for LaTeX output)
 curl -O "https://raw.githubusercontent.com/nandac/pullquote/refs/tags/v1.1.0/_extensions/pullquote/pullquote.tex"
 ```
+*(See [Compilation](#compilation) below for command line flags).*
 
-*See the [Compilation Commands](#compilation-commands) section below for exact terminal usage.*
+<details>
+<summary><strong>Using Plain LaTeX? (No Pandoc/Quarto)</strong></summary>
 
-### Plain LaTeX (No Pandoc or Quarto)
-
-If you're writing LaTeX directly and have no interest in Pandoc/Quarto or the `pq-*` attribute system below, download the standalone package instead:
-
+Download the standalone package to your `TEXINPUTS` directory:
 ```bash
 curl -O "https://raw.githubusercontent.com/nandac/pullquote/refs/tags/v1.1.0/pullquote.sty"
 ```
-
-Place `pullquote.sty` alongside your `.tex` file (or anywhere on your `TEXINPUTS`), then load it and use the `pullquote` environment directly:
-
-```latex
-\usepackage{pullquote}
-...
-\begin{pullquote}[color=DarkSlateGray, barcolor=CadetBlue, size=\Large\itshape]
-"Typography is the craft of endowing human language with a durable visual form."
-\end{pullquote}
-```
-
-This environment takes plain LaTeX/`tcolorbox` keys, not the `pq-*` attributes documented below (those are a Pandoc/Quarto-only convenience the Lua filter translates into these same keys):
-
-| Key | Description | Default |
-| :--- | :--- | :--- |
-| `width` | Container block width | `0.8\textwidth` |
-| `color` | Text foreground color | `DarkGray` |
-| `size` | Font size/style commands | `\large\itshape` |
-| `skip` | Interline spacing (a length) | `1.2\baselineskip` |
-| `align` | Text alignment command | `\raggedright` |
-| `boxalign` | Box alignment on the page (`flush left`/`center`/`flush right`) | `center` |
-| `barwidth` | Left border thickness | `4pt` |
-| `barcolor` | Left border color | `LightGray` |
-| `paddingleft` / `paddingright` / `paddingtop` / `paddingbottom` | Inner spacing on each side | `12pt` / `0pt` / `4pt` / `4pt` |
-
-Colors accept any `xcolor` name (including `svgnames`, loaded automatically) and `xcolor`'s `Color!Percent` mixing syntax. A literal font passed via `size` (e.g. `size=\fontspec{Playfair Display}\Large`) requires compiling with `xelatex` or `lualatex`, same as the Quarto/Pandoc pathway. See [test/pullquote-standalone-example.tex](test/pullquote-standalone-example.tex) for a complete, compilable demo (rendered at the [Plain LaTeX Specimen](https://github.com/nandac/pullquote/blob/main/docs/pullquote-standalone-example.pdf) link above).
-
-> **Advanced — using `pullquote.sty` from a custom Pandoc template:** Pandoc/Quarto users with their own template can `\usepackage{pullquote}` there instead of relying on `--include-in-header=pullquote.tex`. This is more setup, not less: `pullquote.sty` must be installed somewhere LaTeX can find it (your project's `TEXINPUTS`, or a personal `texmf` tree), and your custom template must load it explicitly. The Lua filter's LaTeX output only ever emits `\begin{pullquote}[...]...\end{pullquote}`, so it doesn't care which of the two files actually defined that environment — for the default Pandoc/Quarto setup described above, stick with `pullquote.tex` and `--include-in-header`.
->
-> `pullquote.sty` deliberately lives at the repository root rather than inside `_extensions/pullquote/`: Quarto's `quarto add` copies that whole directory verbatim into a user's project, and `pullquote.sty` plays no part in the Quarto/Pandoc pipeline — bundling it there would just ship an unused file into every Quarto install.
+Load it via `\usepackage{pullquote}` and use standard LaTeX keys instead of `pq-*` attributes (e.g., `\begin{pullquote}[color=DarkSlateGray, size=\Large\itshape]`). See the `test/` directory for a complete demo.
+</details>
 
 ---
 
 ## Basic Usage
 
-The filter uses native Pandoc **Fenced Divs** paired with the `.pullquote` class. By default, with no attributes, the text renders in italics at the large (`l`) scale with a neutral grey bar.
+The filter uses native Pandoc **Fenced Divs** paired with the `.pullquote` class. By default, text renders in italics at the large (`l`) scale.
 
 ```markdown
-::: {.pullquote}
+::: {.pullquote pq-text-color="DarkSlateGray" pq-bar-color="CadetBlue" pq-size="xl"}
 "Typography is the craft of endowing human language with a durable visual form."
 --- Robert Bringhurst
 :::
 ```
 
-You can customize the output by adding inline `pq-*` attributes directly to the div:
-
-```markdown
-::: {.pullquote pq-text-color="DarkSlateGray" pq-bar-color="CadetBlue" pq-size="xl"}
-"Typography is the craft of endowing human language with a durable visual form."
-:::
-```
-
 ---
 
-## Attributes & Examples
+## Attributes Reference
 
-### Colors & Borders
-
-Supports CSS3 named colors (case-insensitive) and 3/4/6/8-digit hex codes (`#RGB`/`#RGBA`/`#RRGGBB`/`#RRGGBBAA`) — the alpha channel renders natively for HTML/Typst, but is dropped for LaTeX, which has no transparency channel here. It also natively supports LaTeX's `xcolor` percentage mixing (e.g., `Maroon!30`) across **all** formats (HTML and Typst included).
-
-A color value outside this shared vocabulary (a name from `xcolor`'s wider `dvipsnames`/`svgnames`/`x11names` libraries, for instance) halts compilation with a clear error, the same way regardless of output format — this filter has no per-format color vocabulary.
+### 1. Colors & Borders
+Supports CSS3 named colors, hex codes, and LaTeX's `xcolor` percentage mixing (e.g., `Maroon!30`) uniformly across **all** formats.
 
 | Attribute | Description | Default |
 | :--- | :--- | :--- |
@@ -113,63 +63,21 @@ A color value outside this shared vocabulary (a name from `xcolor`'s wider `dvip
 | `pq-bar-color` | Left border color | `#d9d9d9` |
 | `pq-bar-width` | Left border thickness | `0.25em` (HTML) / `4pt` |
 
-**Example:**
-
-```markdown
-::: {.pullquote pq-text-color="crimson" pq-bar-color="crimson!30" pq-bar-width="6px"}
-This pullquote uses a solid crimson text color and a 30% tinted crimson bar.
-:::
-```
-
-### Spacing & Padding
-
-You have granular control over the padding on all four sides of the text, as well as the interline spacing (leading).
+### 2. Spacing & Layout
+Granular control over padding, line-height, and block alignment.
 
 | Attribute | Description | Default |
 | :--- | :--- | :--- |
 | `pq-padding-left` | Space between the bar and text | `1em` (HTML) / `12pt` |
-| `pq-padding-right` | Space on the right edge | `0` |
-| `pq-padding-top` | Space above the text | `0.25em` (HTML) / `4pt` |
-| `pq-padding-bottom` | Space below the text | `0.25em` (HTML) / `4pt` |
-| `pq-skip` | Interline spacing — a unitless multiplier, or a `px`/`pt`/`rem`/`em` length | `1.0` |
+| `pq-padding-right` / `top` / `bottom` | Outer edge padding | `0` / `0.25em` / `0.25em` |
+| `pq-skip` | Interline spacing multiplier (or exact unit) | `1.0` |
 | `pq-html-unit` | Base CSS unit for scaling (HTML only) | `rem` (Valid: `rem`, `em`) |
-
-> **Design Note:** For HTML, `pq-padding-*` and `pq-bar-width` default to relative `em` units. This ensures the bar thickness and inner padding grow or shrink proportionally if you drastically change the `pq-size`. LaTeX and Typst use fixed `pt` defaults, as their box frameworks resolve dimensions differently.
-
-`pq-skip` normally acts as a multiplier on the engine's own interline spacing, but you can instead pass an explicit `px`/`pt`/`rem`/`em` length (e.g. `pq-skip="2em"`) for direct control over the line height.
-
-**Example:**
-
-```markdown
-::: {.pullquote pq-padding-left="24px" pq-padding-top="16px" pq-skip="1.5"}
-This text has custom padding on the top and left, with a 1.5x line-height multiplier.
-:::
-```
-
-### Layout & Alignment
-
-Separate controls exist for the text *inside* the box, and the box itself *on the page*.
-
-| Attribute | Description | Default |
-| :--- | :--- | :--- |
-| `pq-width` | Container block width | `80%` (Accepts `%` or a `px`/`pt`/`rem`/`em`/`cm`/`mm`/`in` length) |
+| `pq-width` | Container block width | `80%` |
 | `pq-text-align` | Aligns text *inside* the box | `left` (Valid: `left`, `center`, `right`) |
 | `pq-box-align` | Aligns the entire box on the page | `center` (Valid: `left`, `center`, `right`) |
 
-**Example:**
-
-```markdown
-::: {.pullquote pq-width="60%" pq-box-align="right" pq-text-align="center"}
-This is a 60% width pullquote pushed to the right side of the page, with centered text.
-:::
-```
-
-### Typography (`pq-size`, `pq-weight`, `pq-style`, `pq-family`)
-
-The filter features a robust, unit-agnostic sizing engine.
-
-* **Standard Scale:** Uses a 9-step scale (`3xs` through `3xl`). `m` matches your document's baseline; `l` is the default.
-* **Custom Dimensions:** You can pass standard units (`pt`, `em`, `rem`, `px`, `vw`). For example, `pq-size="24pt"` or `pq-size="1.5rem"`. The filter safely translates web units to PDF units for LaTeX/Typst to prevent crashes.
+### 3. Typography
+Uses a unit-agnostic sizing engine. Pass standard scale keys (`3xs` to `3xl`) or specific physical/relative units (`24pt`, `1.5rem`).
 
 | Attribute | Default | Valid Inputs |
 | :--- | :--- | :--- |
@@ -178,31 +86,13 @@ The filter features a robust, unit-agnostic sizing engine.
 | `pq-style` | `italic` | `upright`, `italic`, `slanted`, `smallcaps`, `emph` |
 | `pq-family` | `serif` | `serif`, `sans`, `mono`, or a literal font name |
 
-**Example (Using Document Fonts):**
-
-```markdown
-::: {.pullquote pq-size="2xl" pq-weight="bold" pq-style="smallcaps" pq-family="sans"}
-This uses the document's global sans-serif font, rendered extra-large and bold.
-:::
-```
-
-**Example (Using an Independent Display Font):**
-
-If you pass a literal string to `pq-family`, the pullquote will use that exact font, independent of the rest of your document. *(Note: Ensure the font is actually installed on your system, or LaTeX will throw a `fontspec` error).*
-
-```markdown
-::: {.pullquote pq-family="Playfair Display" pq-style="upright"}
-This pullquote overrides the document base and explicitly requests Playfair Display.
-:::
-```
-
-> **No Font Chaining:** `pq-family` takes exactly one literal font name — it does not support a CSS-style comma-separated fallback list (e.g. `"Playfair Display, Georgia"`). A comma-separated value (or any character outside letters, digits, spaces, hyphens, and apostrophes) halts compilation with a clear error rather than silently failing to resolve.
+> **Note on `pq-family`:** Standard keywords (`serif`, `sans`, `mono`) automatically inherit from your Pandoc YAML document fonts (`mainfont`, etc.). Passing a literal font string (e.g., `pq-family="Playfair Display"`) applies that exact font but does not support CSS-style fallback chaining.
 
 ---
 
 ## Global Configuration
 
-Instead of writing attributes on every Fenced Div, you can establish project-wide defaults in your YAML frontmatter or a Pandoc `defaults.yaml` file. Inline attributes always override these global defaults.
+You can establish project-wide defaults in your YAML frontmatter. Inline attributes on the Fenced Div will override these defaults.
 
 ```yaml
 metadata:
@@ -210,31 +100,11 @@ metadata:
   pq-bar-color: "CadetBlue"
   pq-width: "80%"
   pq-size: "l"
-  pq-box-align: "center"
-  pq-text-align: "center"
+  mainfont: "Noto Serif" # Automatically inherited by pq-family="serif"
 ```
-
----
-
-## Advanced: Global Font Configuration
-
-To establish a consistent typographic baseline across all formats, define Pandoc's standard font variables directly in your Markdown frontmatter. The Lua filter automatically intercepts these variables so your `pq-family="serif"` / `"sans"` / `"mono"` calls perfectly match the rest of your document.
-
-### PDF and Typst
-
-```yaml
-metadata:
-  fontsize: 12pt
-  mainfont: Noto Serif
-  sansfont: Noto Sans
-  monofont: Fira Mono
-```
-
-> **Typst Sans-Serif Note:** Typst bundles default serif and monospace fonts, but ships no default sans-serif font. If you use `pq-family="sans"` in Typst, you *must* set `sansfont` in your metadata. Otherwise, the filter uses a best-effort fallback chain (`Noto Sans`, `Arial`, etc.), which may not render consistently across all machines.
 
 ### HTML and Web Fonts
-
-For HTML output, loading a webfont in your CSS is not enough. The Lua filter reads Pandoc's *metadata*, not your stylesheet. To ensure your HTML pullquotes inherit your custom fonts, declare them in *both* your CSS and your YAML metadata:
+For HTML output, loading a webfont in your CSS is not enough, because the Lua filter reads Pandoc's metadata to determine the font family. To ensure your HTML pullquotes inherit your custom fonts, declare them in *both* your CSS and your YAML metadata (as shown above).
 
 ```css
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap');
@@ -245,50 +115,32 @@ body {
 }
 ```
 
-> **CSS Specificity:** For HTML output, the Lua filter writes styles directly to the element's inline `style` attribute with `!important` to guarantee survival against aggressive themes (like Bootstrap). Consequently, you cannot override pullquote properties from your external CSS stylesheet; you must configure them using `pq-*` attributes.
-
 ---
 
-## Compilation Commands
+## Compilation
 
-If you are using **Quarto**, execute `quarto render document.qmd`.
-If you are using **Pandoc**, pass the assets via the command line:
+If using **Quarto**, simply run `quarto render document.qmd`.
+If using **Pandoc**, pass the required engine and assets via the command line:
 
-### PDF Generation (LaTeX)
-
-Requires explicitly including the `pullquote.tex` preamble:
-
+**LaTeX PDF:** (Requires explicitly including the preamble)
 ```bash
-pandoc \
-  --lua-filter=pullquote.lua \
-  --include-in-header=pullquote.tex \
-  --pdf-engine=lualatex \
-  --output=document.pdf \
-  document.md
+pandoc --lua-filter=pullquote.lua --include-in-header=pullquote.tex --pdf-engine=lualatex --output=document.pdf document.md
 ```
 
-### Typst & HTML Generation
-
-Typst and HTML are fully standalone and require no external templates:
-
+**Typst & HTML:** (Fully standalone)
 ```bash
-pandoc \
-  --lua-filter=pullquote.lua \
-  --pdf-engine=typst \
-  --output=document.pdf \
-  document.md
+pandoc --lua-filter=pullquote.lua --pdf-engine=typst --output=document.pdf document.md
 ```
 
 ---
 
 ## Troubleshooting
 
-* **LaTeX compilation fails with "Environment pullquote undefined":** You are missing the required `tcolorbox` definition. If you're on the Pandoc/Quarto path, ensure you are passing `--include-in-header=pullquote.tex`. If you're compiling plain LaTeX, ensure `\usepackage{pullquote}` is in your preamble and `pullquote.sty` is on `TEXINPUTS` (e.g. in the same directory as your `.tex` file).
-* **`! LaTeX Error: File 'pullquote.sty' not found`:** `pullquote.sty` isn't on your `TEXINPUTS` — place it next to your `.tex` file, or install it into a personal `texmf` tree (`kpsewhich -var-value TEXMFHOME`).
-* **LaTeX compilation fails with "Package fontspec Error: The font ... cannot be found":** You set `pq-family` to a specific display font that is not installed on your system. Install the font or revert to `serif`/`sans`/`mono`.
-* **LaTeX compilation fails with "Undefined control sequence `\fontspec`" or "You must use XeLaTeX or LuaLaTeX for fontspec!":** A literal `pq-family` font name requires `fontspec`, which only works under XeLaTeX/LuaLaTeX. Compile with `--pdf-engine=lualatex` (or `xelatex`) — this doesn't work under `pdflatex`, Pandoc's default engine.
-* **The filter throws a "CRITICAL ERROR: Undefined color keyword":** You provided an invalid CSS color name or malformed hex code. The filter halts to prevent an upstream crash.
-* **Pullquotes render as unformatted text (`::: {.pullquote}`):** The Pandoc `fenced_divs` extension is disabled. Enable it by passing `-f markdown+fenced_divs`.
+* **Environment pullquote undefined:** Missing the `tcolorbox` definition. Ensure you are passing `--include-in-header=pullquote.tex`.
+* **The font ... cannot be found:** You set `pq-family` to a font not installed on your system.
+* **Undefined control sequence `\fontspec`:** Literal `pq-family` font names require `fontspec`, meaning you must compile with `--pdf-engine=lualatex` or `xelatex`.
+* **CRITICAL ERROR: Undefined color keyword:** Invalid CSS color name or malformed hex code.
+* **Pullquotes render as unformatted text:** The `fenced_divs` extension is disabled.
 
 ## Changelog
 
