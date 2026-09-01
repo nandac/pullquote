@@ -5,6 +5,17 @@
 \usepackage{tcolorbox}
 \usepackage{environ}
 \usepackage{keyval}
+\usepackage{iftex}
+
+% pq-family accepts an arbitrary literal font name (e.g. pq-family="Playfair
+% Display"), which the Lua filter renders as \fontspec{...}. fontspec itself
+% only works under XeLaTeX/LuaLaTeX, so it is loaded here only on those
+% engines — loading it unconditionally would break pdflatex (Pandoc's
+% default engine) even for documents that never use a literal pq-family.
+\ifPDFTeX
+\else
+  \usepackage{fontspec}
+\fi
 
 % Pandoc's default template loads xcolor (without options) before
 % header-includes run, so PassOptionsToPackage above arrives too late

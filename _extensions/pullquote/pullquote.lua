@@ -8,7 +8,7 @@
 --- @copyright © 2026 Nandakumar Chandrasekhar
 --- @license   MIT - see LICENSE for details
 --- @version   1.1.0
---- @release   2026-08-31
+--- @release   2026-09-01
 ---
 --- @note      LaTeX output requires pullquote.tex to be included in the document preamble.
 ---            Typst and HTML outputs are fully standalone.
@@ -178,38 +178,46 @@ end
 -- ==============================================================================
 
 local function resolve_single_color(input)
-  if not input then return nil, nil, false end
+  if not input then return nil, nil end
   local clean_input = input:match("^%s*(.-)%s*$")
-  if not clean_input then return nil, nil, false end
+  if not clean_input then return nil, nil end
 
   local clean_name = clean_input:lower():gsub('[^%w]', '')
 
   if typst_palette[clean_name] then
     local hex = typst_palette[clean_name]
-    return '#' .. hex, hex, true
+    return '#' .. hex, hex
   end
 
   if css_colors[clean_name] then
     local hex = css_colors[clean_name]
-    return '#' .. hex, hex, true
+    return '#' .. hex, hex
   end
 
   local raw_hex = clean_input:gsub('^#', '')
   if raw_hex:match('^%x+$') then
-    if #raw_hex == 6 then
-      return '#' .. raw_hex:upper(), raw_hex:upper(), true
-    elseif #raw_hex == 3 then
+    local len = #raw_hex
+    if len == 6 or len == 8 then
+      local full_hex = raw_hex:upper()
+      return '#' .. full_hex, full_hex
+    elseif len == 3 or len == 4 then
       local r, g, b = raw_hex:sub(1,1), raw_hex:sub(2,2), raw_hex:sub(3,3)
-      local full_hex = (r .. r .. g .. g .. b .. b):upper()
-      return '#' .. full_hex, full_hex, true
+      local full_hex = r .. r .. g .. g .. b .. b
+      if len == 4 then
+        local a = raw_hex:sub(4,4)
+        full_hex = full_hex .. a .. a
+      end
+      full_hex = full_hex:upper()
+      return '#' .. full_hex, full_hex
     end
   end
 
-  if clean_input:match('^[a-zA-Z%-]+$') then
-    abort(string.format('Undefined color keyword "%s".\nColor must be a valid standard CSS keyword, a Hex code (e.g. #FF0000), or valid cross-platform mixing syntax.', clean_input))
-  end
-
-  return nil, nil, false
+  -- Unresolved beyond this point: not a known CSS/Typst name, and not valid
+  -- hex. Aborts unconditionally, the same way for every format, so a color
+  -- name behaves identically regardless of which output this pullquote
+  -- happens to render to — this filter has no per-format color vocabulary,
+  -- only the single shared CSS/hex/mixing syntax documented in the README.
+  abort(string.format('Undefined color keyword "%s".\nColor must be a valid standard CSS keyword, a Hex code (e.g. #FF0000), or valid cross-platform mixing syntax.', clean_input))
 end
 
 local function format_typst_font(font_value)
@@ -253,6 +261,10 @@ local function px_to_pt(value)
   return value
 end
 
+-- resolve_single_color() below either returns a resolved value or aborts
+-- outright, so every call site here can use its result directly with no
+-- "unresolved" fallback branch to handle.
+
 local function format_html_color(c)
   if not c then return nil end
   c = c:match("^%s*(.-)%s*$")
@@ -260,14 +272,14 @@ local function format_html_color(c)
     local c1, pct, c2 = c:match('^([^!]+)!(%d+)!?([^!]*)$')
     if c1 and pct then
       c2 = (c2 == '' or not c2) and 'white' or c2
-      local css_c1 = resolve_single_color(c1) or c1
-      local css_c2 = resolve_single_color(c2) or c2
+      local css_c1 = resolve_single_color(c1)
+      local css_c2 = resolve_single_color(c2)
       return string.format("color-mix(in srgb, %s %s%%, %s)", css_c1, pct, css_c2)
     end
+    warn(string.format('Invalid color-mix syntax "%s". Use "Color!Percent" or "Color1!Percent!Color2" (e.g. "red!30"). Falling back to default.', c))
+    return nil
   end
-  local css_val = resolve_single_color(c)
-  if css_val then return css_val end
-  return c
+  return (resolve_single_color(c))
 end
 
 local function format_typst_color(c)
@@ -277,16 +289,17 @@ local function format_typst_color(c)
     local c1, pct, c2 = c:match('^([^!]+)!(%d+)!?([^!]*)$')
     if c1 and pct then
       c2 = (c2 == '' or not c2) and 'white' or c2
-      local _, hex1, is_hex1 = resolve_single_color(c1)
-      local _, hex2, is_hex2 = resolve_single_color(c2)
-      local col1 = is_hex1 and 'rgb("#' .. hex1:lower() .. '")' or c1:lower()
-      local col2 = is_hex2 and 'rgb("#' .. hex2:lower() .. '")' or c2:lower()
+      local _, hex1 = resolve_single_color(c1)
+      local _, hex2 = resolve_single_color(c2)
+      local col1 = 'rgb("#' .. hex1:lower() .. '")'
+      local col2 = 'rgb("#' .. hex2:lower() .. '")'
       return string.format('color.mix((%s, %d%%), (%s, %d%%))', col1, tonumber(pct), col2, 100 - tonumber(pct))
     end
+    warn(string.format('Invalid color-mix syntax "%s". Use "Color!Percent" or "Color1!Percent!Color2" (e.g. "red!30"). Falling back to default.', c))
+    return nil
   end
-  local css_val, _, is_hex = resolve_single_color(c)
-  if is_hex then return 'rgb("' .. css_val .. '")' end
-  return c:lower()
+  local css_val = resolve_single_color(c)
+  return 'rgb("' .. css_val .. '")'
 end
 
 -- =========================================================================
@@ -311,12 +324,30 @@ local function process_pullquote(el)
   local raw_style      = get_attr(el, 'pq-style')
   local raw_family     = get_attr(el, 'pq-family') or 'serif'
 
+  -- Validate pq-family: letters, digits, spaces, hyphens, and apostrophes
+  -- only. This also rejects a CSS-style comma-separated fallback chain
+  -- (e.g. "Playfair Display, Georgia") with a clear error instead of
+  -- silently emitting a broken single literal name (see README's "No Font
+  -- Chaining" note) and, for LaTeX, keeps raw_family safe to splice
+  -- unescaped into \fontspec{...} inside a tcolorbox keyval option list.
+  if not raw_family:match("^[%w%s%-']+$") then
+    abort(string.format('Invalid pq-family value "%s". Font names may only contain letters, digits, spaces, hyphens, and apostrophes.', raw_family))
+  end
+
   -- Validate pq-width: must be a percentage (e.g. "80%") or an absolute
-  -- unit (e.g. "300pt"), so the LaTeX percentage-to-linewidth math below
-  -- never runs on a non-numeric value.
-  if width and not width:match("^%d+%.?%d*%%$") and not width:match("^%d+%.?%d*%a+$") then
-    warn(string.format('Invalid value "%s" for pq-width. Use a percentage (e.g., "80%%") or an absolute unit (e.g., "300pt"). Falling back to default.', width))
-    width = nil
+  -- length, so the LaTeX percentage-to-linewidth math below never runs on
+  -- a non-numeric value. Unlike pq-bar-width/pq-padding-*, this also
+  -- allows cm/mm/in: pt/em/cm/mm/in are all native LaTeX and Typst length
+  -- units (px_to_pt() passes them through unchanged below), while px/rem
+  -- are converted since neither engine understands them natively.
+  local width_units = { px = true, pt = true, rem = true, em = true, cm = true, mm = true, ["in"] = true }
+  local width_is_percent = width and width:match("^%d+%.?%d*%%$")
+  if width and not width_is_percent then
+    local num, unit = width:match("^(%d+%.?%d*)(%a+)$")
+    if not (num and width_units[unit]) then
+      warn(string.format('Invalid value "%s" for pq-width. Use a percentage (e.g., "80%%") or a length in px/pt/rem/em/cm/mm/in (e.g., "300pt"). Falling back to default.', width))
+      width = nil
+    end
   end
 
   -- Fetch global or inline HTML unit preference, defaulting to rem
@@ -335,7 +366,7 @@ local function process_pullquote(el)
       final_typst_size = pq_sizes[raw_size].typst
     else
       local num, unit = raw_size:match("^(%d+%.?%d*)([a-zA-Z]+)$")
-      if num and (unit == "pt" or unit == "em" or unit == "ex" or unit == "rem" or unit == "px" or unit == "vw") then
+      if num and tonumber(num) > 0 and (unit == "pt" or unit == "em" or unit == "ex" or unit == "rem" or unit == "px" or unit == "vw") then
          local lead = tostring(tonumber(num) * 1.2)
 
          -- Safely convert web-specific units for PDF engines
@@ -362,16 +393,35 @@ local function process_pullquote(el)
     final_typst_size = pq_sizes['l'].typst
   end
 
-  -- Calculate line-height/leading across engines (Typst requires slight reduction vs CSS)
+  -- Validate pq-skip: either a bare unitless multiplier (the documented
+  -- form, e.g. "1.5") or a px/pt/rem/em length passed straight through to
+  -- each engine's own line-height/leading option. Anything else (e.g. CSS's
+  -- "normal" keyword) is valid nowhere but HTML, so reject it here instead
+  -- of letting it reach LaTeX's \setlength or Typst's #set par(leading:)
+  -- and fail with an engine-native "not a length" error.
+  if raw_skip and not tonumber(raw_skip) and not validate_px_pt(raw_skip, 'pq-skip') then
+    raw_skip = nil
+  end
+
+  -- Calculate line-height/leading across engines. Typst's par "leading" is
+  -- the em value applied directly (matching how tex_skip already treats
+  -- the multiplier as a literal em value), so the documented default
+  -- multiplier of 1.0 lines up with the "1em" fallback used when pq-skip
+  -- is omitted entirely, instead of the two diverging.
   local tex_skip, html_skip, typst_skip = nil, "1.5", "1em"
   if raw_skip then
     local num = tonumber(raw_skip)
     if num then
       tex_skip = num .. "em"
       html_skip = tostring(num)
-      typst_skip = tostring(num - 1.0) .. "em"
+      typst_skip = tostring(num) .. "em"
     else
-      tex_skip, html_skip, typst_skip = raw_skip, raw_skip, raw_skip
+      -- CSS understands px/pt/rem/em natively; LaTeX and Typst don't
+      -- understand "px"/"rem" at all, so those two need the same
+      -- PDF-safe conversion every other px/pt/rem/em attribute gets.
+      html_skip = raw_skip
+      tex_skip = px_to_pt(raw_skip)
+      typst_skip = px_to_pt(raw_skip)
     end
   end
 
@@ -413,9 +463,11 @@ local function process_pullquote(el)
     table.insert(active_css_fonts, resolve_html_family(raw_family))
     table.insert(active_typst_fonts, '#set text(font: ' .. format_typst_font(typst_fonts[pq_families[raw_family].typst_family]) .. ')\n')
   else
-    -- Any value other than serif/sans/mono is treated as a literal font
-    -- name (or comma-separated chain for HTML), applied directly across
-    -- all three engines. If the named font isn't actually available,
+    -- Any value other than serif/sans/mono is treated as a single literal
+    -- font name, applied directly across all three engines. A comma-
+    -- separated value is NOT split into a CSS/Typst fallback chain — it is
+    -- passed through as one literal name, which will fail to resolve in
+    -- all three backends. If the named font isn't actually available,
     -- LaTeX's fontspec raises its own compile error and Typst warns and
     -- substitutes a fallback — expected native engine behavior, not
     -- something this filter validates. HTML chains a generic serif
@@ -433,7 +485,7 @@ local function process_pullquote(el)
     local tex_open = "\\begingroup\n"
 
     if width then
-      local tex_width = width:match("%%$") and (tonumber(width:sub(1, -2)) / 100) .. "\\linewidth" or width
+      local tex_width = width:match("%%$") and (tonumber(width:sub(1, -2)) / 100) .. "\\linewidth" or px_to_pt(width)
       table.insert(options, "width=" .. tex_width)
     end
 
@@ -443,13 +495,15 @@ local function process_pullquote(el)
       if c:find('!') then
         table.insert(options, option_key .. "=" .. c)
       else
-        local _, tex_val, is_hex = resolve_single_color(c)
-        if is_hex then
-          tex_open = tex_open .. "\\definecolor{" .. temp_color_name .. "}{HTML}{" .. tex_val .. "}\n"
-          table.insert(options, option_key .. "=" .. temp_color_name)
-        else
-          table.insert(options, option_key .. "=" .. c)
-        end
+        -- resolve_single_color() either returns a resolved hex value or
+        -- aborts outright, so there's no unresolved case to fall back to
+        -- here.
+        local _, tex_val = resolve_single_color(c)
+        -- xcolor's HTML model takes exactly 6 hex digits; drop any alpha
+        -- suffix from an 8-digit #RRGGBBAA input (LaTeX text color has no
+        -- transparency channel here).
+        tex_open = tex_open .. "\\definecolor{" .. temp_color_name .. "}{HTML}{" .. tex_val:sub(1, 6) .. "}\n"
+        table.insert(options, option_key .. "=" .. temp_color_name)
       end
     end
 
@@ -531,7 +585,7 @@ local function process_pullquote(el)
     local final_color = color and format_typst_color(color) or 'rgb("#888888")'
     local final_barcolor = barcolor and format_typst_color(barcolor) or 'rgb("#d9d9d9")'
 
-    local b_width = width or "80%"
+    local b_width = width and (width:match("%%$") and width or px_to_pt(width)) or "80%"
     local b_stroke = (barwidth and px_to_pt(barwidth) or "4pt") .. " + " .. final_barcolor
     local b_padding_left = paddingleft and px_to_pt(paddingleft) or "12pt"
     local b_padding_right = paddingright and px_to_pt(paddingright) or "0pt"

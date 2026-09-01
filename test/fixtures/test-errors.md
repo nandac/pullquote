@@ -44,9 +44,23 @@ This should fall back to the best-effort sans-serif chain for Typst output.
 This should fall back to the best-effort sans-serif chain for Typst output.
 :::
 
-## 4. Invalid Colors (Fatal Error)
+## 4. Invalid pq-skip, pq-size, and Malformed Color-Mix Syntax (Warnings)
 
-This tests the `abort()` trigger. Passing an undefined color string that isn't a Hex code or in the CSS/Typst dictionary should instantly halt compilation to prevent generating a corrupted PDF or HTML file.
+This quote passes a non-numeric, non-dimension `pq-skip`, a zero `pq-size`, and a malformed color-mix string. The filter should log a warning for each and fall back to its default, but it should NOT crash.
+
+```markdown
+::: {.pullquote pq-skip="normal" pq-size="0px" pq-text-color="red!!blue"}
+This should fall back to the default skip, size, and text color.
+:::
+```
+
+::: {.pullquote pq-skip="normal" pq-size="0px" pq-text-color="red!!blue"}
+This should fall back to the default skip, size, and text color.
+:::
+
+## 5. Invalid Colors (Fatal Error)
+
+This tests the `abort()` trigger. Passing an undefined color string that isn't a Hex code or in the CSS/Typst dictionary should instantly halt compilation to prevent generating a corrupted PDF or HTML file — the same way for HTML, LaTeX, and Typst, since this filter has no per-format color vocabulary.
 
 ```markdown
 ::: {.pullquote pq-text-color="MadeUpPurple"}

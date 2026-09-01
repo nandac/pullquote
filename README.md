@@ -29,10 +29,10 @@ Download the Lua filter (and the LaTeX preamble) directly into your project dire
 
 ```bash
 # pullquote.lua (Required for all formats)
-curl -O '[https://raw.githubusercontent.com/nandac/pullquote/refs/tags/v1.1.0/_extensions/pullquote/pullquote.lua](https://raw.githubusercontent.com/nandac/pullquote/refs/tags/v1.1.0/_extensions/pullquote/pullquote.lua)'
+curl -O "https://raw.githubusercontent.com/nandac/pullquote/refs/tags/v1.1.0/_extensions/pullquote/pullquote.lua"
 
 # pullquote.tex (Required ONLY for LaTeX output)
-curl -O '[https://raw.githubusercontent.com/nandac/pullquote/refs/tags/v1.1.0/_extensions/pullquote/pullquote.tex](https://raw.githubusercontent.com/nandac/pullquote/refs/tags/v1.1.0/_extensions/pullquote/pullquote.tex)'
+curl -O "https://raw.githubusercontent.com/nandac/pullquote/refs/tags/v1.1.0/_extensions/pullquote/pullquote.tex"
 ```
 
 *See the [Compilation Commands](#compilation-commands) section below for exact terminal usage.*
@@ -64,7 +64,9 @@ You can customize the output by adding inline `pq-*` attributes directly to the 
 
 ### Colors & Borders
 
-Supports CSS3 named colors (case-insensitive) and hex codes. It also natively supports LaTeX's `xcolor` percentage mixing (e.g., `Maroon!30`) across **all** formats (HTML and Typst included).
+Supports CSS3 named colors (case-insensitive) and 3/4/6/8-digit hex codes (`#RGB`/`#RGBA`/`#RRGGBB`/`#RRGGBBAA`) — the alpha channel renders natively for HTML/Typst, but is dropped for LaTeX, which has no transparency channel here. It also natively supports LaTeX's `xcolor` percentage mixing (e.g., `Maroon!30`) across **all** formats (HTML and Typst included).
+
+A color value outside this shared vocabulary (a name from `xcolor`'s wider `dvipsnames`/`svgnames`/`x11names` libraries, for instance) halts compilation with a clear error, the same way regardless of output format — this filter has no per-format color vocabulary.
 
 | Attribute | Description | Default |
 | :--- | :--- | :--- |
@@ -90,10 +92,12 @@ You have granular control over the padding on all four sides of the text, as wel
 | `pq-padding-right` | Space on the right edge | `0` |
 | `pq-padding-top` | Space above the text | `0.25em` (HTML) / `4pt` |
 | `pq-padding-bottom` | Space below the text | `0.25em` (HTML) / `4pt` |
-| `pq-skip` | Interline spacing multiplier | `1.0` |
+| `pq-skip` | Interline spacing — a unitless multiplier, or a `px`/`pt`/`rem`/`em` length | `1.0` |
 | `pq-html-unit` | Base CSS unit for scaling (HTML only) | `rem` (Valid: `rem`, `em`) |
 
 > **Design Note:** For HTML, `pq-padding-*` and `pq-bar-width` default to relative `em` units. This ensures the bar thickness and inner padding grow or shrink proportionally if you drastically change the `pq-size`. LaTeX and Typst use fixed `pt` defaults, as their box frameworks resolve dimensions differently.
+
+`pq-skip` normally acts as a multiplier on the engine's own interline spacing, but you can instead pass an explicit `px`/`pt`/`rem`/`em` length (e.g. `pq-skip="2em"`) for direct control over the line height.
 
 **Example:**
 
@@ -109,7 +113,7 @@ Separate controls exist for the text *inside* the box, and the box itself *on th
 
 | Attribute | Description | Default |
 | :--- | :--- | :--- |
-| `pq-width` | Container block width | `80%` (Accepts `%` or `pt`) |
+| `pq-width` | Container block width | `80%` (Accepts `%` or a `px`/`pt`/`rem`/`em`/`cm`/`mm`/`in` length) |
 | `pq-text-align` | Aligns text *inside* the box | `left` (Valid: `left`, `center`, `right`) |
 | `pq-box-align` | Aligns the entire box on the page | `center` (Valid: `left`, `center`, `right`) |
 
@@ -153,6 +157,8 @@ This pullquote overrides the document base and explicitly requests Playfair Disp
 :::
 ```
 
+> **No Font Chaining:** `pq-family` takes exactly one literal font name — it does not support a CSS-style comma-separated fallback list (e.g. `"Playfair Display, Georgia"`). A comma-separated value (or any character outside letters, digits, spaces, hyphens, and apostrophes) halts compilation with a clear error rather than silently failing to resolve.
+
 ---
 
 ## Global Configuration
@@ -192,7 +198,7 @@ metadata:
 For HTML output, loading a webfont in your CSS is not enough. The Lua filter reads Pandoc's *metadata*, not your stylesheet. To ensure your HTML pullquotes inherit your custom fonts, declare them in *both* your CSS and your YAML metadata:
 
 ```css
-@import url('[https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap](https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap)');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap');
 
 body {
   font-size: 1rem;
@@ -240,6 +246,7 @@ pandoc \
 
 * **LaTeX compilation fails with "Environment pullquote undefined":** You are missing the required `tcolorbox` definition. Ensure you are passing `--include-in-header=pullquote.tex`.
 * **LaTeX compilation fails with "Package fontspec Error: The font ... cannot be found":** You set `pq-family` to a specific display font that is not installed on your system. Install the font or revert to `serif`/`sans`/`mono`.
+* **LaTeX compilation fails with "Undefined control sequence `\fontspec`" or "You must use XeLaTeX or LuaLaTeX for fontspec!":** A literal `pq-family` font name requires `fontspec`, which only works under XeLaTeX/LuaLaTeX. Compile with `--pdf-engine=lualatex` (or `xelatex`) — this doesn't work under `pdflatex`, Pandoc's default engine.
 * **The filter throws a "CRITICAL ERROR: Undefined color keyword":** You provided an invalid CSS color name or malformed hex code. The filter halts to prevent an upstream crash.
 * **Pullquotes render as unformatted text (`::: {.pullquote}`):** The Pandoc `fenced_divs` extension is disabled. Enable it by passing `-f markdown+fenced_divs`.
 

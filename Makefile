@@ -39,8 +39,8 @@ endif
 TEST_MDS   := $(wildcard test/fixtures/*.md)
 ALL_TEST_NAMES := $(patsubst test/fixtures/%.md,%,$(TEST_MDS))
 
-# Filter out the error-testing file so it isn't passed to the AST diff or preview generators
-TEST_NAMES := $(filter-out test-errors, $(ALL_TEST_NAMES))
+# Filter out the error-testing files so they aren't passed to the AST diff or preview generators
+TEST_NAMES := $(filter-out test-errors test-errors-family, $(ALL_TEST_NAMES))
 DIFF_NAMES := $(TEST_NAMES)
 
 # Reusable Defaults Chaining Profiles
@@ -85,7 +85,7 @@ filter-proxy: $(FILTER_FILE) ## Generate the cross-platform root-level filter pr
 # Testing Rules (Using clean YAML Defaults + Format Overrides)
 # ==============================================================================
 .PHONY: test
-test: $(FILTER_FILE) $(addprefix test-,$(DIFF_NAMES)) test-errors test-family ## Run all multi-backend AST differential tests and error tests
+test: $(FILTER_FILE) $(addprefix test-,$(DIFF_NAMES)) test-errors test-errors-family test-family ## Run all multi-backend AST differential tests and error tests
 
 test-%: $(FILTER_FILE) test/fixtures/%.md
 	@echo "🧪 Verifying AST layout integrity for case: $*"
@@ -137,6 +137,23 @@ test-errors: $(FILTER_FILE) test/fixtures/test-errors.md ## Test expected failur
 			cat error_log.txt; rm error_log.txt; exit 1; \
 		fi \
 	fi
+	@echo "  Checking fatal error (Invalid Colors) is symmetric across formats..."
+	@for fmt_defaults_engine in "$(DEFAULTS_LATEX):latex" "$(DEFAULTS_TYPST):typst"; do \
+		fmt_defaults=$${fmt_defaults_engine%:*}; \
+		fmt=$${fmt_defaults_engine##*:}; \
+		if $(PANDOC) test/fixtures/test-errors.md --lua-filter=$(FILTER_FILE) $$fmt_defaults -t $$fmt > /dev/null 2> symmetry_log.txt; then \
+			echo "  ❌ FAIL: $$fmt should have aborted on the same invalid color as HTML, but it succeeded."; \
+			rm -f symmetry_log.txt; exit 1; \
+		else \
+			if grep -q "CRITICAL ERROR: Undefined color keyword" symmetry_log.txt; then \
+				echo "  ✅ PASS: $$fmt aborted on the same invalid color as HTML."; \
+			else \
+				echo "  ❌ FAIL: $$fmt crashed, but not for the expected reason."; \
+				cat symmetry_log.txt; rm -f symmetry_log.txt; exit 1; \
+			fi \
+		fi; \
+	done
+	@rm -f symmetry_log.txt
 	@echo "  Checking warnings (Invalid Taxonomy Keys)..."
 	@if grep -q "Invalid value .* for pq-size" error_log.txt && \
 	    grep -q "Unknown text-align value" error_log.txt && \
@@ -159,6 +176,15 @@ test-errors: $(FILTER_FILE) test/fixtures/test-errors.md ## Test expected failur
 		echo "  ❌ FAIL: Expected dimension/unit warnings not found."; \
 		cat error_log.txt; rm error_log.txt; exit 1; \
 	fi
+	@echo "  Checking warnings (Invalid pq-skip, pq-size, and Color-Mix Syntax)..."
+	@if grep -q "Invalid value .* for pq-skip" error_log.txt && \
+	    grep -q "Invalid value .* for pq-size" error_log.txt && \
+	    grep -q "Invalid color-mix syntax" error_log.txt; then \
+		echo "  ✅ PASS: Caught pq-skip, pq-size, and color-mix fallback warnings."; \
+	else \
+		echo "  ❌ FAIL: Expected pq-skip/pq-size/color-mix warnings not found."; \
+		cat error_log.txt; rm error_log.txt; exit 1; \
+	fi
 	@echo "  Checking warnings (Missing fenced_divs extension)..."
 	@$(PANDOC) test/fixtures/test-errors.md --lua-filter=$(FILTER_FILE) -f markdown-fenced_divs -t html > /dev/null 2> error_log.txt || true
 	@if grep -q "Required extension \"fenced_divs\" is disabled" error_log.txt; then \
@@ -174,6 +200,23 @@ test-errors: $(FILTER_FILE) test/fixtures/test-errors.md ## Test expected failur
 	else \
 		echo "  ❌ FAIL: Expected Typst sans-serif warning not found."; \
 		cat error_log.txt; rm error_log.txt; exit 1; \
+	fi
+	@rm -f error_log.txt
+
+.PHONY: test-errors-family
+test-errors-family: $(FILTER_FILE) test/fixtures/test-errors-family.md ## Test the fatal pq-family abort (comma-separated / invalid-character font names)
+	@echo "🧪 Verifying pq-family error handling..."
+	@echo "  Checking fatal error (Invalid pq-family)..."
+	@if $(PANDOC) test/fixtures/test-errors-family.md --lua-filter=$(FILTER_FILE) $(DEFAULTS_HTML) -t html > /dev/null 2> error_log.txt; then \
+		echo "  ❌ FAIL: Pandoc should have crashed on an invalid pq-family value, but it succeeded."; \
+		rm error_log.txt; exit 1; \
+	else \
+		if grep -q "CRITICAL ERROR: Invalid pq-family value" error_log.txt; then \
+			echo "  ✅ PASS: Caught expected fatal error."; \
+		else \
+			echo "  ❌ FAIL: Pandoc crashed, but not for the expected reason."; \
+			cat error_log.txt; rm error_log.txt; exit 1; \
+		fi \
 	fi
 	@rm -f error_log.txt
 
