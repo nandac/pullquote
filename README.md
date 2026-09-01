@@ -14,26 +14,32 @@ A robust, cross-platform Lua filter for Pandoc that brings rich typographic cont
 Requires **Pandoc 3.10+** and the `fenced_divs` extension (enabled by default).
 
 ### Quarto
+
 Quarto handles all asset registration automatically:
+
 ```bash
 quarto add nandac/pullquote
 ```
 
 ### Pandoc
+
 Download the Lua filter and the LaTeX preamble into your project directory:
+
 ```bash
 curl -O "https://raw.githubusercontent.com/nandac/pullquote/refs/tags/v1.1.0/_extensions/pullquote/pullquote.lua"
 curl -O "https://raw.githubusercontent.com/nandac/pullquote/refs/tags/v1.1.0/_extensions/pullquote/pullquote.tex"
 ```
+
 *(See [Compilation](#compilation) below for command line flags).*
 
-<details>
-<summary><strong>Using Plain LaTeX? (No Pandoc/Quarto)</strong></summary>
+### Using Plain LaTeX? (No Pandoc/Quarto)
 
 Download the standalone package to your `TEXINPUTS` directory:
+
 ```bash
 curl -O "https://raw.githubusercontent.com/nandac/pullquote/refs/tags/v1.1.0/pullquote.sty"
 ```
+
 Load it via `\usepackage{pullquote}` and use standard LaTeX keys instead of `pq-*` attributes (e.g., `\begin{pullquote}[color=DarkSlateGray, size=\Large\itshape]`). See the `test/` directory for a complete demo.
 </details>
 
@@ -54,7 +60,8 @@ The filter uses native Pandoc **Fenced Divs** paired with the `.pullquote` class
 
 ## Attributes Reference
 
-### 1. Colors & Borders
+### Colors & Borders
+
 Supports CSS3 named colors, hex codes, and LaTeX's `xcolor` percentage mixing (e.g., `Maroon!30`) uniformly across **all** formats.
 
 | Attribute | Description | Default |
@@ -63,7 +70,8 @@ Supports CSS3 named colors, hex codes, and LaTeX's `xcolor` percentage mixing (e
 | `pq-bar-color` | Left border color | `#d9d9d9` |
 | `pq-bar-width` | Left border thickness | `0.25em` (HTML) / `4pt` |
 
-### 2. Spacing & Layout
+### Spacing & Layout
+
 Granular control over padding, line-height, and block alignment.
 
 | Attribute | Description | Default |
@@ -76,7 +84,8 @@ Granular control over padding, line-height, and block alignment.
 | `pq-text-align` | Aligns text *inside* the box | `left` (Valid: `left`, `center`, `right`) |
 | `pq-box-align` | Aligns the entire box on the page | `center` (Valid: `left`, `center`, `right`) |
 
-### 3. Typography
+### Typography
+
 Uses a unit-agnostic sizing engine. Pass standard scale keys (`3xs` to `3xl`) or specific physical/relative units (`24pt`, `1.5rem`).
 
 | Attribute | Default | Valid Inputs |
@@ -104,6 +113,7 @@ metadata:
 ```
 
 ### HTML and Web Fonts
+
 For HTML output, loading a webfont in your CSS is not enough, because the Lua filter reads Pandoc's metadata to determine the font family. To ensure your HTML pullquotes inherit your custom fonts, declare them in *both* your CSS and your YAML metadata (as shown above).
 
 ```css
@@ -123,11 +133,13 @@ If using **Quarto**, simply run `quarto render document.qmd`.
 If using **Pandoc**, pass the required engine and assets via the command line:
 
 **LaTeX PDF:** (Requires explicitly including the preamble)
+
 ```bash
 pandoc --lua-filter=pullquote.lua --include-in-header=pullquote.tex --pdf-engine=lualatex --output=document.pdf document.md
 ```
 
 **Typst & HTML:** (Fully standalone)
+
 ```bash
 pandoc --lua-filter=pullquote.lua --pdf-engine=typst --output=document.pdf document.md
 ```
