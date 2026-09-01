@@ -23,6 +23,15 @@ PANDOC ?= pandoc
 # Allow to adjust the diff command if necessary
 DIFF = diff
 
+# Standalone plain-LaTeX example (compiled directly with a LaTeX engine,
+# no Pandoc/Quarto involved) demonstrating pullquote.sty
+STANDALONE_SRC  := test/pullquote-standalone-example.tex
+STANDALONE_NAME := pullquote-standalone-example
+STY_FILE        := pullquote.sty
+# fontspec-dependent features need XeLaTeX/LuaLaTeX; lualatex matches the
+# engine used for the Pandoc/Quarto demo PDFs above.
+LATEX ?= lualatex
+
 # Current version, i.e., the latest tag. Used to version the quarto extension.
 VERSION = $(shell git tag --sort=-version:refname --merged | head -n1 | \
                          sed -e 's/^v//' | tr -d "\n")
@@ -296,7 +305,7 @@ $(PREVIEWS_DIR)/latex/latex-%.pdf: test/fixtures/%.md
 # Documentation System (With Dual-Engine Output Targets)
 # ==============================================================================
 .PHONY: docs
-docs: docs/$(DEMO_NAME).html docs/$(DEMO_NAME)-latex.pdf docs/$(DEMO_NAME)-typst.pdf docs/pullquote.lua ## Build the standalone docs portal with dual-format PDFs
+docs: docs/$(DEMO_NAME).html docs/$(DEMO_NAME)-latex.pdf docs/$(DEMO_NAME)-typst.pdf docs/pullquote.lua docs/$(STANDALONE_NAME).pdf docs/$(STY_FILE) ## Build the standalone docs portal with dual-format PDFs
 
 docs/$(DEMO_NAME).html: $(DEMO_SRC)
 	@mkdir -p $(@D)
@@ -325,6 +334,15 @@ docs/pullquote.lua: $(FILTER_FILE)
 	@mkdir -p docs
 	cp $(FILTER_FILE) $@
 
+docs/$(STANDALONE_NAME).pdf: $(STANDALONE_SRC) $(STY_FILE)
+	@mkdir -p $(@D)
+	TEXINPUTS=".:$(CURDIR):" $(LATEX) -interaction=nonstopmode -halt-on-error -output-directory=$(@D) $< > /dev/null
+	@rm -f $(@D)/$(STANDALONE_NAME).aux $(@D)/$(STANDALONE_NAME).log
+
+docs/$(STY_FILE): $(STY_FILE)
+	@mkdir -p docs
+	cp $< $@
+
 
 # ==============================================================================
 # Housekeeping
@@ -332,6 +350,7 @@ docs/pullquote.lua: $(FILTER_FILE)
 .PHONY: clean
 clean: ## Purge all temporary assets and generated distribution instances
 	rm -f docs/$(DEMO_NAME).html docs/$(DEMO_NAME)-latex.pdf docs/$(DEMO_NAME)-typst.pdf docs/preview-styles.css docs/pullquote.lua
+	rm -f docs/$(STANDALONE_NAME).pdf docs/$(STY_FILE)
 	rm -rf $(PREVIEWS_DIR)
 	rm -f $(FILTER_FILE)
 	rm -f error_log.txt

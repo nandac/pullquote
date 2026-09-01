@@ -3,3 +3,5 @@
 .claude
 .markdownlint.json
 artifacts/
+docs/pullquote.lua
+docs/pullquote.sty

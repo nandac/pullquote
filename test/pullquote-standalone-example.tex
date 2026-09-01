@@ -1,0 +1,46 @@
+% Minimal example showing pullquote.sty used directly in plain LaTeX,
+% with no Pandoc/Quarto involved. Compile with pdflatex, xelatex, or
+% lualatex (fontspec-dependent features, like a literal \fontspec font
+% name, require xelatex/lualatex). Built automatically by `make docs`
+% (see the Makefile) into docs/pullquote-standalone-example.pdf.
+%
+% pullquote.sty must be on TEXINPUTS or in the same directory as this file;
+% it lives at the repo root.
+\documentclass{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{pullquote}
+
+% Noto Serif, to match the font used by the other three rendered
+% specimens (test/settings/shared.yaml's mainfont). fontspec (loaded by
+% pullquote.sty on XeLaTeX/LuaLaTeX) provides \setmainfont; under
+% pdflatex there's no fontspec, so this falls back to Computer Modern.
+\ifPDFTeX
+\else
+  \setmainfont{Noto Serif}
+\fi
+
+\begin{document}
+
+\section*{Plain LaTeX pullquote example}
+
+Ordinary paragraph text before the pullquote, to show how it breaks the
+flow of the page.
+
+\begin{pullquote}
+"Typography is the craft of endowing human language with a durable visual
+form." --- Robert Bringhurst
+\end{pullquote}
+
+Ordinary paragraph text after the pullquote. The keys below match the
+\texttt{tcolorbox}-backed environment defined in \texttt{pullquote.sty}:
+\texttt{width}, \texttt{color}, \texttt{size}, \texttt{skip},
+\texttt{align}, \texttt{boxalign}, \texttt{barwidth}, \texttt{barcolor},
+and \texttt{paddingleft}/\texttt{paddingright}/\texttt{paddingtop}/%
+\texttt{paddingbottom}.
+
+\begin{pullquote}[color=DarkSlateGray, barcolor=CadetBlue, size=\Large\itshape, boxalign=flush right, width=0.6\textwidth]
+A second pullquote with a custom text color, bar color, larger italic
+size, and pushed to the right at 60\% width.
+\end{pullquote}
+
+\end{document}

@@ -1,0 +1,97 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{pullquote}[2026/09/01 v1.1.0 Typographic pullquote box environment]
+
+% This is the plain-LaTeX distribution of the pullquote environment, for
+% documents compiled directly with (pdf/Xe/Lua)LaTeX rather than through
+% Pandoc/Quarto. It defines the same \pullquote environment and keys as the
+% Pandoc/Quarto extension's LaTeX preamble (_extensions/pullquote/pullquote.tex),
+% which the pullquote.lua filter targets — the two files are intentionally
+% kept in sync rather than shared, since the Quarto file is loaded via
+% Pandoc's --include-in-header (a raw preamble insert, not a package lookup)
+% and duplicating the ~80 lines here is simpler than making that mechanism
+% resolve a package on TEXINPUTS. If you change one, change the other.
+
+% --- Safe Package Loading ---
+\PassOptionsToPackage{svgnames}{xcolor}
+\PassOptionsToPackage{most}{tcolorbox}
+
+\RequirePackage{tcolorbox}
+\RequirePackage{environ}
+\RequirePackage{keyval}
+\RequirePackage{iftex}
+
+% pq-family accepts an arbitrary literal font name, rendered here via
+% \fontspec{...}. fontspec itself only works under XeLaTeX/LuaLaTeX, so it is
+% loaded here only on those engines — loading it unconditionally would break
+% pdflatex even for documents that never pass a literal font name.
+\ifPDFTeX
+\else
+  \RequirePackage{fontspec}
+\fi
+
+% If the surrounding document (or a package loaded ahead of pullquote, e.g.
+% a document class) already pulled in xcolor without options, the
+% \PassOptionsToPackage above arrives too late to enable svgnames. Load the
+% SVG color names directly as a fallback; re-running this after a successful
+% svgnames load is harmless.
+\input{svgnam.def}
+
+% --- Define the Keys ---
+\makeatletter
+\define@key{pullquote}{width}{\def\pqwidth{#1}}
+\define@key{pullquote}{color}{\def\pqcolor{#1}}
+\define@key{pullquote}{size}{\def\pqsize{#1}}
+\define@key{pullquote}{skip}{\def\pqskip{#1}}
+\define@key{pullquote}{align}{\def\pqalign{#1}}
+\define@key{pullquote}{boxalign}{\def\pqboxalign{#1}}
+\define@key{pullquote}{barwidth}{\def\pqbarwidth{#1}}
+\define@key{pullquote}{barcolor}{\def\pqbarcolor{#1}}
+\define@key{pullquote}{paddingleft}{\def\pqpaddingleft{#1}}
+\define@key{pullquote}{paddingright}{\def\pqpaddingright{#1}}
+\define@key{pullquote}{paddingtop}{\def\pqpaddingtop{#1}}
+\define@key{pullquote}{paddingbottom}{\def\pqpaddingbottom{#1}}
+\makeatother
+
+% --- Publicly Sensible Default Values ---
+\newcommand{\pqsetdefaults}{%
+  \def\pqwidth{0.8\textwidth}%
+  \def\pqcolor{DarkGray}%
+  \def\pqsize{\large\itshape}%
+  \def\pqskip{1.2\baselineskip}%
+  \def\pqalign{\raggedright}%
+  \def\pqboxalign{center}%
+  \def\pqbarwidth{4pt}%
+  \def\pqbarcolor{LightGray}%
+  \def\pqpaddingleft{12pt}%
+  \def\pqpaddingright{0pt}%
+  \def\pqpaddingtop{4pt}%
+  \def\pqpaddingbottom{4pt}%
+}
+
+% --- Environment Definition ---
+\NewEnviron{pullquote}[1][]{%
+  \pqsetdefaults
+  \setkeys{pullquote}{#1}%
+  %
+  \begin{tcolorbox}[
+    enhanced,       % Enables advanced border controls
+    sharp corners,
+    colback=white,
+    frame hidden,   % Completely disables the base bounding box (kills the hairline)
+    borderline west={\pqbarwidth}{0pt}{\pqbarcolor}, % Explicitly draws ONLY the left bar
+    width=\pqwidth,
+    \pqboxalign,
+    left=\pqpaddingleft, right=\pqpaddingright, top=\pqpaddingtop, bottom=\pqpaddingbottom,
+    before skip=15pt, after skip=15pt,
+    colupper=\pqcolor,
+    % tcolorbox resets \parskip inside the box regardless of the
+    % parskip package loaded by the surrounding document, which
+    % otherwise collapses multi-paragraph content with no visible
+    % break. Restore half a (possibly pq-skip-adjusted) baselineskip
+    % as the paragraph gap; a full baselineskip reads as double-spaced
+    % on top of the existing interline gap.
+    before upper={\pqsize\setlength{\baselineskip}{\pqskip}\setlength{\parskip}{0.5\baselineskip}\pqalign},
+  ]
+   \BODY
+  \end{tcolorbox}
+}

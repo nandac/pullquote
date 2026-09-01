@@ -8,6 +8,7 @@ Pullquote is a robust, cross-platform Lua filter for Pandoc that brings rich, ty
 * [Live HTML Specimen (Rendered Preview)](https://htmlpreview.github.io/?https://github.com/nandac/pullquote/blob/main/docs/pullquote-examples.html)
 * [LaTeX PDF Specimen](https://github.com/nandac/pullquote/blob/main/docs/pullquote-examples-latex.pdf)
 * [Typst PDF Specimen](https://github.com/nandac/pullquote/blob/main/docs/pullquote-examples-typst.pdf)
+* [Plain LaTeX Specimen (`pullquote.sty`, no Pandoc/Quarto)](https://github.com/nandac/pullquote/blob/main/docs/pullquote-standalone-example.pdf)
 
 ---
 
@@ -36,6 +37,44 @@ curl -O "https://raw.githubusercontent.com/nandac/pullquote/refs/tags/v1.1.0/_ex
 ```
 
 *See the [Compilation Commands](#compilation-commands) section below for exact terminal usage.*
+
+### Plain LaTeX (No Pandoc or Quarto)
+
+If you're writing LaTeX directly and have no interest in Pandoc/Quarto or the `pq-*` attribute system below, download the standalone package instead:
+
+```bash
+curl -O "https://raw.githubusercontent.com/nandac/pullquote/refs/tags/v1.1.0/pullquote.sty"
+```
+
+Place `pullquote.sty` alongside your `.tex` file (or anywhere on your `TEXINPUTS`), then load it and use the `pullquote` environment directly:
+
+```latex
+\usepackage{pullquote}
+...
+\begin{pullquote}[color=DarkSlateGray, barcolor=CadetBlue, size=\Large\itshape]
+"Typography is the craft of endowing human language with a durable visual form."
+\end{pullquote}
+```
+
+This environment takes plain LaTeX/`tcolorbox` keys, not the `pq-*` attributes documented below (those are a Pandoc/Quarto-only convenience the Lua filter translates into these same keys):
+
+| Key | Description | Default |
+| :--- | :--- | :--- |
+| `width` | Container block width | `0.8\textwidth` |
+| `color` | Text foreground color | `DarkGray` |
+| `size` | Font size/style commands | `\large\itshape` |
+| `skip` | Interline spacing (a length) | `1.2\baselineskip` |
+| `align` | Text alignment command | `\raggedright` |
+| `boxalign` | Box alignment on the page (`flush left`/`center`/`flush right`) | `center` |
+| `barwidth` | Left border thickness | `4pt` |
+| `barcolor` | Left border color | `LightGray` |
+| `paddingleft` / `paddingright` / `paddingtop` / `paddingbottom` | Inner spacing on each side | `12pt` / `0pt` / `4pt` / `4pt` |
+
+Colors accept any `xcolor` name (including `svgnames`, loaded automatically) and `xcolor`'s `Color!Percent` mixing syntax. A literal font passed via `size` (e.g. `size=\fontspec{Playfair Display}\Large`) requires compiling with `xelatex` or `lualatex`, same as the Quarto/Pandoc pathway. See [test/pullquote-standalone-example.tex](test/pullquote-standalone-example.tex) for a complete, compilable demo (rendered at the [Plain LaTeX Specimen](https://github.com/nandac/pullquote/blob/main/docs/pullquote-standalone-example.pdf) link above).
+
+> **Advanced — using `pullquote.sty` from a custom Pandoc template:** Pandoc/Quarto users with their own template can `\usepackage{pullquote}` there instead of relying on `--include-in-header=pullquote.tex`. This is more setup, not less: `pullquote.sty` must be installed somewhere LaTeX can find it (your project's `TEXINPUTS`, or a personal `texmf` tree), and your custom template must load it explicitly. The Lua filter's LaTeX output only ever emits `\begin{pullquote}[...]...\end{pullquote}`, so it doesn't care which of the two files actually defined that environment — for the default Pandoc/Quarto setup described above, stick with `pullquote.tex` and `--include-in-header`.
+>
+> `pullquote.sty` deliberately lives at the repository root rather than inside `_extensions/pullquote/`: Quarto's `quarto add` copies that whole directory verbatim into a user's project, and `pullquote.sty` plays no part in the Quarto/Pandoc pipeline — bundling it there would just ship an unused file into every Quarto install.
 
 ---
 
@@ -244,7 +283,8 @@ pandoc \
 
 ## Troubleshooting
 
-* **LaTeX compilation fails with "Environment pullquote undefined":** You are missing the required `tcolorbox` definition. Ensure you are passing `--include-in-header=pullquote.tex`.
+* **LaTeX compilation fails with "Environment pullquote undefined":** You are missing the required `tcolorbox` definition. If you're on the Pandoc/Quarto path, ensure you are passing `--include-in-header=pullquote.tex`. If you're compiling plain LaTeX, ensure `\usepackage{pullquote}` is in your preamble and `pullquote.sty` is on `TEXINPUTS` (e.g. in the same directory as your `.tex` file).
+* **`! LaTeX Error: File 'pullquote.sty' not found`:** `pullquote.sty` isn't on your `TEXINPUTS` — place it next to your `.tex` file, or install it into a personal `texmf` tree (`kpsewhich -var-value TEXMFHOME`).
 * **LaTeX compilation fails with "Package fontspec Error: The font ... cannot be found":** You set `pq-family` to a specific display font that is not installed on your system. Install the font or revert to `serif`/`sans`/`mono`.
 * **LaTeX compilation fails with "Undefined control sequence `\fontspec`" or "You must use XeLaTeX or LuaLaTeX for fontspec!":** A literal `pq-family` font name requires `fontspec`, which only works under XeLaTeX/LuaLaTeX. Compile with `--pdf-engine=lualatex` (or `xelatex`) — this doesn't work under `pdflatex`, Pandoc's default engine.
 * **The filter throws a "CRITICAL ERROR: Undefined color keyword":** You provided an invalid CSS color name or malformed hex code. The filter halts to prevent an upstream crash.
