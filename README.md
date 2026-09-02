@@ -32,16 +32,15 @@ curl -O "https://raw.githubusercontent.com/nandac/pullquote/refs/tags/v1.1.0/_ex
 
 *(See [Compilation](#compilation) below for command line flags).*
 
-### Using Plain LaTeX? (No Pandoc/Quarto)
+### LaTeX without Pandoc or Quarto
 
-Download the standalone package to your `TEXINPUTS` directory:
+Download the standalone `pullquote.sty` package to your `TEXINPUTS` directory:
 
 ```bash
 curl -O "https://raw.githubusercontent.com/nandac/pullquote/refs/tags/v1.1.0/pullquote.sty"
 ```
 
-Load it via `\usepackage{pullquote}` and use standard LaTeX keys instead of `pq-*` attributes (e.g., `\begin{pullquote}[color=DarkSlateGray, size=\Large\itshape]`). See the `test/` directory for a complete demo.
-</details>
+Load it with `\usepackage{pullquote}`, then configure pull quotes using standard LaTeX keys (e.g., `\begin{pullquote}[color=DarkSlateGray, size=\Large\itshape]`) instead of the `pq-*` attributes used elsewhere in this document. See `test/pullquote-standalone-example.tex` for a complete example.
 
 ---
 
