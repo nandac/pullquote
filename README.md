@@ -118,8 +118,11 @@ For HTML output, loading a webfont in your CSS is not enough, because the Lua fi
 ```css
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap');
 
-body {
+:root {
   font-size: 1rem;
+}
+
+body {
   font-family: 'Noto Serif', serif;
 }
 ```
