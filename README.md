@@ -26,8 +26,8 @@ quarto add nandac/pullquote
 Download the Lua filter and the LaTeX preamble into your project directory:
 
 ```bash
-curl -O "https://raw.githubusercontent.com/nandac/pullquote/refs/tags/v1.1.0/_extensions/pullquote/pullquote.lua"
-curl -O "https://raw.githubusercontent.com/nandac/pullquote/refs/tags/v1.1.0/_extensions/pullquote/pullquote.tex"
+curl -O "https://raw.githubusercontent.com/nandac/pullquote/refs/tags/v1.1.1/_extensions/pullquote/pullquote.lua"
+curl -O "https://raw.githubusercontent.com/nandac/pullquote/refs/tags/v1.1.1/_extensions/pullquote/pullquote.tex"
 ```
 
 *(See [Compilation](#compilation) below for command line flags).*
@@ -37,7 +37,7 @@ curl -O "https://raw.githubusercontent.com/nandac/pullquote/refs/tags/v1.1.0/_ex
 Download the standalone `pullquote.sty` package to your `TEXINPUTS` directory:
 
 ```bash
-curl -O "https://raw.githubusercontent.com/nandac/pullquote/refs/tags/v1.1.0/pullquote.sty"
+curl -O "https://raw.githubusercontent.com/nandac/pullquote/refs/tags/v1.1.1/pullquote.sty"
 ```
 
 Load it with `\usepackage{pullquote}`, then configure pull quotes using standard LaTeX keys (e.g., `\begin{pullquote}[color=DarkSlateGray, size=\Large\itshape]`) instead of the `pq-*` attributes used elsewhere in this document. See `test/pullquote-standalone-example.tex` for a complete example.

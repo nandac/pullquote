@@ -7,8 +7,8 @@
 --- @author    Nandakumar Chandrasekhar (nandac)
 --- @copyright © 2026 Nandakumar Chandrasekhar
 --- @license   MIT - see LICENSE for details
---- @version   1.1.0
---- @release   2026-09-01
+--- @version   1.1.1
+--- @release   2026-09-07
 ---
 --- @note      LaTeX output requires pullquote.tex to be included in the document preamble.
 ---            Typst and HTML outputs are fully standalone.

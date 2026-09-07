@@ -7,6 +7,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.1] — 2026-09-07
+
+### Changed
+
+- README: clarified the plain-LaTeX (`pullquote.sty`) section heading and instructions, pointing to `test/pullquote-standalone-example.tex` as the complete example.
+- README/specimen CSS: simplified font setup to rely on plain `font-family`/`font-size` declarations instead of `--pq-*` custom properties.
+
 ## [1.1.0] — 2026-09-02
 
 ### Added
@@ -65,5 +72,6 @@ Initial public release of the `pullquote` Pandoc Lua filter.
 - Pandoc extension manifest (`_extension.yml`) for `pandoc-ext`/`quarto`-style installation.
 - Robust `Makefile` for multi-backend AST testing, artifact previews, and documentation generation.
 
+[1.1.1]: https://github.com/nandac/pullquote/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/nandac/pullquote/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/nandac/pullquote/releases/tag/v1.0.0
