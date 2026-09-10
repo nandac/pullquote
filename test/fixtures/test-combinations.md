@@ -2,9 +2,11 @@
 title: "Pullquote Test: Combinations and Edge Cases"
 ---
 
+This fixture is the integration check: bare defaults at one end, every attribute at once at the other. The individual attributes each have their own focused fixture; what is being tested here is that they compose without interfering. Compare the three rendered previews — the fully-loaded quote at the end is the one most likely to expose an ordering bug in a single engine, since it exercises width, size, colors, both alignments, all three font axes, padding and spacing simultaneously.
+
 ## The Default Pullquote
 
-This test checks that if a user provides absolutely no arguments, the fallback defaults (80% width, dark gray text, light gray bar, italicized large text, centered box) trigger correctly.
+This test checks that if a user provides absolutely no arguments, the fallback defaults trigger correctly: 80% width, `#888888` text, a `#d9d9d9` bar, italicized large text, and a centered box. All three engines resolve these to the same values, so the default quote should look the same in every preview.
 
 ```markdown
 ::: {.pullquote}
@@ -22,7 +24,7 @@ Here is some standard body text following the quote to ensure vertical spacing (
 
 ## Vertical Spacing (Skip)
 
-This tests the `skip` attribute which manipulates line-height (leading) across the different engines.
+This tests `pq-skip`, which sets the baseline-to-baseline line spacing as a multiple of the pullquote's own font size. The dedicated `test-skip.md` fixture covers the full range and the unit forms; this one only confirms that an extreme value still composes with everything else. All three engines should produce the same spacing.
 
 ```markdown
 ::: {.pullquote pq-skip="2.5"}

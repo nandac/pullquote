@@ -1,4 +1,155 @@
-[ Header
+[ Para
+    [ Code ( "" , [] , [] ) "pq-html-unit"
+    , Space
+    , Str "is"
+    , Space
+    , Str "the"
+    , Space
+    , Str "one"
+    , Space
+    , Str "attribute"
+    , Space
+    , Str "in"
+    , Space
+    , Str "the"
+    , Space
+    , Str "filter"
+    , Space
+    , Str "that"
+    , Space
+    , Str "deliberately"
+    , Space
+    , Str "affects"
+    , Space
+    , Str "a"
+    , Space
+    , Str "single"
+    , Space
+    , Str "format."
+    , Space
+    , Str "It"
+    , Space
+    , Str "chooses"
+    , Space
+    , Str "whether"
+    , Space
+    , Str "the"
+    , Space
+    , Code ( "" , [] , [] ) "pq-size"
+    , Space
+    , Str "scale"
+    , Space
+    , Str "keys"
+    , Space
+    , Str "are"
+    , Space
+    , Str "emitted"
+    , Space
+    , Str "as"
+    , Space
+    , Code ( "" , [] , [] ) "rem"
+    , Space
+    , Str "or"
+    , Space
+    , Code ( "" , [] , [] ) "em"
+    , Space
+    , Str "in"
+    , Space
+    , Str "CSS,"
+    , Space
+    , Str "and"
+    , Space
+    , Str "neither"
+    , Space
+    , Str "PDF"
+    , Space
+    , Str "engine"
+    , Space
+    , Str "has"
+    , Space
+    , Str "an"
+    , Space
+    , Str "equivalent"
+    , Space
+    , Str "concept."
+    , Space
+    , Str "Comparing"
+    , Space
+    , Str "previews"
+    , Space
+    , Str "here"
+    , Space
+    , Str "is"
+    , Space
+    , Str "therefore"
+    , Space
+    , Str "the"
+    , Space
+    , Str "inverse"
+    , Space
+    , Str "of"
+    , Space
+    , Str "every"
+    , Space
+    , Str "other"
+    , Space
+    , Str "fixture:"
+    , Space
+    , Str "the"
+    , Space
+    , Str "three"
+    , Space
+    , Str "HTML"
+    , Space
+    , Str "quotes"
+    , Space
+    , Str "below"
+    , Space
+    , Str "should"
+    , Space
+    , Str "differ"
+    , Space
+    , Str "from"
+    , Space
+    , Str "each"
+    , Space
+    , Str "other,"
+    , Space
+    , Str "while"
+    , Space
+    , Str "the"
+    , Space
+    , Str "LaTeX"
+    , Space
+    , Str "and"
+    , Space
+    , Str "Typst"
+    , Space
+    , Str "previews"
+    , Space
+    , Str "should"
+    , Space
+    , Str "render"
+    , Space
+    , Str "all"
+    , Space
+    , Str "three"
+    , Space
+    , Str "identically,"
+    , Space
+    , Str "since"
+    , Space
+    , Str "the"
+    , Space
+    , Str "attribute"
+    , Space
+    , Str "never"
+    , Space
+    , Str "reaches"
+    , Space
+    , Str "them."
+    ]
+, Header
     2
     ( "default-unit-rem" , [] , [] )
     [ Str "Default"

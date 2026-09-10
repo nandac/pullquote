@@ -1,4 +1,165 @@
-[ Header
+[ Para
+    [ Str "Every"
+    , Space
+    , Code ( "" , [] , [] ) "pq-*"
+    , Space
+    , Str "attribute"
+    , Space
+    , Str "can"
+    , Space
+    , Str "also"
+    , Space
+    , Str "be"
+    , Space
+    , Str "set"
+    , Space
+    , Str "once"
+    , Space
+    , Str "in"
+    , Space
+    , Str "the"
+    , Space
+    , Str "document\8217s"
+    , Space
+    , Str "YAML"
+    , Space
+    , Str "frontmatter,"
+    , Space
+    , Str "as"
+    , Space
+    , Str "this"
+    , Space
+    , Str "fixture\8217s"
+    , Space
+    , Str "own"
+    , Space
+    , Str "header"
+    , Space
+    , Str "does."
+    , Space
+    , Str "The"
+    , Space
+    , Str "filter"
+    , Space
+    , Str "checks"
+    , Space
+    , Str "the"
+    , Space
+    , Str "fenced"
+    , Space
+    , Str "div"
+    , Space
+    , Str "first"
+    , Space
+    , Str "and"
+    , Space
+    , Str "falls"
+    , Space
+    , Str "back"
+    , Space
+    , Str "to"
+    , Space
+    , Str "the"
+    , Space
+    , Str "metadata,"
+    , Space
+    , Str "so"
+    , Space
+    , Str "these"
+    , Space
+    , Str "two"
+    , Space
+    , Str "sections"
+    , Space
+    , Str "test"
+    , Space
+    , Str "the"
+    , Space
+    , Str "two"
+    , Space
+    , Str "halves"
+    , Space
+    , Str "of"
+    , Space
+    , Str "that"
+    , Space
+    , Str "lookup."
+    , Space
+    , Str "Compare"
+    , Space
+    , Str "the"
+    , Space
+    , Str "three"
+    , Space
+    , Str "rendered"
+    , Space
+    , Str "previews:"
+    , Space
+    , Str "resolution"
+    , Space
+    , Str "happens"
+    , Space
+    , Str "in"
+    , Space
+    , Str "the"
+    , Space
+    , Str "filter,"
+    , Space
+    , Str "before"
+    , Space
+    , Str "any"
+    , Space
+    , Str "format-specific"
+    , Space
+    , Str "code"
+    , Space
+    , Str "runs,"
+    , Space
+    , Str "so"
+    , Space
+    , Str "all"
+    , Space
+    , Str "three"
+    , Space
+    , Str "engines"
+    , Space
+    , Str "should"
+    , Space
+    , Str "inherit"
+    , Space
+    , Str "and"
+    , Space
+    , Str "override"
+    , Space
+    , Str "identically"
+    , Space
+    , Str "\8212"
+    , Space
+    , Str "any"
+    , Space
+    , Str "divergence"
+    , Space
+    , Str "here"
+    , Space
+    , Str "is"
+    , Space
+    , Str "a"
+    , Space
+    , Str "filter"
+    , Space
+    , Str "bug"
+    , Space
+    , Str "rather"
+    , Space
+    , Str "than"
+    , Space
+    , Str "an"
+    , Space
+    , Str "engine"
+    , Space
+    , Str "difference."
+    ]
+, Header
     2
     ( "global-inheritance" , [] , [] )
     [ Str "Global" , Space , Str "Inheritance" ]
@@ -243,15 +404,108 @@
     , Space
     , Str "inline."
     ]
+, Para
+    [ Str "Note"
+    , Space
+    , Str "that"
+    , Space
+    , Str "the"
+    , Space
+    , Str "inline"
+    , Space
+    , Str "names"
+    , Space
+    , Str "carry"
+    , Space
+    , Str "the"
+    , Space
+    , Str "same"
+    , Space
+    , Code ( "" , [] , [] ) "pq-"
+    , Space
+    , Str "prefix"
+    , Space
+    , Str "as"
+    , Space
+    , Str "everywhere"
+    , Space
+    , Str "else."
+    , Space
+    , Str "The"
+    , Space
+    , Str "filter"
+    , Space
+    , Str "only"
+    , Space
+    , Str "reads"
+    , Space
+    , Str "prefixed"
+    , Space
+    , Str "attributes,"
+    , Space
+    , Str "so"
+    , Space
+    , Str "a"
+    , Space
+    , Str "bare"
+    , Space
+    , Code ( "" , [] , [] ) "width=\"90%\""
+    , Space
+    , Str "is"
+    , Space
+    , Str "not"
+    , Space
+    , Str "an"
+    , Space
+    , Str "override"
+    , Space
+    , Str "\8212"
+    , Space
+    , Str "Pandoc"
+    , Space
+    , Str "passes"
+    , Space
+    , Str "it"
+    , Space
+    , Str "straight"
+    , Space
+    , Str "through"
+    , Space
+    , Str "as"
+    , Space
+    , Str "a"
+    , Space
+    , Str "literal"
+    , Space
+    , Str "HTML"
+    , Space
+    , Str "attribute"
+    , Space
+    , Str "and"
+    , Space
+    , Str "the"
+    , Space
+    , Str "global"
+    , Space
+    , Str "value"
+    , Space
+    , Str "silently"
+    , Space
+    , Str "stays"
+    , Space
+    , Str "in"
+    , Space
+    , Str "force."
+    ]
 , CodeBlock
     ( "" , [ "markdown" ] , [] )
-    "::: {.pullquote width=\"90%\" color=\"Indigo\" barcolor=\"MediumPurple\"}\nThis quote selectively overrides the global width and colors, while successfully retaining the global large size and centered block alignment.\n:::"
+    "::: {.pullquote pq-width=\"90%\" pq-text-color=\"Indigo\" pq-bar-color=\"MediumPurple\"}\nThis quote selectively overrides the global width and colors, while successfully retaining the global large size and centered block alignment.\n:::"
 , Div
     ( ""
     , [ "pullquote" ]
-    , [ ( "width" , "90%" )
-      , ( "color" , "Indigo" )
-      , ( "barcolor" , "MediumPurple" )
+    , [ ( "pq-width" , "90%" )
+      , ( "pq-text-color" , "Indigo" )
+      , ( "pq-bar-color" , "MediumPurple" )
       ]
     )
     [ Para

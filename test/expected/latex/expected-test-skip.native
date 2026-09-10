@@ -1,0 +1,757 @@
+[ Header
+    2
+    ( "multiplier-scale" , [] , [] )
+    [ Str "Multiplier" , Space , Str "Scale" ]
+, Para
+    [ Code ( "" , [] , [] ) "pq-skip"
+    , Space
+    , Str "is"
+    , Space
+    , Str "a"
+    , Space
+    , Str "baseline-to-baseline"
+    , Space
+    , Str "multiple"
+    , Space
+    , Str "in"
+    , Space
+    , Str "every"
+    , Space
+    , Str "engine,"
+    , Space
+    , Str "so"
+    , Space
+    , Str "the"
+    , Space
+    , Str "same"
+    , SoftBreak
+    , Str "value"
+    , Space
+    , Str "should"
+    , Space
+    , Str "produce"
+    , Space
+    , Str "the"
+    , Space
+    , Str "same"
+    , Space
+    , Str "line"
+    , Space
+    , Str "spacing"
+    , Space
+    , Str "in"
+    , Space
+    , Str "HTML,"
+    , Space
+    , Str "LaTeX,"
+    , Space
+    , Str "and"
+    , Space
+    , Str "Typst."
+    , Space
+    , Str "Every"
+    , SoftBreak
+    , Str "quote"
+    , Space
+    , Str "below"
+    , Space
+    , Str "uses"
+    , Space
+    , Str "the"
+    , Space
+    , Str "same"
+    , Space
+    , Code ( "" , [] , [] ) "pq-size"
+    , Space
+    , Str "and"
+    , Space
+    , Str "the"
+    , Space
+    , Str "same"
+    , Space
+    , Str "wrapped"
+    , Space
+    , Str "text,"
+    , Space
+    , Str "so"
+    , Space
+    , Str "spacing"
+    , Space
+    , Str "is"
+    , SoftBreak
+    , Str "the"
+    , Space
+    , Str "only"
+    , Space
+    , Str "variable."
+    , Space
+    , Str "Compare"
+    , Space
+    , Str "the"
+    , Space
+    , Str "three"
+    , Space
+    , Str "rendered"
+    , Space
+    , Str "formats"
+    , Space
+    , Str "side"
+    , Space
+    , Str "by"
+    , Space
+    , Str "side."
+    ]
+, CodeBlock
+    ( "" , [ "markdown" ] , [] )
+    "::: {.pullquote pq-size=\"m\"}\nNo pq-skip at all. HTML and Typst default to 1.5; LaTeX leaves the size's own natural leading alone.\n:::"
+, Div
+    ( "" , [ "pullquote" ] , [ ( "pq-size" , "m" ) ] )
+    [ Para
+        [ Str "No"
+        , Space
+        , Str "pq-skip"
+        , Space
+        , Str "at"
+        , Space
+        , Str "all."
+        , Space
+        , Str "HTML"
+        , Space
+        , Str "and"
+        , Space
+        , Str "Typst"
+        , Space
+        , Str "default"
+        , Space
+        , Str "to"
+        , Space
+        , Str "1.5;"
+        , Space
+        , Str "LaTeX"
+        , Space
+        , Str "leaves"
+        , Space
+        , Str "the"
+        , Space
+        , Str "size\8217s"
+        , Space
+        , Str "own"
+        , Space
+        , Str "natural"
+        , Space
+        , Str "leading"
+        , Space
+        , Str "alone."
+        ]
+    ]
+, CodeBlock
+    ( "" , [ "markdown" ] , [] )
+    "::: {.pullquote pq-size=\"m\" pq-skip=\"1.0\"}\nA pq-skip of 1.0 is single spacing. LaTeX will not set a baselineskip tighter than the natural line height, so it clamps here where HTML and Typst do not.\n:::"
+, Div
+    ( ""
+    , [ "pullquote" ]
+    , [ ( "pq-size" , "m" ) , ( "pq-skip" , "1.0" ) ]
+    )
+    [ Para
+        [ Str "A"
+        , Space
+        , Str "pq-skip"
+        , Space
+        , Str "of"
+        , Space
+        , Str "1.0"
+        , Space
+        , Str "is"
+        , Space
+        , Str "single"
+        , Space
+        , Str "spacing."
+        , Space
+        , Str "LaTeX"
+        , Space
+        , Str "will"
+        , Space
+        , Str "not"
+        , Space
+        , Str "set"
+        , Space
+        , Str "a"
+        , Space
+        , Str "baselineskip"
+        , Space
+        , Str "tighter"
+        , Space
+        , Str "than"
+        , Space
+        , Str "the"
+        , Space
+        , Str "natural"
+        , Space
+        , Str "line"
+        , Space
+        , Str "height,"
+        , Space
+        , Str "so"
+        , Space
+        , Str "it"
+        , Space
+        , Str "clamps"
+        , Space
+        , Str "here"
+        , Space
+        , Str "where"
+        , Space
+        , Str "HTML"
+        , Space
+        , Str "and"
+        , Space
+        , Str "Typst"
+        , Space
+        , Str "do"
+        , Space
+        , Str "not."
+        ]
+    ]
+, CodeBlock
+    ( "" , [ "markdown" ] , [] )
+    "::: {.pullquote pq-size=\"m\" pq-skip=\"1.25\"}\nA pq-skip of 1.25 is a modest opening up of the lines, still tighter than the default.\n:::"
+, Div
+    ( ""
+    , [ "pullquote" ]
+    , [ ( "pq-size" , "m" ) , ( "pq-skip" , "1.25" ) ]
+    )
+    [ Para
+        [ Str "A"
+        , Space
+        , Str "pq-skip"
+        , Space
+        , Str "of"
+        , Space
+        , Str "1.25"
+        , Space
+        , Str "is"
+        , Space
+        , Str "a"
+        , Space
+        , Str "modest"
+        , Space
+        , Str "opening"
+        , Space
+        , Str "up"
+        , Space
+        , Str "of"
+        , Space
+        , Str "the"
+        , Space
+        , Str "lines,"
+        , Space
+        , Str "still"
+        , Space
+        , Str "tighter"
+        , Space
+        , Str "than"
+        , Space
+        , Str "the"
+        , Space
+        , Str "default."
+        ]
+    ]
+, CodeBlock
+    ( "" , [ "markdown" ] , [] )
+    "::: {.pullquote pq-size=\"m\" pq-skip=\"1.5\"}\nA pq-skip of 1.5 matches the default that HTML and Typst apply when the attribute is omitted.\n:::"
+, Div
+    ( ""
+    , [ "pullquote" ]
+    , [ ( "pq-size" , "m" ) , ( "pq-skip" , "1.5" ) ]
+    )
+    [ Para
+        [ Str "A"
+        , Space
+        , Str "pq-skip"
+        , Space
+        , Str "of"
+        , Space
+        , Str "1.5"
+        , Space
+        , Str "matches"
+        , Space
+        , Str "the"
+        , Space
+        , Str "default"
+        , Space
+        , Str "that"
+        , Space
+        , Str "HTML"
+        , Space
+        , Str "and"
+        , Space
+        , Str "Typst"
+        , Space
+        , Str "apply"
+        , Space
+        , Str "when"
+        , Space
+        , Str "the"
+        , Space
+        , Str "attribute"
+        , Space
+        , Str "is"
+        , Space
+        , Str "omitted."
+        ]
+    ]
+, CodeBlock
+    ( "" , [ "markdown" ] , [] )
+    "::: {.pullquote pq-size=\"m\" pq-skip=\"2.0\"}\nA pq-skip of 2.0 is double spacing, the most common reason to reach for this attribute at all.\n:::"
+, Div
+    ( ""
+    , [ "pullquote" ]
+    , [ ( "pq-size" , "m" ) , ( "pq-skip" , "2.0" ) ]
+    )
+    [ Para
+        [ Str "A"
+        , Space
+        , Str "pq-skip"
+        , Space
+        , Str "of"
+        , Space
+        , Str "2.0"
+        , Space
+        , Str "is"
+        , Space
+        , Str "double"
+        , Space
+        , Str "spacing,"
+        , Space
+        , Str "the"
+        , Space
+        , Str "most"
+        , Space
+        , Str "common"
+        , Space
+        , Str "reason"
+        , Space
+        , Str "to"
+        , Space
+        , Str "reach"
+        , Space
+        , Str "for"
+        , Space
+        , Str "this"
+        , Space
+        , Str "attribute"
+        , Space
+        , Str "at"
+        , Space
+        , Str "all."
+        ]
+    ]
+, CodeBlock
+    ( "" , [ "markdown" ] , [] )
+    "::: {.pullquote pq-size=\"m\" pq-skip=\"2.5\"}\nA pq-skip of 2.5 is well past double spacing, useful mainly for very short display quotes.\n:::"
+, Div
+    ( ""
+    , [ "pullquote" ]
+    , [ ( "pq-size" , "m" ) , ( "pq-skip" , "2.5" ) ]
+    )
+    [ Para
+        [ Str "A"
+        , Space
+        , Str "pq-skip"
+        , Space
+        , Str "of"
+        , Space
+        , Str "2.5"
+        , Space
+        , Str "is"
+        , Space
+        , Str "well"
+        , Space
+        , Str "past"
+        , Space
+        , Str "double"
+        , Space
+        , Str "spacing,"
+        , Space
+        , Str "useful"
+        , Space
+        , Str "mainly"
+        , Space
+        , Str "for"
+        , Space
+        , Str "very"
+        , Space
+        , Str "short"
+        , Space
+        , Str "display"
+        , Space
+        , Str "quotes."
+        ]
+    ]
+, Header
+    2
+    ( "explicit-units" , [] , [] )
+    [ Str "Explicit" , Space , Str "Units" ]
+, Para
+    [ Code ( "" , [] , [] ) "pq-skip"
+    , Space
+    , Str "also"
+    , Space
+    , Str "accepts"
+    , Space
+    , Str "an"
+    , Space
+    , Str "exact"
+    , Space
+    , Str "length"
+    , Space
+    , Str "instead"
+    , Space
+    , Str "of"
+    , Space
+    , Str "a"
+    , Space
+    , Str "bare"
+    , Space
+    , Str "multiplier."
+    , Space
+    , Code ( "" , [] , [] ) "em"
+    , Space
+    , Str "and"
+    , SoftBreak
+    , Code ( "" , [] , [] ) "rem"
+    , Space
+    , Str "resolve"
+    , Space
+    , Str "against"
+    , Space
+    , Str "the"
+    , Space
+    , Str "pullquote\8217s"
+    , Space
+    , Str "own"
+    , Space
+    , Str "size;"
+    , Space
+    , Code ( "" , [] , [] ) "px"
+    , Space
+    , Str "is"
+    , Space
+    , Str "converted"
+    , Space
+    , Str "to"
+    , Space
+    , Code ( "" , [] , [] ) "pt"
+    , Space
+    , Str "for"
+    , SoftBreak
+    , Str "the"
+    , Space
+    , Str "two"
+    , Space
+    , Str "PDF"
+    , Space
+    , Str "engines,"
+    , Space
+    , Str "and"
+    , Space
+    , Str "Typst"
+    , Space
+    , Str "receives"
+    , Space
+    , Str "absolute"
+    , Space
+    , Str "lengths"
+    , Space
+    , Str "as"
+    , Space
+    , Code ( "" , [] , [] ) "<length> - 1em"
+    , SoftBreak
+    , Str "so"
+    , Space
+    , Str "they"
+    , Space
+    , Str "still"
+    , Space
+    , Str "describe"
+    , Space
+    , Str "a"
+    , Space
+    , Str "baseline-to-baseline"
+    , Space
+    , Str "distance."
+    ]
+, CodeBlock
+    ( "" , [ "markdown" ] , [] )
+    "::: {.pullquote pq-size=\"m\" pq-skip=\"1.4em\"}\nAn em-based pq-skip of 1.4em scales with the pullquote's own font size.\n:::"
+, Div
+    ( ""
+    , [ "pullquote" ]
+    , [ ( "pq-size" , "m" ) , ( "pq-skip" , "1.4em" ) ]
+    )
+    [ Para
+        [ Str "An"
+        , Space
+        , Str "em-based"
+        , Space
+        , Str "pq-skip"
+        , Space
+        , Str "of"
+        , Space
+        , Str "1.4em"
+        , Space
+        , Str "scales"
+        , Space
+        , Str "with"
+        , Space
+        , Str "the"
+        , Space
+        , Str "pullquote\8217s"
+        , Space
+        , Str "own"
+        , Space
+        , Str "font"
+        , Space
+        , Str "size."
+        ]
+    ]
+, CodeBlock
+    ( "" , [ "markdown" ] , [] )
+    "::: {.pullquote pq-size=\"m\" pq-skip=\"1.5rem\"}\nA rem-based pq-skip of 1.5rem is converted to em for the LaTeX and Typst pathways.\n:::"
+, Div
+    ( ""
+    , [ "pullquote" ]
+    , [ ( "pq-size" , "m" ) , ( "pq-skip" , "1.5rem" ) ]
+    )
+    [ Para
+        [ Str "A"
+        , Space
+        , Str "rem-based"
+        , Space
+        , Str "pq-skip"
+        , Space
+        , Str "of"
+        , Space
+        , Str "1.5rem"
+        , Space
+        , Str "is"
+        , Space
+        , Str "converted"
+        , Space
+        , Str "to"
+        , Space
+        , Str "em"
+        , Space
+        , Str "for"
+        , Space
+        , Str "the"
+        , Space
+        , Str "LaTeX"
+        , Space
+        , Str "and"
+        , Space
+        , Str "Typst"
+        , Space
+        , Str "pathways."
+        ]
+    ]
+, CodeBlock
+    ( "" , [ "markdown" ] , [] )
+    "::: {.pullquote pq-size=\"m\" pq-skip=\"20pt\"}\nAn absolute pq-skip of 20pt is a fixed baseline-to-baseline distance that does not scale with pq-size.\n:::"
+, Div
+    ( ""
+    , [ "pullquote" ]
+    , [ ( "pq-size" , "m" ) , ( "pq-skip" , "20pt" ) ]
+    )
+    [ Para
+        [ Str "An"
+        , Space
+        , Str "absolute"
+        , Space
+        , Str "pq-skip"
+        , Space
+        , Str "of"
+        , Space
+        , Str "20pt"
+        , Space
+        , Str "is"
+        , Space
+        , Str "a"
+        , Space
+        , Str "fixed"
+        , Space
+        , Str "baseline-to-baseline"
+        , Space
+        , Str "distance"
+        , Space
+        , Str "that"
+        , Space
+        , Str "does"
+        , Space
+        , Str "not"
+        , Space
+        , Str "scale"
+        , Space
+        , Str "with"
+        , Space
+        , Str "pq-size."
+        ]
+    ]
+, CodeBlock
+    ( "" , [ "markdown" ] , [] )
+    "::: {.pullquote pq-size=\"m\" pq-skip=\"24px\"}\nA pixel pq-skip of 24px is converted to 18pt for both PDF engines at the standard 96dpi to 72pt ratio.\n:::"
+, Div
+    ( ""
+    , [ "pullquote" ]
+    , [ ( "pq-size" , "m" ) , ( "pq-skip" , "24px" ) ]
+    )
+    [ Para
+        [ Str "A"
+        , Space
+        , Str "pixel"
+        , Space
+        , Str "pq-skip"
+        , Space
+        , Str "of"
+        , Space
+        , Str "24px"
+        , Space
+        , Str "is"
+        , Space
+        , Str "converted"
+        , Space
+        , Str "to"
+        , Space
+        , Str "18pt"
+        , Space
+        , Str "for"
+        , Space
+        , Str "both"
+        , Space
+        , Str "PDF"
+        , Space
+        , Str "engines"
+        , Space
+        , Str "at"
+        , Space
+        , Str "the"
+        , Space
+        , Str "standard"
+        , Space
+        , Str "96dpi"
+        , Space
+        , Str "to"
+        , Space
+        , Str "72pt"
+        , Space
+        , Str "ratio."
+        ]
+    ]
+, Header
+    2
+    ( "interaction-with-pq-size" , [] , [] )
+    [ Str "Interaction"
+    , Space
+    , Str "With"
+    , Space
+    , Str "pq-size"
+    ]
+, Para
+    [ Str "Because"
+    , Space
+    , Str "a"
+    , Space
+    , Str "bare"
+    , Space
+    , Str "multiplier"
+    , Space
+    , Str "is"
+    , Space
+    , Str "relative"
+    , Space
+    , Str "to"
+    , Space
+    , Str "the"
+    , Space
+    , Str "pullquote\8217s"
+    , Space
+    , Str "own"
+    , Space
+    , Str "font"
+    , Space
+    , Str "size,"
+    , Space
+    , Str "the"
+    , SoftBreak
+    , Str "same"
+    , Space
+    , Code ( "" , [] , [] ) "pq-skip"
+    , Space
+    , Str "produces"
+    , Space
+    , Str "proportionally"
+    , Space
+    , Str "larger"
+    , Space
+    , Str "spacing"
+    , Space
+    , Str "at"
+    , Space
+    , Str "a"
+    , Space
+    , Str "larger"
+    , Space
+    , Code ( "" , [] , [] ) "pq-size"
+    , Str "."
+    ]
+, CodeBlock
+    ( "" , [ "markdown" ] , [] )
+    "::: {.pullquote pq-size=\"2xl\" pq-skip=\"1.5\"}\nThe same 1.5 multiplier at a much larger size, to confirm the spacing tracks the font rather than the document.\n:::"
+, Div
+    ( ""
+    , [ "pullquote" ]
+    , [ ( "pq-size" , "2xl" ) , ( "pq-skip" , "1.5" ) ]
+    )
+    [ Para
+        [ Str "The"
+        , Space
+        , Str "same"
+        , Space
+        , Str "1.5"
+        , Space
+        , Str "multiplier"
+        , Space
+        , Str "at"
+        , Space
+        , Str "a"
+        , Space
+        , Str "much"
+        , Space
+        , Str "larger"
+        , Space
+        , Str "size,"
+        , Space
+        , Str "to"
+        , Space
+        , Str "confirm"
+        , Space
+        , Str "the"
+        , Space
+        , Str "spacing"
+        , Space
+        , Str "tracks"
+        , Space
+        , Str "the"
+        , Space
+        , Str "font"
+        , Space
+        , Str "rather"
+        , Space
+        , Str "than"
+        , Space
+        , Str "the"
+        , Space
+        , Str "document."
+        ]
+    ]
+]

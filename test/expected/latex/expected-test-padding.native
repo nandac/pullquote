@@ -1,4 +1,206 @@
-[ Header
+[ Para
+    [ Str "The"
+    , Space
+    , Str "four"
+    , Space
+    , Code ( "" , [] , [] ) "pq-padding-*"
+    , Space
+    , Str "attributes"
+    , Space
+    , Str "control"
+    , Space
+    , Str "the"
+    , Space
+    , Str "space"
+    , Space
+    , Str "between"
+    , Space
+    , Str "the"
+    , Space
+    , Str "box"
+    , Space
+    , Str "edges"
+    , Space
+    , Str "and"
+    , Space
+    , Str "the"
+    , Space
+    , Str "text."
+    , Space
+    , Str "Compare"
+    , Space
+    , Str "the"
+    , Space
+    , Str "three"
+    , Space
+    , Str "rendered"
+    , Space
+    , Str "previews:"
+    , Space
+    , Code ( "" , [] , [] ) "px"
+    , Space
+    , Str "values"
+    , Space
+    , Str "are"
+    , Space
+    , Str "converted"
+    , Space
+    , Str "to"
+    , Space
+    , Code ( "" , [] , [] ) "pt"
+    , Space
+    , Str "for"
+    , Space
+    , Str "both"
+    , Space
+    , Str "PDF"
+    , Space
+    , Str "engines"
+    , Space
+    , Str "at"
+    , Space
+    , Str "the"
+    , Space
+    , Str "standard"
+    , Space
+    , Str "96dpi"
+    , Space
+    , Str "ratio,"
+    , Space
+    , Str "so"
+    , Space
+    , Str "an"
+    , Space
+    , Str "identical"
+    , Space
+    , Code ( "" , [] , [] ) "px"
+    , Space
+    , Str "padding"
+    , Space
+    , Str "should"
+    , Space
+    , Str "produce"
+    , Space
+    , Str "the"
+    , Space
+    , Str "same"
+    , Space
+    , Str "physical"
+    , Space
+    , Str "gap"
+    , Space
+    , Str "in"
+    , Space
+    , Str "LaTeX"
+    , Space
+    , Str "and"
+    , Space
+    , Str "Typst"
+    , Space
+    , Str "as"
+    , Space
+    , Str "it"
+    , Space
+    , Str "does"
+    , Space
+    , Str "on"
+    , Space
+    , Str "screen."
+    , Space
+    , Str "The"
+    , Space
+    , Str "defaults"
+    , Space
+    , Str "are"
+    , Space
+    , Str "the"
+    , Space
+    , Str "one"
+    , Space
+    , Str "place"
+    , Space
+    , Str "the"
+    , Space
+    , Str "engines"
+    , Space
+    , Str "diverge"
+    , Space
+    , Str "on"
+    , Space
+    , Str "purpose"
+    , Space
+    , Str "\8212"
+    , Space
+    , Str "HTML"
+    , Space
+    , Str "uses"
+    , Space
+    , Code ( "" , [] , [] ) "em"
+    , Space
+    , Str "so"
+    , Space
+    , Str "the"
+    , Space
+    , Str "gap"
+    , Space
+    , Str "scales"
+    , Space
+    , Str "with"
+    , Space
+    , Code ( "" , [] , [] ) "pq-size"
+    , Str ","
+    , Space
+    , Str "while"
+    , Space
+    , Str "the"
+    , Space
+    , Str "PDF"
+    , Space
+    , Str "engines"
+    , Space
+    , Str "use"
+    , Space
+    , Str "fixed"
+    , Space
+    , Str "points,"
+    , Space
+    , Str "because"
+    , Space
+    , Str "their"
+    , Space
+    , Str "box-frame"
+    , Space
+    , Str "options"
+    , Space
+    , Str "are"
+    , Space
+    , Str "resolved"
+    , Space
+    , Str "in"
+    , Space
+    , Str "the"
+    , Space
+    , Str "outer"
+    , Space
+    , Str "document\8217s"
+    , Space
+    , Str "font"
+    , Space
+    , Str "context"
+    , Space
+    , Str "before"
+    , Space
+    , Str "the"
+    , Space
+    , Str "in-box"
+    , Space
+    , Str "size"
+    , Space
+    , Str "change"
+    , Space
+    , Str "applies."
+    ]
+, Header
     2
     ( "default-padding" , [] , [] )
     [ Str "Default" , Space , Str "Padding" ]

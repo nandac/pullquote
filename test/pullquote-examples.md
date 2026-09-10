@@ -261,7 +261,7 @@ This quote takes up 70% of the page and is aligned to the left margin, but the t
 
 ## Interline Spacing (Line-Height)
 
-The `pq-skip` attribute allows you to adjust the vertical space between lines of text. While casually referred to as leading, `pq-skip` technically acts as a multiplier for the engine's interline spacing (`line-height` in CSS, `\baselineskip` in LaTeX, and `leading` in Typst). This is particularly useful for dense multi-line quotes or when using very large custom font sizes.
+The `pq-skip` attribute allows you to adjust the vertical space between lines of text. It is a *baseline-to-baseline* multiple — the same measurement CSS calls `line-height` and LaTeX calls `\baselineskip` — so a given value produces the same line spacing in all three formats. Typst is the exception under the hood: its native `leading` is the gap *between* lines rather than the baseline-to-baseline distance, so the filter translates the value rather than passing it through. This is particularly useful for dense multi-line quotes or when using very large custom font sizes.
 
 ```markdown
 ::: {.pullquote pq-size="xl" pq-skip="2.0"}
@@ -271,6 +271,30 @@ This quote uses a `pq-skip` value of 2.0, acting as a double-spacing multiplier 
 
 ::: {.pullquote pq-size="xl" pq-skip="2.0"}
 This quote uses a `pq-skip` value of 2.0, acting as a double-spacing multiplier to let the text breathe.
+:::
+
+Tightening works the same way. Note that LaTeX will not set a `\baselineskip` below the natural line height, so it quietly clamps values much under `1.2` where HTML and Typst honour them:
+
+```markdown
+::: {.pullquote pq-size="l" pq-skip="1.15"}
+This quote is deliberately tight, to show how far the lines can be pulled together before an engine stops following.
+:::
+```
+
+::: {.pullquote pq-size="l" pq-skip="1.15"}
+This quote is deliberately tight, to show how far the lines can be pulled together before an engine stops following.
+:::
+
+Instead of a bare multiplier you can give an exact length. An `em` value scales with the pullquote's own font size, so it stays proportional as `pq-size` changes:
+
+```markdown
+::: {.pullquote pq-size="l" pq-skip="1.6em"}
+This quote sets its interline spacing as an explicit 1.6em length rather than a bare multiplier.
+:::
+```
+
+::: {.pullquote pq-size="l" pq-skip="1.6em"}
+This quote sets its interline spacing as an explicit 1.6em length rather than a bare multiplier.
 :::
 
 ## Global Metadata Configuration

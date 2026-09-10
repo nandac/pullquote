@@ -1,4 +1,235 @@
-[ Header
+[ Para
+    [ Code ( "" , [] , [] ) "pq-size"
+    , Space
+    , Str "accepts"
+    , Space
+    , Str "either"
+    , Space
+    , Str "a"
+    , Space
+    , Str "key"
+    , Space
+    , Str "from"
+    , Space
+    , Str "the"
+    , Space
+    , Str "filter\8217s"
+    , Space
+    , Str "own"
+    , Space
+    , Str "scale"
+    , Space
+    , Str "("
+    , Code ( "" , [] , [] ) "3xs"
+    , Space
+    , Str "through"
+    , Space
+    , Code ( "" , [] , [] ) "3xl"
+    , Str ")"
+    , Space
+    , Str "or"
+    , Space
+    , Str "an"
+    , Space
+    , Str "exact"
+    , Space
+    , Str "dimension."
+    , Space
+    , Str "The"
+    , Space
+    , Str "scale"
+    , Space
+    , Str "keys"
+    , Space
+    , Str "are"
+    , Space
+    , Str "mapped"
+    , Space
+    , Str "per"
+    , Space
+    , Str "engine"
+    , Space
+    , Str "\8212"
+    , Space
+    , Str "LaTeX"
+    , Space
+    , Str "gets"
+    , Space
+    , Str "its"
+    , Space
+    , Str "native"
+    , Space
+    , Str "size"
+    , Space
+    , Str "commands,"
+    , Space
+    , Str "HTML"
+    , Space
+    , Str "a"
+    , Space
+    , Code ( "" , [] , [] ) "rem"
+    , Str "/"
+    , Code ( "" , [] , [] ) "em"
+    , Space
+    , Str "multiplier,"
+    , Space
+    , Str "Typst"
+    , Space
+    , Str "an"
+    , Space
+    , Code ( "" , [] , [] ) "em"
+    , Space
+    , Str "value"
+    , Space
+    , Str "\8212"
+    , Space
+    , Str "so"
+    , Space
+    , Str "they"
+    , Space
+    , Str "are"
+    , Space
+    , Str "equivalent"
+    , Space
+    , Str "by"
+    , Space
+    , Str "construction"
+    , Space
+    , Str "rather"
+    , Space
+    , Str "than"
+    , Space
+    , Str "by"
+    , Space
+    , Str "arithmetic."
+    , Space
+    , Str "Compare"
+    , Space
+    , Str "the"
+    , Space
+    , Str "three"
+    , Space
+    , Str "rendered"
+    , Space
+    , Str "previews:"
+    , Space
+    , Str "sizes"
+    , Space
+    , Str "should"
+    , Space
+    , Str "track"
+    , Space
+    , Str "each"
+    , Space
+    , Str "other"
+    , Space
+    , Str "across"
+    , Space
+    , Str "the"
+    , Space
+    , Str "whole"
+    , Space
+    , Str "scale,"
+    , Space
+    , Str "with"
+    , Space
+    , Code ( "" , [] , [] ) "px"
+    , Space
+    , Str "converted"
+    , Space
+    , Str "at"
+    , Space
+    , Str "the"
+    , Space
+    , Str "standard"
+    , Space
+    , Str "96dpi"
+    , Space
+    , Str "ratio"
+    , Space
+    , Str "and"
+    , Space
+    , Code ( "" , [] , [] ) "rem"
+    , Space
+    , Str "resolved"
+    , Space
+    , Str "as"
+    , Space
+    , Code ( "" , [] , [] ) "em"
+    , Space
+    , Str "for"
+    , Space
+    , Str "the"
+    , Space
+    , Str "PDF"
+    , Space
+    , Str "engines."
+    , Space
+    , Str "The"
+    , Space
+    , Str "exception"
+    , Space
+    , Str "is"
+    , Space
+    , Code ( "" , [] , [] ) "vw"
+    , Str ","
+    , Space
+    , Str "which"
+    , Space
+    , Str "is"
+    , Space
+    , Str "genuinely"
+    , Space
+    , Str "viewport-relative"
+    , Space
+    , Str "and"
+    , Space
+    , Str "has"
+    , Space
+    , Str "no"
+    , Space
+    , Str "PDF"
+    , Space
+    , Str "equivalent;"
+    , Space
+    , Str "HTML"
+    , Space
+    , Str "resolves"
+    , Space
+    , Str "it"
+    , Space
+    , Str "against"
+    , Space
+    , Str "the"
+    , Space
+    , Str "window"
+    , Space
+    , Str "while"
+    , Space
+    , Str "LaTeX"
+    , Space
+    , Str "and"
+    , Space
+    , Str "Typst"
+    , Space
+    , Str "fall"
+    , Space
+    , Str "back"
+    , Space
+    , Str "to"
+    , Space
+    , Str "treating"
+    , Space
+    , Str "the"
+    , Space
+    , Str "number"
+    , Space
+    , Str "as"
+    , Space
+    , Code ( "" , [] , [] ) "em"
+    , Str "."
+    ]
+, Header
     2
     ( "symmetrical-size-scale" , [] , [] )
     [ Str "Symmetrical"
@@ -250,6 +481,170 @@
         , Str "of"
         , Space
         , Str "3.5em."
+        ]
+    ]
+, CodeBlock
+    ( "" , [ "markdown" ] , [] )
+    "::: {.pullquote pq-size=\"24pt\"}\nThis text has been set to an absolute size of 24pt, identical in all three engines.\n:::"
+, Div
+    ( "" , [ "pullquote" ] , [ ( "pq-size" , "24pt" ) ] )
+    [ Para
+        [ Str "This"
+        , Space
+        , Str "text"
+        , Space
+        , Str "has"
+        , Space
+        , Str "been"
+        , Space
+        , Str "set"
+        , Space
+        , Str "to"
+        , Space
+        , Str "an"
+        , Space
+        , Str "absolute"
+        , Space
+        , Str "size"
+        , Space
+        , Str "of"
+        , Space
+        , Str "24pt,"
+        , Space
+        , Str "identical"
+        , Space
+        , Str "in"
+        , Space
+        , Str "all"
+        , Space
+        , Str "three"
+        , Space
+        , Str "engines."
+        ]
+    ]
+, CodeBlock
+    ( "" , [ "markdown" ] , [] )
+    "::: {.pullquote pq-size=\"1.75rem\"}\nThis text has been set to 1.75rem, which the LaTeX and Typst pathways resolve as em.\n:::"
+, Div
+    ( "" , [ "pullquote" ] , [ ( "pq-size" , "1.75rem" ) ] )
+    [ Para
+        [ Str "This"
+        , Space
+        , Str "text"
+        , Space
+        , Str "has"
+        , Space
+        , Str "been"
+        , Space
+        , Str "set"
+        , Space
+        , Str "to"
+        , Space
+        , Str "1.75rem,"
+        , Space
+        , Str "which"
+        , Space
+        , Str "the"
+        , Space
+        , Str "LaTeX"
+        , Space
+        , Str "and"
+        , Space
+        , Str "Typst"
+        , Space
+        , Str "pathways"
+        , Space
+        , Str "resolve"
+        , Space
+        , Str "as"
+        , Space
+        , Str "em."
+        ]
+    ]
+, CodeBlock
+    ( "" , [ "markdown" ] , [] )
+    "::: {.pullquote pq-size=\"32px\"}\nThis text has been set to 32px, converted to 24pt for both PDF engines.\n:::"
+, Div
+    ( "" , [ "pullquote" ] , [ ( "pq-size" , "32px" ) ] )
+    [ Para
+        [ Str "This"
+        , Space
+        , Str "text"
+        , Space
+        , Str "has"
+        , Space
+        , Str "been"
+        , Space
+        , Str "set"
+        , Space
+        , Str "to"
+        , Space
+        , Str "32px,"
+        , Space
+        , Str "converted"
+        , Space
+        , Str "to"
+        , Space
+        , Str "24pt"
+        , Space
+        , Str "for"
+        , Space
+        , Str "both"
+        , Space
+        , Str "PDF"
+        , Space
+        , Str "engines."
+        ]
+    ]
+, CodeBlock
+    ( "" , [ "markdown" ] , [] )
+    "::: {.pullquote pq-size=\"2.5vw\"}\nThis text has been set to 2.5vw, a viewport unit that only HTML resolves natively; the PDF engines fall back to em.\n:::"
+, Div
+    ( "" , [ "pullquote" ] , [ ( "pq-size" , "2.5vw" ) ] )
+    [ Para
+        [ Str "This"
+        , Space
+        , Str "text"
+        , Space
+        , Str "has"
+        , Space
+        , Str "been"
+        , Space
+        , Str "set"
+        , Space
+        , Str "to"
+        , Space
+        , Str "2.5vw,"
+        , Space
+        , Str "a"
+        , Space
+        , Str "viewport"
+        , Space
+        , Str "unit"
+        , Space
+        , Str "that"
+        , Space
+        , Str "only"
+        , Space
+        , Str "HTML"
+        , Space
+        , Str "resolves"
+        , Space
+        , Str "natively;"
+        , Space
+        , Str "the"
+        , Space
+        , Str "PDF"
+        , Space
+        , Str "engines"
+        , Space
+        , Str "fall"
+        , Space
+        , Str "back"
+        , Space
+        , Str "to"
+        , Space
+        , Str "em."
         ]
     ]
 ]

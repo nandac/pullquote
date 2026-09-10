@@ -4,9 +4,7 @@ filters:
   - type: lua
     path: pullquote.lua
 
-metadata:
-  author: Nandakumar Chandrasekhar
-  date: 2026-09-02
+variables:
   fontsize: 12pt
   mainfont: Noto Serif
   sansfont: Noto Sans
@@ -14,3 +12,8 @@ metadata:
   codefont: Fira Mono
   linestretch: 1.25
   number-sections: true
+
+metadata:
+  author: Nandakumar Chandrasekhar
+  # date is not set here; it's injected fresh on every build via the
+  # Makefile's BUILD_DATE / --metadata=date:... flag.

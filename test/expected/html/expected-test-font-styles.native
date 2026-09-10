@@ -1,4 +1,225 @@
-[ Header
+[ Para
+    [ Code ( "" , [] , [] ) "pq-weight"
+    , Str ","
+    , Space
+    , Code ( "" , [] , [] ) "pq-family"
+    , Space
+    , Str "and"
+    , Space
+    , Code ( "" , [] , [] ) "pq-style"
+    , Space
+    , Str "are"
+    , Space
+    , Str "three"
+    , Space
+    , Str "independent"
+    , Space
+    , Str "axes"
+    , Space
+    , Str "that"
+    , Space
+    , Str "compose"
+    , Space
+    , Str "into"
+    , Space
+    , Str "a"
+    , Space
+    , Str "single"
+    , Space
+    , Str "font"
+    , Space
+    , Str "selection."
+    , Space
+    , Str "Each"
+    , Space
+    , Str "engine"
+    , Space
+    , Str "applies"
+    , Space
+    , Str "them"
+    , Space
+    , Str "in"
+    , Space
+    , Str "its"
+    , Space
+    , Str "own"
+    , Space
+    , Str "way"
+    , Space
+    , Str "\8212"
+    , Space
+    , Str "CSS"
+    , Space
+    , Str "declarations,"
+    , Space
+    , Str "LaTeX"
+    , Space
+    , Str "font-shape"
+    , Space
+    , Str "commands"
+    , Space
+    , Str "inside"
+    , Space
+    , Str "the"
+    , Space
+    , Code ( "" , [] , [] ) "size="
+    , Space
+    , Str "key,"
+    , Space
+    , Str "and"
+    , Space
+    , Str "Typst"
+    , Space
+    , Code ( "" , [] , [] ) "#set text"
+    , Space
+    , Str "rules"
+    , Space
+    , Str "\8212"
+    , Space
+    , Str "so"
+    , Space
+    , Str "this"
+    , Space
+    , Str "fixture"
+    , Space
+    , Str "is"
+    , Space
+    , Str "mostly"
+    , Space
+    , Str "a"
+    , Space
+    , Str "check"
+    , Space
+    , Str "that"
+    , Space
+    , Str "all"
+    , Space
+    , Str "three"
+    , Space
+    , Str "axes"
+    , Space
+    , Str "survive"
+    , Space
+    , Str "being"
+    , Space
+    , Str "combined."
+    , Space
+    , Str "Compare"
+    , Space
+    , Str "the"
+    , Space
+    , Str "three"
+    , Space
+    , Str "rendered"
+    , Space
+    , Str "previews:"
+    , Space
+    , Code ( "" , [] , [] ) "serif"
+    , Str "/"
+    , Code ( "" , [] , [] ) "sans"
+    , Str "/"
+    , Code ( "" , [] , [] ) "mono"
+    , Space
+    , Str "resolve"
+    , Space
+    , Str "through"
+    , Space
+    , Str "the"
+    , Space
+    , Str "document\8217s"
+    , Space
+    , Str "own"
+    , Space
+    , Code ( "" , [] , [] ) "mainfont"
+    , Str "/"
+    , Code ( "" , [] , [] ) "sansfont"
+    , Str "/"
+    , Code ( "" , [] , [] ) "monofont"
+    , Str ","
+    , Space
+    , Str "so"
+    , Space
+    , Str "they"
+    , Space
+    , Str "only"
+    , Space
+    , Str "match"
+    , Space
+    , Str "across"
+    , Space
+    , Str "formats"
+    , Space
+    , Str "when"
+    , Space
+    , Str "those"
+    , Space
+    , Str "are"
+    , Space
+    , Str "configured"
+    , Space
+    , Str "identically,"
+    , Space
+    , Str "as"
+    , Space
+    , Code ( "" , [] , [] ) "test/settings/shared.yaml"
+    , Space
+    , Str "does."
+    , Space
+    , Str "Typst"
+    , Space
+    , Str "is"
+    , Space
+    , Str "the"
+    , Space
+    , Str "one"
+    , Space
+    , Str "engine"
+    , Space
+    , Str "with"
+    , Space
+    , Str "no"
+    , Space
+    , Str "bundled"
+    , Space
+    , Str "sans-serif,"
+    , Space
+    , Str "so"
+    , Space
+    , Str "a"
+    , Space
+    , Str "document"
+    , Space
+    , Str "that"
+    , Space
+    , Str "asks"
+    , Space
+    , Str "for"
+    , Space
+    , Code ( "" , [] , [] ) "sans"
+    , Space
+    , Str "without"
+    , Space
+    , Str "configuring"
+    , Space
+    , Str "one"
+    , Space
+    , Str "falls"
+    , Space
+    , Str "back"
+    , Space
+    , Str "to"
+    , Space
+    , Str "a"
+    , Space
+    , Str "best-effort"
+    , Space
+    , Str "chain"
+    , Space
+    , Str "and"
+    , Space
+    , Str "warns."
+    ]
+, Header
     2
     ( "weights-families-and-variants" , [] , [] )
     [ Str "Weights,"

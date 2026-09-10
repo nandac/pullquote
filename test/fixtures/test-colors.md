@@ -2,6 +2,8 @@
 title: "Pullquote Test: Colors"
 ---
 
+`pq-text-color` and `pq-bar-color` accept SVG color names, 3-, 4-, 6- and 8-digit hex, and a blend syntax. The filter resolves all of these itself and hands each engine a value in that engine's own notation: a CSS color or `color-mix()` for HTML, an xcolor name or `\definecolor`d HTML value for LaTeX, and `rgb()`/`color.mix()` for Typst. Compare the three rendered previews — the resolved colors should match exactly, with one deliberate exception: LaTeX text has no alpha channel here, so the alpha byte of an 8-digit hex is dropped for PDF while HTML and Typst honor it.
+
 ## Color Parsing (SVG Names and Hex)
 
 This tests the robustness of the color parser, routing standard SVG color names and raw HTML hex codes to the backend compilers.

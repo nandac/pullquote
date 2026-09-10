@@ -5,7 +5,7 @@ A robust, cross-platform Lua filter for Pandoc that brings rich typographic cont
 * **LaTeX/PDF:** Automatically maps `pq-*` attributes to a highly customizable `tcolorbox` environment.
 * **HTML & Typst/PDF:** Fully standalone, generating native CSS and Typst block styles directly in the rendered markup.
 
-**Live Previews:** [HTML](https://htmlpreview.github.io/?https://github.com/nandac/pullquote/blob/main/docs/pullquote-examples.html) | [LaTeX PDF](https://github.com/nandac/pullquote/blob/main/docs/pullquote-examples-latex.pdf) | [Typst PDF](https://github.com/nandac/pullquote/blob/main/docs/pullquote-examples-typst.pdf) | [Plain LaTeX](https://github.com/nandac/pullquote/blob/main/docs/pullquote-standalone-example.pdf)
+**Live Previews:** [HTML](https://htmlpreview.github.io/?https://github.com/nandac/pullquote/blob/main/docs/pullquote-examples.html) | [LaTeX PDF](https://github.com/nandac/pullquote/blob/main/docs/pullquote-examples-latex.pdf) | [Typst PDF](https://github.com/nandac/pullquote/blob/main/docs/pullquote-examples-typst.pdf) | [Standalone LaTeX](https://github.com/nandac/pullquote/blob/main/docs/pullquote-standalone-example.pdf)
 
 ---
 
@@ -26,8 +26,8 @@ quarto add nandac/pullquote
 Download the Lua filter and the LaTeX preamble into your project directory:
 
 ```bash
-curl -O "https://raw.githubusercontent.com/nandac/pullquote/refs/tags/v1.1.1/_extensions/pullquote/pullquote.lua"
-curl -O "https://raw.githubusercontent.com/nandac/pullquote/refs/tags/v1.1.1/_extensions/pullquote/pullquote.tex"
+curl -O "https://raw.githubusercontent.com/nandac/pullquote/refs/tags/v1.2.0/_extensions/pullquote/pullquote.lua"
+curl -O "https://raw.githubusercontent.com/nandac/pullquote/refs/tags/v1.2.0/_extensions/pullquote/pullquote.tex"
 ```
 
 *(See [Compilation](#compilation) below for command line flags).*
@@ -37,7 +37,7 @@ curl -O "https://raw.githubusercontent.com/nandac/pullquote/refs/tags/v1.1.1/_ex
 Download the standalone `pullquote.sty` package to your `TEXINPUTS` directory:
 
 ```bash
-curl -O "https://raw.githubusercontent.com/nandac/pullquote/refs/tags/v1.1.1/pullquote.sty"
+curl -O "https://raw.githubusercontent.com/nandac/pullquote/refs/tags/v1.2.0/pullquote.sty"
 ```
 
 Load it with `\usepackage{pullquote}`, then configure pull quotes using standard LaTeX keys (e.g., `\begin{pullquote}[color=DarkSlateGray, size=\Large\itshape]`) instead of the `pq-*` attributes used elsewhere in this document. See `test/pullquote-standalone-example.tex` for a complete example.
@@ -77,11 +77,15 @@ Granular control over padding, line-height, and block alignment.
 | :--- | :--- | :--- |
 | `pq-padding-left` | Space between the bar and text | `1em` (HTML) / `12pt` |
 | `pq-padding-right` / `top` / `bottom` | Outer edge padding | `0` / `0.25em` / `0.25em` |
-| `pq-skip` | Interline spacing multiplier (or exact unit) | `1.0` |
+| `pq-skip` | Interline spacing multiplier (or exact unit) | `1.5` (HTML, Typst) / engine natural (LaTeX) |
 | `pq-html-unit` | Base CSS unit for scaling (HTML only) | `rem` (Valid: `rem`, `em`) |
 | `pq-width` | Container block width | `80%` |
 | `pq-text-align` | Aligns text *inside* the box | `left` (Valid: `left`, `center`, `right`) |
 | `pq-box-align` | Aligns the entire box on the page | `center` (Valid: `left`, `center`, `right`) |
+
+`pq-skip` is a baseline-to-baseline multiple in every engine: `pq-skip="1.4"` sets 1.4x line spacing in HTML, LaTeX and Typst alike. This needs a translation step for Typst, whose native `par(leading)` is the *gap* between lines rather than the baseline-to-baseline distance, measured against a line box that runs only from the font's cap-height to the baseline — so the same number would otherwise produce visibly looser spacing there than in the other two engines, by an amount that varied with the font. The filter pins the Typst line box to exactly `1em` and subtracts it, so one value now behaves the same everywhere.
+
+Two engine limits survive that translation. LaTeX refuses to set a `\baselineskip` tighter than the natural line height, so a `pq-skip` much below `1.2` quietly stops taking effect there (TeX falls back to `\lineskip`), while HTML and Typst will honour it and let lines overlap. And the *default* still differs: HTML and Typst use a flat `1.5`, whereas LaTeX leaves the selected size's own natural leading (about `1.25`) alone, which the document's `linestretch` then scales on top — so a document setting `linestretch: 1.25` lands nearer `1.56` there. Set `pq-skip` explicitly whenever the three outputs need to match exactly.
 
 ### Typography
 
@@ -113,7 +117,7 @@ metadata:
 
 ### HTML and Web Fonts
 
-For HTML output, loading a webfont in your CSS is not enough, because the Lua filter reads Pandoc's metadata to determine the font family. To ensure your HTML pullquotes inherit your custom fonts, declare them in *both* your CSS and your YAML metadata (as shown above).
+For HTML output, loading a webfont in your CSS is not enough, because the Lua filter reads Pandoc's `mainfont`/`sansfont`/`monofont` variables to determine the font family. To ensure your HTML pullquotes inherit your custom fonts, declare them in *both* your CSS and your YAML metadata (as shown above).
 
 ```css
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap');

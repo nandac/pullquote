@@ -2,6 +2,8 @@
 title: "Pullquote Test: HTML Sizing Unit"
 ---
 
+`pq-html-unit` is the one attribute in the filter that deliberately affects a single format. It chooses whether the `pq-size` scale keys are emitted as `rem` or `em` in CSS, and neither PDF engine has an equivalent concept. Comparing previews here is therefore the inverse of every other fixture: the three HTML quotes below should differ from each other, while the LaTeX and Typst previews should render all three identically, since the attribute never reaches them.
+
 ## Default Unit (`rem`)
 
 This tests the default `pq-html-unit`, which scales the `pq-size` keys using root-relative `rem` units for HTML output. LaTeX and Typst are unaffected by this attribute, since it only controls CSS output.

@@ -2,6 +2,8 @@
 title: "Pullquote Test: Typography Styles"
 ---
 
+`pq-weight`, `pq-family` and `pq-style` are three independent axes that compose into a single font selection. Each engine applies them in its own way — CSS declarations, LaTeX font-shape commands inside the `size=` key, and Typst `#set text` rules — so this fixture is mostly a check that all three axes survive being combined. Compare the three rendered previews: `serif`/`sans`/`mono` resolve through the document's own `mainfont`/`sansfont`/`monofont`, so they only match across formats when those are configured identically, as `test/settings/shared.yaml` does. Typst is the one engine with no bundled sans-serif, so a document that asks for `sans` without configuring one falls back to a best-effort chain and warns.
+
 ## Weights, Families, and Variants
 
 This tests the CSS-like class injection for font weights, families, and styles without disrupting the component layout.

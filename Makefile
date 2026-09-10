@@ -23,7 +23,7 @@ PANDOC ?= pandoc
 # Allow to adjust the diff command if necessary
 DIFF = diff
 
-# Standalone plain-LaTeX example (compiled directly with a LaTeX engine,
+# Standalone LaTeX example (compiled directly with a LaTeX engine,
 # no Pandoc/Quarto involved) demonstrating pullquote.sty
 STANDALONE_SRC  := test/pullquote-standalone-example.tex
 STANDALONE_NAME := pullquote-standalone-example
@@ -39,6 +39,10 @@ ifeq "$(VERSION)" ""
 VERSION = 0.0.0
 endif
 
+# Build date for the demo/specimen docs, computed fresh on every build instead
+# of being hand-edited in test/settings/shared.yaml.
+BUILD_DATE := $(shell date +%Y-%m-%d)
+
 # Default behavior when running `make` with no target
 .DEFAULT_GOAL := help
 
@@ -53,7 +57,7 @@ TEST_NAMES := $(filter-out test-errors test-errors-family, $(ALL_TEST_NAMES))
 DIFF_NAMES := $(TEST_NAMES)
 
 # Reusable Defaults Chaining Profiles
-DEFAULTS_SHARED := --defaults=test/settings/shared.yaml
+DEFAULTS_SHARED := --defaults=test/settings/shared.yaml --metadata=date:$(BUILD_DATE)
 DEFAULTS_LATEX  := $(DEFAULTS_SHARED) --defaults=test/settings/latex.yaml
 DEFAULTS_TYPST  := $(DEFAULTS_SHARED) --defaults=test/settings/typst.yaml
 DEFAULTS_HTML   := $(DEFAULTS_SHARED) --defaults=test/settings/html.yaml
@@ -132,7 +136,7 @@ update-%: $(FILTER_FILE) test/fixtures/%.md
 	$(PANDOC) test/fixtures/$*.md $(DEFAULTS_HTML) -t json | $(PANDOC) -f json -t native > test/expected/html/expected-$*.native
 
 .PHONY: test-errors
-test-errors: $(FILTER_FILE) test/fixtures/test-errors.md ## Test expected failure states and warnings
+test-errors: $(FILTER_FILE) test/fixtures/test-errors.md test/fixtures/test-colors.md test/fixtures/test-font-styles.md ## Test expected failure states and warnings
 	@echo "🧪 Verifying error handling and graceful failures..."
 	@echo "  Checking fatal error (Invalid Colors)..."
 	@if $(PANDOC) test/fixtures/test-errors.md --lua-filter=$(FILTER_FILE) $(DEFAULTS_HTML) -t html > /dev/null 2> error_log.txt; then \
@@ -202,15 +206,36 @@ test-errors: $(FILTER_FILE) test/fixtures/test-errors.md ## Test expected failur
 		echo "  ❌ FAIL: Expected fenced_divs warning not found."; \
 		cat error_log.txt; rm error_log.txt; exit 1; \
 	fi
-	@echo "  Checking warnings (Typst Missing Sans-Serif Font)..."
+	@echo "  Checking warnings (Typst Missing Sans-Serif Font, fires once per document)..."
 	@$(PANDOC) test/fixtures/test-errors.md --lua-filter=$(FILTER_FILE) -t typst > /dev/null 2> error_log.txt || true
-	@if grep -q "No sans font configured for Typst output" error_log.txt; then \
-		echo "  ✅ PASS: Caught Typst missing sans-serif font warning."; \
+	@if [ "$$(grep -c "No sans font configured for Typst output" error_log.txt)" = "1" ]; then \
+		echo "  ✅ PASS: Caught Typst missing sans-serif font warning exactly once, despite two pq-family=\"sans\" pullquotes."; \
 	else \
-		echo "  ❌ FAIL: Expected Typst sans-serif warning not found."; \
+		echo "  ❌ FAIL: Expected exactly one Typst sans-serif warning."; \
 		cat error_log.txt; rm error_log.txt; exit 1; \
 	fi
 	@rm -f error_log.txt
+	@echo "  Checking warnings (Typst Sans-Serif Font: no warning when pq-family=\"sans\" is never used)..."
+	@$(PANDOC) test/fixtures/test-colors.md --lua-filter=$(FILTER_FILE) -t typst > /dev/null 2> error_log.txt || true
+	@if grep -q "No sans font configured for Typst output" error_log.txt; then \
+		echo "  ❌ FAIL: Sans-serif warning fired even though no pullquote requested pq-family=\"sans\"."; \
+		cat error_log.txt; rm error_log.txt; exit 1; \
+	else \
+		echo "  ✅ PASS: No warning fired for a document that never requests pq-family=\"sans\"."; \
+	fi
+	@rm -f error_log.txt
+	@echo "  Checking warnings (Typst Sans-Serif Font: no warning when sansfont is configured as a variable)..."
+	@$(PANDOC) test/fixtures/test-font-styles.md --lua-filter=$(FILTER_FILE) $(DEFAULTS_TYPST) -t typst > typst_family_check.txt 2> error_log.txt
+	@if grep -q "No sans font configured for Typst output" error_log.txt; then \
+		echo "  ❌ FAIL: Sans-serif warning fired even though sansfont is configured as a Pandoc variable."; \
+		cat error_log.txt; rm -f error_log.txt typst_family_check.txt; exit 1; \
+	elif ! grep -qF '#set text(font: "Noto Sans")' typst_family_check.txt; then \
+		echo "  ❌ FAIL: Expected #set text(font: \"Noto Sans\") not found in Typst output."; \
+		rm -f error_log.txt typst_family_check.txt; exit 1; \
+	else \
+		echo "  ✅ PASS: No warning fired, and the configured sansfont variable (\"Noto Sans\") was applied."; \
+	fi
+	@rm -f error_log.txt typst_family_check.txt
 
 .PHONY: test-errors-family
 test-errors-family: $(FILTER_FILE) test/fixtures/test-errors-family.md ## Test the fatal pq-family abort (comma-separated / invalid-character font names)

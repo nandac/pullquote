@@ -24,6 +24,15 @@
   paper: "us-letter",
   margin: (x: 1.25in, y: 1.25in),
   cols: 1,
+  // Pandoc passes "fontsize" and "linestretch" through from the defaults
+  // file. Both used to fall into ..args and get silently dropped, which left
+  // the body at Typst's built-in 11pt default while the LaTeX and HTML
+  // pathways honored the configured 12pt -- an 8% size difference under
+  // every em-relative measurement in the filter. They are named explicitly
+  // now so they actually take effect; the defaults below match Pandoc's own
+  // Typst template so a document that sets neither is unaffected.
+  fontsize: 11pt,
+  linestretch: 1,
   ..args, // Swallows the font arguments passed by Pandoc so they don't cause errors
   doc
 ) = {
@@ -36,30 +45,37 @@
   )
 
   // --- GLOBAL METRICS & STYLES ---
-  // The fonts are handled by the template, but we still enforce the code block spacing
+  // The font family is handled by the template; the size is applied here so
+  // every em-relative measurement below (headings, frontmatter, and the
+  // pullquote filter's own pq-size/pq-skip) resolves against the configured
+  // body size rather than Typst's 11pt default.
+  set text(size: fontsize)
+
   show raw: set text(size: 1.25em, spacing: 100%)
 
-  set par(leading: 0.8em, spacing: 1.8em)
+  set par(leading: linestretch * 0.65em, spacing: 1.8em)
 
-  // Use closures to guarantee both block and text styles apply together
+  // Use closures to guarantee both block and text styles apply together.
+  // Sizes are em-relative so the whole scale tracks "fontsize" instead of
+  // being pinned to the 12pt base these ratios were originally derived from.
   show heading.where(level: 1): h => {
     set block(above: 1.925em, below: 1.265em)
-    set text(size: 17.28pt, weight: "semibold")
+    set text(size: 1.44em, weight: "semibold")
     h
   }
   show heading.where(level: 2): h => {
     set block(above: 1.7875em, below: 1.2em)
-    set text(size: 14.4pt, weight: "semibold")
+    set text(size: 1.2em, weight: "semibold")
     h
   }
   show heading.where(level: 3): h => {
     set block(above: 1.7875em, below: 1em)
-    set text(size: 12pt, weight: "semibold")
+    set text(size: 1em, weight: "semibold")
     h
   }
   show heading.where(level: 4): h => {
     set block(above: 1.7875em, below: 1em)
-    set text(size: 12pt, weight: "semibold")
+    set text(size: 1em, weight: "semibold")
     h
   }
 
@@ -81,7 +97,7 @@
   if title != none {
     align(center)[
       #block(below: 1.5em)[
-        #text(weight: "regular", size: 20.74pt)[#title]
+        #text(weight: "regular", size: 1.728em)[#title]
       ]
     ]
   }
@@ -97,7 +113,7 @@
   if authors != none and authors.len() > 0 {
     align(center)[
       #block(above: 3em, below: 0.3em)[
-        #text(weight: "medium", size: 14.4pt)[
+        #text(weight: "medium", size: 1.2em)[
           #authors.map(a => a.name).join(", ")
         ]
       ]
@@ -107,7 +123,7 @@
   if date != none {
     align(center)[
       #block(above: 2.5em, below: 4.5em)[
-        #text(weight: "regular", size: 14.4pt)[#date]
+        #text(weight: "regular", size: 1.2em)[#date]
       ]
     ]
   }

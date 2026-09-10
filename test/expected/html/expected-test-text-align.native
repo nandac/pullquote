@@ -1,4 +1,178 @@
-[ Header
+[ Para
+    [ Code ( "" , [] , [] ) "pq-text-align"
+    , Space
+    , Str "sets"
+    , Space
+    , Str "the"
+    , Space
+    , Str "ragged"
+    , Space
+    , Str "edge"
+    , Space
+    , Str "of"
+    , Space
+    , Str "the"
+    , Space
+    , Str "text"
+    , Space
+    , Emph [ Str "within" ]
+    , Space
+    , Str "the"
+    , Space
+    , Str "box."
+    , Space
+    , Str "It"
+    , Space
+    , Str "is"
+    , Space
+    , Str "independent"
+    , Space
+    , Str "of"
+    , Space
+    , Code ( "" , [] , [] ) "pq-box-align"
+    , Str ","
+    , Space
+    , Str "which"
+    , Space
+    , Str "positions"
+    , Space
+    , Str "the"
+    , Space
+    , Str "box"
+    , Space
+    , Str "itself"
+    , Space
+    , Str "on"
+    , Space
+    , Str "the"
+    , Space
+    , Str "page"
+    , Space
+    , Str "\8212"
+    , Space
+    , Str "that"
+    , Space
+    , Str "one"
+    , Space
+    , Str "has"
+    , Space
+    , Str "its"
+    , Space
+    , Str "own"
+    , Space
+    , Str "fixture"
+    , Space
+    , Str "in"
+    , Space
+    , Code ( "" , [] , [] ) "test-box-align.md"
+    , Str "."
+    , Space
+    , Str "Each"
+    , Space
+    , Str "engine"
+    , Space
+    , Str "reaches"
+    , Space
+    , Str "the"
+    , Space
+    , Str "same"
+    , Space
+    , Str "result"
+    , Space
+    , Str "by"
+    , Space
+    , Str "its"
+    , Space
+    , Str "own"
+    , Space
+    , Str "route:"
+    , Space
+    , Str "CSS"
+    , Space
+    , Code ( "" , [] , [] ) "text-align"
+    , Str ","
+    , Space
+    , Str "LaTeX\8217s"
+    , Space
+    , Code ( "" , [] , [] ) "\\raggedright"
+    , Str "/"
+    , Code ( "" , [] , [] ) "\\centering"
+    , Str "/"
+    , Code ( "" , [] , [] ) "\\raggedleft"
+    , Str ","
+    , Space
+    , Str "and"
+    , Space
+    , Str "Typst\8217s"
+    , Space
+    , Code ( "" , [] , [] ) "align"
+    , Str "."
+    , Space
+    , Str "Compare"
+    , Space
+    , Str "the"
+    , Space
+    , Str "three"
+    , Space
+    , Str "rendered"
+    , Space
+    , Str "previews:"
+    , Space
+    , Str "the"
+    , Space
+    , Str "ragged"
+    , Space
+    , Str "edge"
+    , Space
+    , Str "must"
+    , Space
+    , Str "fall"
+    , Space
+    , Str "on"
+    , Space
+    , Str "the"
+    , Space
+    , Str "same"
+    , Space
+    , Str "side"
+    , Space
+    , Str "in"
+    , Space
+    , Str "all"
+    , Space
+    , Str "three,"
+    , Space
+    , Str "though"
+    , Space
+    , Str "the"
+    , Space
+    , Str "exact"
+    , Space
+    , Str "wrap"
+    , Space
+    , Str "points"
+    , Space
+    , Str "can"
+    , Space
+    , Str "differ,"
+    , Space
+    , Str "because"
+    , Space
+    , Str "the"
+    , Space
+    , Str "three"
+    , Space
+    , Str "engines"
+    , Space
+    , Str "use"
+    , Space
+    , Str "different"
+    , Space
+    , Str "line-breaking"
+    , Space
+    , Str "algorithms."
+    ]
+, Header
     2
     ( "inner-text-alignment" , [] , [] )
     [ Str "Inner"

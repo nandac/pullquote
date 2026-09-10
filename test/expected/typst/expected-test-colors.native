@@ -1,4 +1,200 @@
-[ Header
+[ Para
+    [ Code ( "" , [] , [] ) "pq-text-color"
+    , Space
+    , Str "and"
+    , Space
+    , Code ( "" , [] , [] ) "pq-bar-color"
+    , Space
+    , Str "accept"
+    , Space
+    , Str "SVG"
+    , Space
+    , Str "color"
+    , Space
+    , Str "names,"
+    , Space
+    , Str "3-,"
+    , Space
+    , Str "4-,"
+    , Space
+    , Str "6-"
+    , Space
+    , Str "and"
+    , Space
+    , Str "8-digit"
+    , Space
+    , Str "hex,"
+    , Space
+    , Str "and"
+    , Space
+    , Str "a"
+    , Space
+    , Str "blend"
+    , Space
+    , Str "syntax."
+    , Space
+    , Str "The"
+    , Space
+    , Str "filter"
+    , Space
+    , Str "resolves"
+    , Space
+    , Str "all"
+    , Space
+    , Str "of"
+    , Space
+    , Str "these"
+    , Space
+    , Str "itself"
+    , Space
+    , Str "and"
+    , Space
+    , Str "hands"
+    , Space
+    , Str "each"
+    , Space
+    , Str "engine"
+    , Space
+    , Str "a"
+    , Space
+    , Str "value"
+    , Space
+    , Str "in"
+    , Space
+    , Str "that"
+    , Space
+    , Str "engine\8217s"
+    , Space
+    , Str "own"
+    , Space
+    , Str "notation:"
+    , Space
+    , Str "a"
+    , Space
+    , Str "CSS"
+    , Space
+    , Str "color"
+    , Space
+    , Str "or"
+    , Space
+    , Code ( "" , [] , [] ) "color-mix()"
+    , Space
+    , Str "for"
+    , Space
+    , Str "HTML,"
+    , Space
+    , Str "an"
+    , Space
+    , Str "xcolor"
+    , Space
+    , Str "name"
+    , Space
+    , Str "or"
+    , Space
+    , Code ( "" , [] , [] ) "\\definecolor"
+    , Str "d"
+    , Space
+    , Str "HTML"
+    , Space
+    , Str "value"
+    , Space
+    , Str "for"
+    , Space
+    , Str "LaTeX,"
+    , Space
+    , Str "and"
+    , Space
+    , Code ( "" , [] , [] ) "rgb()"
+    , Str "/"
+    , Code ( "" , [] , [] ) "color.mix()"
+    , Space
+    , Str "for"
+    , Space
+    , Str "Typst."
+    , Space
+    , Str "Compare"
+    , Space
+    , Str "the"
+    , Space
+    , Str "three"
+    , Space
+    , Str "rendered"
+    , Space
+    , Str "previews"
+    , Space
+    , Str "\8212"
+    , Space
+    , Str "the"
+    , Space
+    , Str "resolved"
+    , Space
+    , Str "colors"
+    , Space
+    , Str "should"
+    , Space
+    , Str "match"
+    , Space
+    , Str "exactly,"
+    , Space
+    , Str "with"
+    , Space
+    , Str "one"
+    , Space
+    , Str "deliberate"
+    , Space
+    , Str "exception:"
+    , Space
+    , Str "LaTeX"
+    , Space
+    , Str "text"
+    , Space
+    , Str "has"
+    , Space
+    , Str "no"
+    , Space
+    , Str "alpha"
+    , Space
+    , Str "channel"
+    , Space
+    , Str "here,"
+    , Space
+    , Str "so"
+    , Space
+    , Str "the"
+    , Space
+    , Str "alpha"
+    , Space
+    , Str "byte"
+    , Space
+    , Str "of"
+    , Space
+    , Str "an"
+    , Space
+    , Str "8-digit"
+    , Space
+    , Str "hex"
+    , Space
+    , Str "is"
+    , Space
+    , Str "dropped"
+    , Space
+    , Str "for"
+    , Space
+    , Str "PDF"
+    , Space
+    , Str "while"
+    , Space
+    , Str "HTML"
+    , Space
+    , Str "and"
+    , Space
+    , Str "Typst"
+    , Space
+    , Str "honor"
+    , Space
+    , Str "it."
+    ]
+, Header
     2
     ( "color-parsing-svg-names-and-hex" , [] , [] )
     [ Str "Color"

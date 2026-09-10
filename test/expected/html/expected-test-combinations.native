@@ -1,4 +1,165 @@
-[ Header
+[ Para
+    [ Str "This"
+    , Space
+    , Str "fixture"
+    , Space
+    , Str "is"
+    , Space
+    , Str "the"
+    , Space
+    , Str "integration"
+    , Space
+    , Str "check:"
+    , Space
+    , Str "bare"
+    , Space
+    , Str "defaults"
+    , Space
+    , Str "at"
+    , Space
+    , Str "one"
+    , Space
+    , Str "end,"
+    , Space
+    , Str "every"
+    , Space
+    , Str "attribute"
+    , Space
+    , Str "at"
+    , Space
+    , Str "once"
+    , Space
+    , Str "at"
+    , Space
+    , Str "the"
+    , Space
+    , Str "other."
+    , Space
+    , Str "The"
+    , Space
+    , Str "individual"
+    , Space
+    , Str "attributes"
+    , Space
+    , Str "each"
+    , Space
+    , Str "have"
+    , Space
+    , Str "their"
+    , Space
+    , Str "own"
+    , Space
+    , Str "focused"
+    , Space
+    , Str "fixture;"
+    , Space
+    , Str "what"
+    , Space
+    , Str "is"
+    , Space
+    , Str "being"
+    , Space
+    , Str "tested"
+    , Space
+    , Str "here"
+    , Space
+    , Str "is"
+    , Space
+    , Str "that"
+    , Space
+    , Str "they"
+    , Space
+    , Str "compose"
+    , Space
+    , Str "without"
+    , Space
+    , Str "interfering."
+    , Space
+    , Str "Compare"
+    , Space
+    , Str "the"
+    , Space
+    , Str "three"
+    , Space
+    , Str "rendered"
+    , Space
+    , Str "previews"
+    , Space
+    , Str "\8212"
+    , Space
+    , Str "the"
+    , Space
+    , Str "fully-loaded"
+    , Space
+    , Str "quote"
+    , Space
+    , Str "at"
+    , Space
+    , Str "the"
+    , Space
+    , Str "end"
+    , Space
+    , Str "is"
+    , Space
+    , Str "the"
+    , Space
+    , Str "one"
+    , Space
+    , Str "most"
+    , Space
+    , Str "likely"
+    , Space
+    , Str "to"
+    , Space
+    , Str "expose"
+    , Space
+    , Str "an"
+    , Space
+    , Str "ordering"
+    , Space
+    , Str "bug"
+    , Space
+    , Str "in"
+    , Space
+    , Str "a"
+    , Space
+    , Str "single"
+    , Space
+    , Str "engine,"
+    , Space
+    , Str "since"
+    , Space
+    , Str "it"
+    , Space
+    , Str "exercises"
+    , Space
+    , Str "width,"
+    , Space
+    , Str "size,"
+    , Space
+    , Str "colors,"
+    , Space
+    , Str "both"
+    , Space
+    , Str "alignments,"
+    , Space
+    , Str "all"
+    , Space
+    , Str "three"
+    , Space
+    , Str "font"
+    , Space
+    , Str "axes,"
+    , Space
+    , Str "padding"
+    , Space
+    , Str "and"
+    , Space
+    , Str "spacing"
+    , Space
+    , Str "simultaneously."
+    ]
+, Header
     2
     ( "the-default-pullquote" , [] , [] )
     [ Str "The"
@@ -36,19 +197,21 @@
     , Space
     , Str "defaults"
     , Space
-    , Str "(80%"
+    , Str "trigger"
+    , Space
+    , Str "correctly:"
+    , Space
+    , Str "80%"
     , Space
     , Str "width,"
     , Space
-    , Str "dark"
-    , Space
-    , Str "gray"
+    , Code ( "" , [] , [] ) "#888888"
     , Space
     , Str "text,"
     , Space
-    , Str "light"
+    , Str "a"
     , Space
-    , Str "gray"
+    , Code ( "" , [] , [] ) "#d9d9d9"
     , Space
     , Str "bar,"
     , Space
@@ -58,13 +221,53 @@
     , Space
     , Str "text,"
     , Space
+    , Str "and"
+    , Space
+    , Str "a"
+    , Space
     , Str "centered"
     , Space
-    , Str "box)"
+    , Str "box."
     , Space
-    , Str "trigger"
+    , Str "All"
     , Space
-    , Str "correctly."
+    , Str "three"
+    , Space
+    , Str "engines"
+    , Space
+    , Str "resolve"
+    , Space
+    , Str "these"
+    , Space
+    , Str "to"
+    , Space
+    , Str "the"
+    , Space
+    , Str "same"
+    , Space
+    , Str "values,"
+    , Space
+    , Str "so"
+    , Space
+    , Str "the"
+    , Space
+    , Str "default"
+    , Space
+    , Str "quote"
+    , Space
+    , Str "should"
+    , Space
+    , Str "look"
+    , Space
+    , Str "the"
+    , Space
+    , Str "same"
+    , Space
+    , Str "in"
+    , Space
+    , Str "every"
+    , Space
+    , Str "preview."
     ]
 , CodeBlock
     ( "" , [ "markdown" ] , [] )
@@ -175,27 +378,104 @@
     , Space
     , Str "tests"
     , Space
-    , Str "the"
-    , Space
-    , Code ( "" , [] , [] ) "skip"
-    , Space
-    , Str "attribute"
+    , Code ( "" , [] , [] ) "pq-skip"
+    , Str ","
     , Space
     , Str "which"
     , Space
-    , Str "manipulates"
-    , Space
-    , Str "line-height"
-    , Space
-    , Str "(leading)"
-    , Space
-    , Str "across"
+    , Str "sets"
     , Space
     , Str "the"
     , Space
-    , Str "different"
+    , Str "baseline-to-baseline"
     , Space
-    , Str "engines."
+    , Str "line"
+    , Space
+    , Str "spacing"
+    , Space
+    , Str "as"
+    , Space
+    , Str "a"
+    , Space
+    , Str "multiple"
+    , Space
+    , Str "of"
+    , Space
+    , Str "the"
+    , Space
+    , Str "pullquote\8217s"
+    , Space
+    , Str "own"
+    , Space
+    , Str "font"
+    , Space
+    , Str "size."
+    , Space
+    , Str "The"
+    , Space
+    , Str "dedicated"
+    , Space
+    , Code ( "" , [] , [] ) "test-skip.md"
+    , Space
+    , Str "fixture"
+    , Space
+    , Str "covers"
+    , Space
+    , Str "the"
+    , Space
+    , Str "full"
+    , Space
+    , Str "range"
+    , Space
+    , Str "and"
+    , Space
+    , Str "the"
+    , Space
+    , Str "unit"
+    , Space
+    , Str "forms;"
+    , Space
+    , Str "this"
+    , Space
+    , Str "one"
+    , Space
+    , Str "only"
+    , Space
+    , Str "confirms"
+    , Space
+    , Str "that"
+    , Space
+    , Str "an"
+    , Space
+    , Str "extreme"
+    , Space
+    , Str "value"
+    , Space
+    , Str "still"
+    , Space
+    , Str "composes"
+    , Space
+    , Str "with"
+    , Space
+    , Str "everything"
+    , Space
+    , Str "else."
+    , Space
+    , Str "All"
+    , Space
+    , Str "three"
+    , Space
+    , Str "engines"
+    , Space
+    , Str "should"
+    , Space
+    , Str "produce"
+    , Space
+    , Str "the"
+    , Space
+    , Str "same"
+    , Space
+    , Str "spacing."
     ]
 , CodeBlock
     ( "" , [ "markdown" ] , [] )

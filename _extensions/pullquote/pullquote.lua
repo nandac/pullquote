@@ -7,8 +7,8 @@
 --- @author    Nandakumar Chandrasekhar (nandac)
 --- @copyright © 2026 Nandakumar Chandrasekhar
 --- @license   MIT - see LICENSE for details
---- @version   1.1.1
---- @release   2026-09-07
+--- @version   1.2.0
+--- @release   2026-09-10
 ---
 --- @note      LaTeX output requires pullquote.tex to be included in the document preamble.
 ---            Typst and HTML outputs are fully standalone.
@@ -68,6 +68,13 @@ local typst_fonts = {
 -- not just the bare generic CSS keyword. Left nil per-key when unset, so
 -- resolve_html_family() falls back to the generic keyword alone.
 local html_fonts = {}
+
+-- Whether the document configured "sansfont" for Typst output. Used to warn
+-- only when a pullquote actually resolves to the sans family without one
+-- (not unconditionally for every Typst document), and only once even if
+-- several pullquotes use pq-family="sans".
+local typst_sansfont_configured = false
+local typst_sans_warned = false
 
 local css_colors = {
   aliceblue = 'F0F8FF', antiquewhite = 'FAEBD7', aqua = '00FFFF', aquamarine = '7FFFD4', azure = 'F0FFFF',
@@ -261,6 +268,35 @@ local function px_to_pt(value)
   return value
 end
 
+-- Converts a baseline-to-baseline line height (what CSS "line-height" and
+-- LaTeX's \baselineskip both describe) into the value Typst's par "leading"
+-- actually wants.
+--
+-- Typst's leading is NOT a baseline-to-baseline distance: it's the *gap*
+-- between one line's box and the next. Worse, the default box runs from the
+-- font's cap-height down to the baseline, so descenders hang into the gap and
+-- the box height varies per font (0.714em in Noto Serif, 0.658em in Libertinus
+-- Serif). A "1.4" that means 1.4x line spacing in CSS and LaTeX therefore came
+-- out as 2.11x in Typst -- the same number describing a visibly different
+-- result, which is why the three engines needed unrelated pq-skip values to
+-- look alike.
+--
+-- The Typst branch pins the line box to exactly 1em (top-edge 0.8em /
+-- bottom-edge -0.2em: a 1em box that still leaves descender room below the
+-- baseline), which makes the box height font-independent and reduces the
+-- relationship to "baseline-to-baseline = 1em + leading". Subtracting that 1em
+-- here is all that's left. Absolute units can't be reduced arithmetically at
+-- filter time -- the font size isn't known until layout -- but Typst lengths
+-- carry separate absolute and em components, so "20pt - 1em" is a valid
+-- length it resolves itself.
+local function typst_leading(total)
+  local num, unit = total:match("^(%d+%.?%d*)(%a+)$")
+  if unit == "em" then
+    return string.format("%.4gem", tonumber(num) - 1)
+  end
+  return total .. " - 1em"
+end
+
 -- resolve_single_color() below either returns a resolved value or aborts
 -- outright, so every call site here can use its result directly with no
 -- "unresolved" fallback branch to handle.
@@ -367,19 +403,25 @@ local function process_pullquote(el)
     else
       local num, unit = raw_size:match("^(%d+%.?%d*)([a-zA-Z]+)$")
       if num and tonumber(num) > 0 and (unit == "pt" or unit == "em" or unit == "ex" or unit == "rem" or unit == "px" or unit == "vw") then
-         local lead = tostring(tonumber(num) * 1.2)
-
          -- Safely convert web-specific units for PDF engines
-         local pdf_unit = unit
+         local pdf_num, pdf_unit = num, unit
          if unit == "rem" or unit == "vw" then
             pdf_unit = "em"
          elseif unit == "px" then
-            pdf_unit = "pt"
+            -- Scale by the same 96dpi:72pt ratio px_to_pt() applies to every
+            -- other px-valued attribute. Swapping the "px" suffix for "pt"
+            -- without scaling the number rendered pq-size="32px" as 32pt in
+            -- both PDF engines instead of 24pt — a third larger than the
+            -- identical value in HTML, and inconsistent with pq-bar-width and
+            -- pq-padding-* in the very same pullquote.
+            pdf_num, pdf_unit = string.format("%.4g", tonumber(num) * 0.75), "pt"
          end
 
-         final_tex_size = string.format("\\fontsize{%s%s}{%s%s}\\selectfont", num, pdf_unit, lead, pdf_unit)
+         local lead = tostring(tonumber(pdf_num) * 1.2)
+
+         final_tex_size = string.format("\\fontsize{%s%s}{%s%s}\\selectfont", pdf_num, pdf_unit, lead, pdf_unit)
          final_css_size = raw_size
-         final_typst_size = num .. pdf_unit
+         final_typst_size = pdf_num .. pdf_unit
       else
          warn(string.format('Invalid value "%s" for pq-size. Use standard keys (e.g., xs, s, m, l) or standard units (pt, em, ex, rem, px, vw). Falling back to default.', raw_size))
          final_tex_size   = pq_sizes['l'].tex
@@ -403,25 +445,27 @@ local function process_pullquote(el)
     raw_skip = nil
   end
 
-  -- Calculate line-height/leading across engines. Typst's par "leading" is
-  -- the em value applied directly (matching how tex_skip already treats
-  -- the multiplier as a literal em value), so the documented default
-  -- multiplier of 1.0 lines up with the "1em" fallback used when pq-skip
-  -- is omitted entirely, instead of the two diverging.
-  local tex_skip, html_skip, typst_skip = nil, "1.5", "1em"
+  -- Calculate line-height/leading across engines. pq-skip is a
+  -- baseline-to-baseline multiplier in every engine: CSS applies it as
+  -- "line-height", LaTeX as \baselineskip, and Typst via typst_leading()
+  -- above, which converts it to Typst's gap-based "leading". The default
+  -- matches HTML's "1.5" in Typst too (a leading of 0.5em on the pinned 1em
+  -- line box); LaTeX's default stays a no-op, leaving each size's own natural
+  -- leading (roughly 1.2) alone.
+  local tex_skip, html_skip, typst_skip = nil, "1.5", "0.5em"
   if raw_skip then
     local num = tonumber(raw_skip)
     if num then
       tex_skip = num .. "em"
       html_skip = tostring(num)
-      typst_skip = tostring(num) .. "em"
+      typst_skip = typst_leading(num .. "em")
     else
       -- CSS understands px/pt/rem/em natively; LaTeX and Typst don't
       -- understand "px"/"rem" at all, so those two need the same
       -- PDF-safe conversion every other px/pt/rem/em attribute gets.
       html_skip = raw_skip
       tex_skip = px_to_pt(raw_skip)
-      typst_skip = px_to_pt(raw_skip)
+      typst_skip = typst_leading(px_to_pt(raw_skip))
     end
   end
 
@@ -462,6 +506,11 @@ local function process_pullquote(el)
     table.insert(active_tex_fonts, pq_families[raw_family].tex)
     table.insert(active_css_fonts, resolve_html_family(raw_family))
     table.insert(active_typst_fonts, '#set text(font: ' .. format_typst_font(typst_fonts[pq_families[raw_family].typst_family]) .. ')\n')
+
+    if raw_family == 'sans' and FORMAT:match('typst') and not typst_sansfont_configured and not typst_sans_warned then
+      typst_sans_warned = true
+      warn('No sans font configured for Typst output (set "sansfont" as a Pandoc variable). Typst has no bundled sans-serif font, so a best-effort fallback chain will be used and may not render as true sans-serif on all systems.')
+    end
   else
     -- Any value other than serif/sans/mono is treated as a single literal
     -- font name, applied directly across all three engines. A comma-
@@ -603,8 +652,12 @@ local function process_pullquote(el)
       box_align, b_width, b_stroke, b_padding_left, b_padding_right, b_padding_top, b_padding_bottom
     )
 
+    -- top-edge/bottom-edge pin the line box to exactly 1em regardless of the
+    -- font's own cap-height, which is what lets pq-skip mean the same
+    -- baseline-to-baseline multiple here as it does in CSS and LaTeX. See
+    -- typst_leading() for the full reasoning.
     local typst_injections = string.format(
-      '    #set align(%s)\n    #set text(fill: %s, size: %s)\n    #set par(leading: %s)\n',
+      '    #set align(%s)\n    #set text(fill: %s, size: %s, top-edge: 0.8em, bottom-edge: -0.2em)\n    #set par(leading: %s)\n',
       text_align, final_color, final_typst_size, typst_skip
     )
 
@@ -624,6 +677,25 @@ end
 -- PANDOC FILTER EXECUTION PIPELINE
 -- =========================================================================
 
+-- Resolves a Pandoc font variable (mainfont/sansfont/monofont/codefont) from
+-- either place Pandoc can surface it: YAML frontmatter or a defaults file's
+-- "metadata:" block (doc.meta, a Meta AST needing utils.stringify) or a
+-- defaults file's "variables:" block / "-V" on the command line
+-- (PANDOC_WRITER_OPTIONS.variables, a plain Lua table). Pandoc's template
+-- renderer merges both into the same $mainfont$-style placeholders, but a
+-- Lua filter sees them as two disjoint sources, so both need checking here.
+-- Variables take precedence, matching "-V" overriding metadata at render time.
+local function resolve_font_var(doc, key)
+  local variables = PANDOC_WRITER_OPTIONS and PANDOC_WRITER_OPTIONS.variables
+  -- Pandoc surfaces these as `Doc` userdata, not plain Lua strings (even
+  -- though they hold simple text), so an explicit tostring() is required;
+  -- otherwise a literal userdata value ends up spliced into generated
+  -- LaTeX/Typst/CSS strings and later fails a "string expected" type check.
+  if variables and variables[key] then return tostring(variables[key]) end
+  if doc.meta[key] then return utils.stringify(doc.meta[key]) end
+  return nil
+end
+
 return {
   {
     Meta = function(meta)
@@ -633,24 +705,34 @@ return {
   {
     Pandoc = function(doc)
       if FORMAT:match('html') then
-        if doc.meta['mainfont'] then html_fonts.serif = utils.stringify(doc.meta['mainfont']) end
-        if doc.meta['sansfont'] then html_fonts.sans = utils.stringify(doc.meta['sansfont']) end
-        if doc.meta['codefont']     then html_fonts.mono = utils.stringify(doc.meta['codefont'])
-        elseif doc.meta['monofont'] then html_fonts.mono = utils.stringify(doc.meta['monofont']) end
+        local mainfont = resolve_font_var(doc, 'mainfont')
+        local sansfont = resolve_font_var(doc, 'sansfont')
+        local codefont = resolve_font_var(doc, 'codefont')
+        local monofont = resolve_font_var(doc, 'monofont')
+
+        if mainfont then html_fonts.serif = mainfont end
+        if sansfont then html_fonts.sans = sansfont end
+        if codefont     then html_fonts.mono = codefont
+        elseif monofont then html_fonts.mono = monofont end
       end
 
       if not FORMAT:match('typst') then return end
 
-      if doc.meta['mainfont']    then typst_fonts.serif = utils.stringify(doc.meta['mainfont'])
+      local mainfont = resolve_font_var(doc, 'mainfont')
+      local sansfont = resolve_font_var(doc, 'sansfont')
+      local codefont = resolve_font_var(doc, 'codefont')
+      local monofont = resolve_font_var(doc, 'monofont')
+
+      if mainfont then typst_fonts.serif = mainfont
       else typst_fonts.serif = "Libertinus Serif" end
 
-      if doc.meta['codefont']    then typst_fonts.mono = utils.stringify(doc.meta['codefont'])
-      elseif doc.meta['monofont']    then typst_fonts.mono = utils.stringify(doc.meta['monofont'])
+      if codefont    then typst_fonts.mono = codefont
+      elseif monofont    then typst_fonts.mono = monofont
       else typst_fonts.mono = "DejaVu Sans Mono" end
 
-      if doc.meta['sansfont']    then typst_fonts.sans = utils.stringify(doc.meta['sansfont'])
-      else
-        warn('No sans font configured for Typst output (set "sansfont" in metadata). Typst has no bundled sans-serif font, so a best-effort fallback chain will be used and may not render as true sans-serif on all systems.')
+      if sansfont then
+        typst_fonts.sans = sansfont
+        typst_sansfont_configured = true
       end
     end
   },

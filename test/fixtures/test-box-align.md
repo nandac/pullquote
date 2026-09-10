@@ -2,6 +2,8 @@
 title: "Pullquote Test: Box Alignment and Width"
 ---
 
+`pq-box-align` positions the whole block on the page and `pq-width` sets how much of the measure it occupies. The alignment of the text *inside* the box is a separate attribute, covered in `test-text-align.md`. Compare the three rendered previews: a percentage width is resolved against `\linewidth` in LaTeX and against the containing block in HTML and Typst, so the same percentage should occupy the same fraction of the text column everywhere, and an absolute width should come out at the same physical size in both PDF engines.
+
 ## Block-Level Positioning
 
 By adjusting `width` and `boxalign`, we can position the entire pullquote block to the left, center, or right of the page. Note that this shifts the block within the standard document flow; the body text will sit above and below it rather than wrapping around it.

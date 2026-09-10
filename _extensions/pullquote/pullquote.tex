@@ -23,6 +23,17 @@
 % re-running this after a successful svgnames load is harmless.
 \input{svgnam.def}
 
+% --- Default Colors ---
+% The Lua filter only emits "color="/"barcolor=" when the document actually
+% sets pq-text-color/pq-bar-color, so the \pqsetdefaults values below are what
+% a pullquote with no color attributes renders as. They are defined here as the
+% exact hex values the HTML and Typst pathways fall back to, rather than the
+% nearest svgnames greys (DarkGray is #A9A9A9, LightGray is #D3D3D3), so an
+% uncolored pullquote renders the same grey in all three engines instead of a
+% visibly lighter one in PDF.
+\definecolor{pqdefaulttext}{HTML}{888888}
+\definecolor{pqdefaultbar}{HTML}{D9D9D9}
+
 % --- Define the Keys ---
 \makeatletter
 \define@key{pullquote}{width}{\def\pqwidth{#1}}
@@ -42,13 +53,19 @@
 % --- Publicly Sensible Default Values ---
 \newcommand{\pqsetdefaults}{%
   \def\pqwidth{0.8\textwidth}%
-  \def\pqcolor{DarkGray}%
+  \def\pqcolor{pqdefaulttext}%
   \def\pqsize{\large\itshape}%
-  \def\pqskip{1.2\baselineskip}%
+  % Leave whatever leading \pqsize's \selectfont already set for the chosen
+  % font size alone by default, rather than multiplying it — "before upper"
+  % below applies \pqsize (which resets \baselineskip to that size's own
+  % natural leading) before this value is read, so a "1.2\baselineskip"
+  % default would compound an extra 20% on top of the already-correct
+  % per-size leading instead of overriding it.
+  \def\pqskip{\baselineskip}%
   \def\pqalign{\raggedright}%
   \def\pqboxalign{center}%
   \def\pqbarwidth{4pt}%
-  \def\pqbarcolor{LightGray}%
+  \def\pqbarcolor{pqdefaultbar}%
   \def\pqpaddingleft{12pt}%
   \def\pqpaddingright{0pt}%
   \def\pqpaddingtop{4pt}%

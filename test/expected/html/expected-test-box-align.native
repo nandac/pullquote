@@ -1,4 +1,178 @@
-[ Header
+[ Para
+    [ Code ( "" , [] , [] ) "pq-box-align"
+    , Space
+    , Str "positions"
+    , Space
+    , Str "the"
+    , Space
+    , Str "whole"
+    , Space
+    , Str "block"
+    , Space
+    , Str "on"
+    , Space
+    , Str "the"
+    , Space
+    , Str "page"
+    , Space
+    , Str "and"
+    , Space
+    , Code ( "" , [] , [] ) "pq-width"
+    , Space
+    , Str "sets"
+    , Space
+    , Str "how"
+    , Space
+    , Str "much"
+    , Space
+    , Str "of"
+    , Space
+    , Str "the"
+    , Space
+    , Str "measure"
+    , Space
+    , Str "it"
+    , Space
+    , Str "occupies."
+    , Space
+    , Str "The"
+    , Space
+    , Str "alignment"
+    , Space
+    , Str "of"
+    , Space
+    , Str "the"
+    , Space
+    , Str "text"
+    , Space
+    , Emph [ Str "inside" ]
+    , Space
+    , Str "the"
+    , Space
+    , Str "box"
+    , Space
+    , Str "is"
+    , Space
+    , Str "a"
+    , Space
+    , Str "separate"
+    , Space
+    , Str "attribute,"
+    , Space
+    , Str "covered"
+    , Space
+    , Str "in"
+    , Space
+    , Code ( "" , [] , [] ) "test-text-align.md"
+    , Str "."
+    , Space
+    , Str "Compare"
+    , Space
+    , Str "the"
+    , Space
+    , Str "three"
+    , Space
+    , Str "rendered"
+    , Space
+    , Str "previews:"
+    , Space
+    , Str "a"
+    , Space
+    , Str "percentage"
+    , Space
+    , Str "width"
+    , Space
+    , Str "is"
+    , Space
+    , Str "resolved"
+    , Space
+    , Str "against"
+    , Space
+    , Code ( "" , [] , [] ) "\\linewidth"
+    , Space
+    , Str "in"
+    , Space
+    , Str "LaTeX"
+    , Space
+    , Str "and"
+    , Space
+    , Str "against"
+    , Space
+    , Str "the"
+    , Space
+    , Str "containing"
+    , Space
+    , Str "block"
+    , Space
+    , Str "in"
+    , Space
+    , Str "HTML"
+    , Space
+    , Str "and"
+    , Space
+    , Str "Typst,"
+    , Space
+    , Str "so"
+    , Space
+    , Str "the"
+    , Space
+    , Str "same"
+    , Space
+    , Str "percentage"
+    , Space
+    , Str "should"
+    , Space
+    , Str "occupy"
+    , Space
+    , Str "the"
+    , Space
+    , Str "same"
+    , Space
+    , Str "fraction"
+    , Space
+    , Str "of"
+    , Space
+    , Str "the"
+    , Space
+    , Str "text"
+    , Space
+    , Str "column"
+    , Space
+    , Str "everywhere,"
+    , Space
+    , Str "and"
+    , Space
+    , Str "an"
+    , Space
+    , Str "absolute"
+    , Space
+    , Str "width"
+    , Space
+    , Str "should"
+    , Space
+    , Str "come"
+    , Space
+    , Str "out"
+    , Space
+    , Str "at"
+    , Space
+    , Str "the"
+    , Space
+    , Str "same"
+    , Space
+    , Str "physical"
+    , Space
+    , Str "size"
+    , Space
+    , Str "in"
+    , Space
+    , Str "both"
+    , Space
+    , Str "PDF"
+    , Space
+    , Str "engines."
+    ]
+, Header
     2
     ( "block-level-positioning" , [] , [] )
     [ Str "Block-Level" , Space , Str "Positioning" ]

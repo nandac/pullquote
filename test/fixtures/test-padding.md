@@ -2,6 +2,8 @@
 title: "Pullquote Test: Padding"
 ---
 
+The four `pq-padding-*` attributes control the space between the box edges and the text. Compare the three rendered previews: `px` values are converted to `pt` for both PDF engines at the standard 96dpi ratio, so an identical `px` padding should produce the same physical gap in LaTeX and Typst as it does on screen. The defaults are the one place the engines diverge on purpose — HTML uses `em` so the gap scales with `pq-size`, while the PDF engines use fixed points, because their box-frame options are resolved in the outer document's font context before the in-box size change applies.
+
 ## Default Padding
 
 This tests the default spacing on each side of the box when no padding attributes are specified (`pq-padding-left` defaults to `1em`/`12pt`; `pq-padding-top`/`pq-padding-bottom` default to `0.25em`/`4pt`; `pq-padding-right` defaults to `0`). HTML padding defaults deliberately use `em` rather than a fixed `px` value, so the gap around the text scales with whichever `pq-size` the pullquote itself uses.

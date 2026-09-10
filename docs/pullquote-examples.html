@@ -5,7 +5,7 @@
   <meta name="generator" content="pandoc 3.11" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Nandakumar Chandrasekhar" />
-  <meta name="dcterms.date" content="2026-09-02" />
+  <meta name="dcterms.date" content="2026-09-10" />
   <title>Demonstration of the Pullquote Filter for Pandoc</title>
   <style>
     /* Default styles provided by pandoc.
@@ -99,7 +99,7 @@
 <header id="title-block-header">
 <h1 class="title">Demonstration of the Pullquote Filter for Pandoc</h1>
 <p class="author">Nandakumar Chandrasekhar</p>
-<p class="date">2026-09-02</p>
+<p class="date">2026-09-10</p>
 </header>
 <h2 id="introduction">Introduction</h2>
 <p>This document showcases the features of the <code>pullquote</code>
@@ -382,12 +382,15 @@ but the text <em>inside</em> the box is centered.
 <h2 id="interline-spacing-line-height">Interline Spacing
 (Line-Height)</h2>
 <p>The <code>pq-skip</code> attribute allows you to adjust the vertical
-space between lines of text. While casually referred to as leading,
-<code>pq-skip</code> technically acts as a multiplier for the engine’s
-interline spacing (<code>line-height</code> in CSS,
-<code>\baselineskip</code> in LaTeX, and <code>leading</code> in Typst).
-This is particularly useful for dense multi-line quotes or when using
-very large custom font sizes.</p>
+space between lines of text. It is a <em>baseline-to-baseline</em>
+multiple — the same measurement CSS calls <code>line-height</code> and
+LaTeX calls <code>\baselineskip</code> — so a given value produces the
+same line spacing in all three formats. Typst is the exception under the
+hood: its native <code>leading</code> is the gap <em>between</em> lines
+rather than the baseline-to-baseline distance, so the filter translates
+the value rather than passing it through. This is particularly useful
+for dense multi-line quotes or when using very large custom font
+sizes.</p>
 <div class="sourceCode" id="cb14"><pre
 class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>::: {.pullquote pq-size=&quot;xl&quot; pq-skip=&quot;2.0&quot;}</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>This quote uses a <span class="in">`pq-skip`</span> value of 2.0, acting as a double-spacing multiplier to let the text breathe.</span>
@@ -397,6 +400,31 @@ style=" display: block !important; box-sizing: border-box !important; padding-le
 This quote uses a <code>pq-skip</code> value of 2.0, acting as a
 double-spacing multiplier to let the text breathe.
 </div>
+<p>Tightening works the same way. Note that LaTeX will not set a
+<code>\baselineskip</code> below the natural line height, so it quietly
+clamps values much under <code>1.2</code> where HTML and Typst honour
+them:</p>
+<div class="sourceCode" id="cb15"><pre
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>::: {.pullquote pq-size=&quot;l&quot; pq-skip=&quot;1.15&quot;}</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>This quote is deliberately tight, to show how far the lines can be pulled together before an engine stops following.</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>:::</span></code></pre></div>
+<div class="pullquote" data-pq-size="l" data-pq-skip="1.15"
+style=" display: block !important; box-sizing: border-box !important; padding-left: 1em !important; padding-right: 0 !important; padding-top: 0.25em !important; padding-bottom: 0.25em !important; line-height: 1.15 !important; width: 80% !important; color: #2F4F4F !important; border-left: 0.25em solid #5F9EA0 !important; margin: 1.5rem auto !important; font-size: 1.2rem !important; font-style: italic !important; font-family: &quot;Noto Serif&quot;, serif !important;">
+This quote is deliberately tight, to show how far the lines can be
+pulled together before an engine stops following.
+</div>
+<p>Instead of a bare multiplier you can give an exact length. An
+<code>em</code> value scales with the pullquote’s own font size, so it
+stays proportional as <code>pq-size</code> changes:</p>
+<div class="sourceCode" id="cb16"><pre
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>::: {.pullquote pq-size=&quot;l&quot; pq-skip=&quot;1.6em&quot;}</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>This quote sets its interline spacing as an explicit 1.6em length rather than a bare multiplier.</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>:::</span></code></pre></div>
+<div class="pullquote" data-pq-size="l" data-pq-skip="1.6em"
+style=" display: block !important; box-sizing: border-box !important; padding-left: 1em !important; padding-right: 0 !important; padding-top: 0.25em !important; padding-bottom: 0.25em !important; line-height: 1.6em !important; width: 80% !important; color: #2F4F4F !important; border-left: 0.25em solid #5F9EA0 !important; margin: 1.5rem auto !important; font-size: 1.2rem !important; font-style: italic !important; font-family: &quot;Noto Serif&quot;, serif !important;">
+This quote sets its interline spacing as an explicit 1.6em length rather
+than a bare multiplier.
+</div>
 <h2 id="global-metadata-configuration">Global Metadata
 Configuration</h2>
 <p>You can establish project-wide defaults for your pullquotes using
@@ -405,20 +433,20 @@ attributes first; if none exist, it falls back to the global
 metadata.</p>
 <p>For example, if your document includes the following YAML
 frontmatter:</p>
-<div class="sourceCode" id="cb15"><pre
-class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pq-text-color</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;DarkSlateGray&quot;</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">pq-bar-color</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;CadetBlue&quot;</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="fu">pq-width</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;80%&quot;</span></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="fu">pq-size</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;l&quot;</span></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="fu">pq-box-align</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;center&quot;</span></span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pq-text-color</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;DarkSlateGray&quot;</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">pq-bar-color</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;CadetBlue&quot;</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="fu">pq-width</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;80%&quot;</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="fu">pq-size</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;l&quot;</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="fu">pq-box-align</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;center&quot;</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span></code></pre></div>
 <p>A pullquote with no inline attributes will automatically inherit
 those exact styles:</p>
-<div class="sourceCode" id="cb16"><pre
-class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>::: {.pullquote}</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>This quote has no inline attributes. It inherits its styling entirely from the YAML frontmatter defined at the top of this document.</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>:::</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>::: {.pullquote}</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>This quote has no inline attributes. It inherits its styling entirely from the YAML frontmatter defined at the top of this document.</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>:::</span></code></pre></div>
 <div class="pullquote"
 style=" display: block !important; box-sizing: border-box !important; padding-left: 1em !important; padding-right: 0 !important; padding-top: 0.25em !important; padding-bottom: 0.25em !important; line-height: 1.5 !important; width: 80% !important; color: #2F4F4F !important; border-left: 0.25em solid #5F9EA0 !important; margin: 1.5rem auto !important; font-size: 1.2rem !important; font-style: italic !important; font-family: &quot;Noto Serif&quot;, serif !important;">
 This quote has no inline attributes. It inherits its styling entirely
@@ -430,10 +458,10 @@ Attributes</h2>
 <p>Multiple typographic utilities and attributes can be combined within
 the same element. Font, size, color, and alignment compose
 independently.</p>
-<div class="sourceCode" id="cb17"><pre
-class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>::: {.pullquote pq-weight=&quot;bold&quot; pq-family=&quot;serif&quot; pq-style=&quot;slanted&quot; pq-size=&quot;3xl&quot; pq-text-align=&quot;center&quot; pq-box-align=&quot;center&quot; pq-width=&quot;95%&quot; pq-text-color=&quot;DarkSlateBlue&quot; pq-bar-color=&quot;PowderBlue&quot; pq-bar-width=&quot;0.75rem&quot; pq-padding-left=&quot;1.25rem&quot; pq-skip=&quot;2.0&quot;}</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>The Ultimate Stress Test</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>:::</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>::: {.pullquote pq-weight=&quot;bold&quot; pq-family=&quot;serif&quot; pq-style=&quot;slanted&quot; pq-size=&quot;3xl&quot; pq-text-align=&quot;center&quot; pq-box-align=&quot;center&quot; pq-width=&quot;95%&quot; pq-text-color=&quot;DarkSlateBlue&quot; pq-bar-color=&quot;PowderBlue&quot; pq-bar-width=&quot;0.75rem&quot; pq-padding-left=&quot;1.25rem&quot; pq-skip=&quot;2.0&quot;}</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>The Ultimate Stress Test</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>:::</span></code></pre></div>
 <div class="pullquote" data-pq-weight="bold" data-pq-family="serif"
 data-pq-style="slanted" data-pq-size="3xl" data-pq-text-align="center"
 data-pq-box-align="center" data-pq-width="95%"
