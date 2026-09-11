@@ -1,15 +1,9 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{pullquote}[2026/09/10 v1.2.0 Typographic pullquote box environment]
+\ProvidesPackage{pullquote}[2026/09/11 v1.2.0 Typographic pullquote box environment]
 
-% This is the standalone LaTeX distribution of the pullquote environment,
-% for documents compiled directly with (pdf/Xe/Lua)LaTeX rather than through
-% Pandoc/Quarto. It defines the same \pullquote environment and keys as the
-% Pandoc/Quarto extension's LaTeX preamble (_extensions/pullquote/pullquote.tex),
-% which the pullquote.lua filter targets — the two files are intentionally
-% kept in sync rather than shared, since the Quarto file is loaded via
-% Pandoc's --include-in-header (a raw preamble insert, not a package lookup)
-% and duplicating the ~80 lines here is simpler than making that mechanism
-% resolve a package on TEXINPUTS. If you change one, change the other.
+% Standalone LaTeX distribution of the pullquote environment.
+% Note: Keep this file in sync with the Pandoc/Quarto preamble
+% (_extensions/pullquote/pullquote.tex).
 
 % --- Safe Package Loading ---
 \PassOptionsToPackage{svgnames}{xcolor}
@@ -18,32 +12,13 @@
 \RequirePackage{tcolorbox}
 \RequirePackage{environ}
 \RequirePackage{keyval}
-\RequirePackage{iftex}
+\RequirePackage{fontspec} % Requires XeLaTeX or LuaLaTeX
 
-% pq-family accepts an arbitrary literal font name, rendered here via
-% \fontspec{...}. fontspec itself only works under XeLaTeX/LuaLaTeX, so it is
-% loaded here only on those engines — loading it unconditionally would break
-% pdflatex even for documents that never pass a literal font name.
-\ifPDFTeX
-\else
-  \RequirePackage{fontspec}
-\fi
-
-% If the surrounding document (or a package loaded ahead of pullquote, e.g.
-% a document class) already pulled in xcolor without options, the
-% \PassOptionsToPackage above arrives too late to enable svgnames. Load the
-% SVG color names directly as a fallback; re-running this after a successful
-% svgnames load is harmless.
+% Load svgnames directly as a fallback in case xcolor was loaded without options earlier.
 \input{svgnam.def}
 
 % --- Default Colors ---
-% The Lua filter only emits "color="/"barcolor=" when the document actually
-% sets pq-text-color/pq-bar-color, so the \pqsetdefaults values below are what
-% a pullquote with no color attributes renders as. They are defined here as the
-% exact hex values the HTML and Typst pathways fall back to, rather than the
-% nearest svgnames greys (DarkGray is #A9A9A9, LightGray is #D3D3D3), so an
-% uncolored pullquote renders the same grey in all three engines instead of a
-% visibly lighter one in PDF.
+% Exact hex values matching HTML/Typst outputs for cross-engine consistency.
 \definecolor{pqdefaulttext}{HTML}{888888}
 \definecolor{pqdefaultbar}{HTML}{D9D9D9}
 
@@ -68,12 +43,7 @@
   \def\pqwidth{0.8\textwidth}%
   \def\pqcolor{pqdefaulttext}%
   \def\pqsize{\large\itshape}%
-  % Leave whatever leading \pqsize's \selectfont already set for the chosen
-  % font size alone by default, rather than multiplying it — "before upper"
-  % below applies \pqsize (which resets \baselineskip to that size's own
-  % natural leading) before this value is read, so a "1.2\baselineskip"
-  % default would compound an extra 20% on top of the already-correct
-  % per-size leading instead of overriding it.
+  % Default to the natural leading of the chosen font size.
   \def\pqskip{\baselineskip}%
   \def\pqalign{\raggedright}%
   \def\pqboxalign{center}%
@@ -101,12 +71,7 @@
     left=\pqpaddingleft, right=\pqpaddingright, top=\pqpaddingtop, bottom=\pqpaddingbottom,
     before skip=15pt, after skip=15pt,
     colupper=\pqcolor,
-    % tcolorbox resets \parskip inside the box regardless of the
-    % parskip package loaded by the surrounding document, which
-    % otherwise collapses multi-paragraph content with no visible
-    % break. Restore half a (possibly pq-skip-adjusted) baselineskip
-    % as the paragraph gap; a full baselineskip reads as double-spaced
-    % on top of the existing interline gap.
+    % Restore half a baselineskip for paragraph gaps, as tcolorbox resets \parskip.
     before upper={\pqsize\setlength{\baselineskip}{\pqskip}\setlength{\parskip}{0.5\baselineskip}\pqalign},
   ]
    \BODY

@@ -5,32 +5,15 @@
 \usepackage{tcolorbox}
 \usepackage{environ}
 \usepackage{keyval}
-\usepackage{iftex}
 
-% pq-family accepts an arbitrary literal font name (e.g. pq-family="Playfair
-% Display"), which the Lua filter renders as \fontspec{...}. fontspec itself
-% only works under XeLaTeX/LuaLaTeX, so it is loaded here only on those
-% engines — loading it unconditionally would break pdflatex (Pandoc's
-% default engine) even for documents that never use a literal pq-family.
-\ifPDFTeX
-\else
-  \usepackage{fontspec}
-\fi
+% Requires XeLaTeX or LuaLaTeX to support literal font names in pq-family.
+\usepackage{fontspec}
 
-% Pandoc's default template loads xcolor (without options) before
-% header-includes run, so PassOptionsToPackage above arrives too late
-% to enable svgnames. Load the SVG color names directly as a fallback;
-% re-running this after a successful svgnames load is harmless.
+% Load svgnames directly as a fallback if Pandoc loaded xcolor without options.
 \input{svgnam.def}
 
 % --- Default Colors ---
-% The Lua filter only emits "color="/"barcolor=" when the document actually
-% sets pq-text-color/pq-bar-color, so the \pqsetdefaults values below are what
-% a pullquote with no color attributes renders as. They are defined here as the
-% exact hex values the HTML and Typst pathways fall back to, rather than the
-% nearest svgnames greys (DarkGray is #A9A9A9, LightGray is #D3D3D3), so an
-% uncolored pullquote renders the same grey in all three engines instead of a
-% visibly lighter one in PDF.
+% Exact hex values matching HTML/Typst outputs for cross-engine consistency.
 \definecolor{pqdefaulttext}{HTML}{888888}
 \definecolor{pqdefaultbar}{HTML}{D9D9D9}
 
@@ -55,12 +38,7 @@
   \def\pqwidth{0.8\textwidth}%
   \def\pqcolor{pqdefaulttext}%
   \def\pqsize{\large\itshape}%
-  % Leave whatever leading \pqsize's \selectfont already set for the chosen
-  % font size alone by default, rather than multiplying it — "before upper"
-  % below applies \pqsize (which resets \baselineskip to that size's own
-  % natural leading) before this value is read, so a "1.2\baselineskip"
-  % default would compound an extra 20% on top of the already-correct
-  % per-size leading instead of overriding it.
+  % Default to the natural leading of the chosen font size.
   \def\pqskip{\baselineskip}%
   \def\pqalign{\raggedright}%
   \def\pqboxalign{center}%
@@ -88,12 +66,7 @@
     left=\pqpaddingleft, right=\pqpaddingright, top=\pqpaddingtop, bottom=\pqpaddingbottom,
     before skip=15pt, after skip=15pt,
     colupper=\pqcolor,
-    % tcolorbox resets \parskip inside the box regardless of the
-    % parskip package loaded by the surrounding document, which
-    % otherwise collapses multi-paragraph content with no visible
-    % break. Restore half a (possibly pq-skip-adjusted) baselineskip
-    % as the paragraph gap; a full baselineskip reads as double-spaced
-    % on top of the existing interline gap.
+    % Restore half a baselineskip for paragraph gaps, as tcolorbox resets \parskip.
     before upper={\pqsize\setlength{\baselineskip}{\pqskip}\setlength{\parskip}{0.5\baselineskip}\pqalign},
   ]
    \BODY
