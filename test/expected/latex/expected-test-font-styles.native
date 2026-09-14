@@ -2,7 +2,7 @@
     [ Code ( "" , [] , [] ) "pq-weight"
     , Str ","
     , Space
-    , Code ( "" , [] , [] ) "pq-family"
+    , Code ( "" , [] , [] ) "pq-font"
     , Space
     , Str "and"
     , Space
@@ -114,117 +114,54 @@
     , Space
     , Str "previews:"
     , Space
-    , Code ( "" , [] , [] ) "serif"
-    , Str "/"
-    , Code ( "" , [] , [] ) "sans"
-    , Str "/"
-    , Code ( "" , [] , [] ) "mono"
+    , Str "by"
     , Space
-    , Str "resolve"
+    , Str "default,"
     , Space
-    , Str "through"
+    , Str "pullquotes"
+    , Space
+    , Str "seamlessly"
+    , Space
+    , Str "inherit"
     , Space
     , Str "the"
     , Space
     , Str "document\8217s"
     , Space
-    , Str "own"
-    , Space
-    , Code ( "" , [] , [] ) "mainfont"
-    , Str "/"
-    , Code ( "" , [] , [] ) "sansfont"
-    , Str "/"
-    , Code ( "" , [] , [] ) "monofont"
-    , Str ","
-    , Space
-    , Str "so"
-    , Space
-    , Str "they"
-    , Space
-    , Str "only"
-    , Space
-    , Str "match"
-    , Space
-    , Str "across"
-    , Space
-    , Str "formats"
-    , Space
-    , Str "when"
-    , Space
-    , Str "those"
-    , Space
-    , Str "are"
-    , Space
     , Str "configured"
     , Space
-    , Str "identically,"
+    , Str "fonts."
     , Space
-    , Str "as"
+    , Str "Using"
     , Space
-    , Code ( "" , [] , [] ) "test/settings/shared.yaml"
+    , Code ( "" , [] , [] ) "pq-font"
     , Space
-    , Str "does."
+    , Str "allows"
     , Space
-    , Str "Typst"
+    , Str "overriding"
     , Space
-    , Str "is"
+    , Str "this"
     , Space
-    , Str "the"
-    , Space
-    , Str "one"
-    , Space
-    , Str "engine"
+    , Str "inheritance"
     , Space
     , Str "with"
     , Space
-    , Str "no"
-    , Space
-    , Str "bundled"
-    , Space
-    , Str "sans-serif,"
-    , Space
-    , Str "so"
-    , Space
     , Str "a"
     , Space
-    , Str "document"
+    , Str "literal"
     , Space
-    , Str "that"
+    , Str "custom"
     , Space
-    , Str "asks"
+    , Str "font"
     , Space
-    , Str "for"
-    , Space
-    , Code ( "" , [] , [] ) "sans"
-    , Space
-    , Str "without"
-    , Space
-    , Str "configuring"
-    , Space
-    , Str "one"
-    , Space
-    , Str "falls"
-    , Space
-    , Str "back"
-    , Space
-    , Str "to"
-    , Space
-    , Str "a"
-    , Space
-    , Str "best-effort"
-    , Space
-    , Str "chain"
-    , Space
-    , Str "and"
-    , Space
-    , Str "warns."
+    , Str "name."
     ]
 , Header
     2
-    ( "weights-families-and-variants" , [] , [] )
+    ( "weights-fonts-and-variants" , [] , [] )
     [ Str "Weights,"
     , Space
-    , Str "Families,"
+    , Str "Fonts,"
     , Space
     , Str "and"
     , Space
@@ -249,7 +186,7 @@
     , Space
     , Str "weights,"
     , Space
-    , Str "families,"
+    , Str "fonts,"
     , Space
     , Str "and"
     , Space
@@ -326,11 +263,11 @@
     ]
 , Header
     3
-    ( "font-families" , [] , [] )
-    [ Str "Font" , Space , Str "Families" ]
+    ( "custom-fonts" , [] , [] )
+    [ Str "Custom" , Space , Str "Fonts" ]
 , CodeBlock
     ( "" , [ "markdown" ] , [] )
-    "::: {.pullquote}\nThis is an un-styled quote, which should default pq-family to serif.\n:::"
+    "::: {.pullquote}\nThis is an un-styled quote, which naturally inherits the document's font.\n:::"
 , Div
     ( "" , [ "pullquote" ] , [] )
     [ Para
@@ -346,76 +283,22 @@
         , Space
         , Str "which"
         , Space
-        , Str "should"
+        , Str "naturally"
         , Space
-        , Str "default"
+        , Str "inherits"
         , Space
-        , Str "pq-family"
+        , Str "the"
         , Space
-        , Str "to"
+        , Str "document\8217s"
         , Space
-        , Str "serif."
+        , Str "font."
         ]
     ]
 , CodeBlock
     ( "" , [ "markdown" ] , [] )
-    "::: {.pullquote pq-family=\"serif\"}\nThis is a Serif quote.\n:::"
+    "::: {.pullquote pq-font=\"Georgia\"}\nThis is a quote using a literal custom font name.\n:::"
 , Div
-    ( "" , [ "pullquote" ] , [ ( "pq-family" , "serif" ) ] )
-    [ Para
-        [ Str "This"
-        , Space
-        , Str "is"
-        , Space
-        , Str "a"
-        , Space
-        , Str "Serif"
-        , Space
-        , Str "quote."
-        ]
-    ]
-, CodeBlock
-    ( "" , [ "markdown" ] , [] )
-    "::: {.pullquote pq-family=\"sans\"}\nThis is a Sans-Serif quote.\n:::"
-, Div
-    ( "" , [ "pullquote" ] , [ ( "pq-family" , "sans" ) ] )
-    [ Para
-        [ Str "This"
-        , Space
-        , Str "is"
-        , Space
-        , Str "a"
-        , Space
-        , Str "Sans-Serif"
-        , Space
-        , Str "quote."
-        ]
-    ]
-, CodeBlock
-    ( "" , [ "markdown" ] , [] )
-    "::: {.pullquote pq-family=\"mono\"}\nThis is a Monospace quote.\n:::"
-, Div
-    ( "" , [ "pullquote" ] , [ ( "pq-family" , "mono" ) ] )
-    [ Para
-        [ Str "This"
-        , Space
-        , Str "is"
-        , Space
-        , Str "a"
-        , Space
-        , Str "Monospace"
-        , Space
-        , Str "quote."
-        ]
-    ]
-, CodeBlock
-    ( "" , [ "markdown" ] , [] )
-    "::: {.pullquote pq-family=\"Libre Baskerville\"}\nThis is a quote using a literal custom font name, not one of serif/sans/mono.\n:::"
-, Div
-    ( ""
-    , [ "pullquote" ]
-    , [ ( "pq-family" , "Libre Baskerville" ) ]
-    )
+    ( "" , [ "pullquote" ] , [ ( "pq-font" , "Georgia" ) ] )
     [ Para
         [ Str "This"
         , Space
@@ -435,15 +318,7 @@
         , Space
         , Str "font"
         , Space
-        , Str "name,"
-        , Space
-        , Str "not"
-        , Space
-        , Str "one"
-        , Space
-        , Str "of"
-        , Space
-        , Str "serif/sans/mono."
+        , Str "name."
         ]
     ]
 , Header
@@ -557,18 +432,16 @@
         ]
     ]
 , Header
-    3
-    ( "combinations" , [] , [] )
-    [ Str "4." , Space , Str "Combinations" ]
+    3 ( "combinations" , [] , [] ) [ Str "Combinations" ]
 , CodeBlock
     ( "" , [ "markdown" ] , [] )
-    "::: {.pullquote pq-style=\"smallcaps\" pq-weight=\"bold\" pq-family=\"serif\"}\nThis is a Bold, Small-Caps, Serif quote.\n:::"
+    "::: {.pullquote pq-style=\"smallcaps\" pq-weight=\"bold\" pq-font=\"Georgia\"}\nThis is a Bold, Small-Caps quote using Georgia.\n:::"
 , Div
     ( ""
     , [ "pullquote" ]
     , [ ( "pq-style" , "smallcaps" )
       , ( "pq-weight" , "bold" )
-      , ( "pq-family" , "serif" )
+      , ( "pq-font" , "Georgia" )
       ]
     )
     [ Para
@@ -580,22 +453,24 @@
         , Space
         , Str "Bold,"
         , Space
-        , Str "Small-Caps,"
+        , Str "Small-Caps"
         , Space
-        , Str "Serif"
+        , Str "quote"
         , Space
-        , Str "quote."
+        , Str "using"
+        , Space
+        , Str "Georgia."
         ]
     ]
 , CodeBlock
     ( "" , [ "markdown" ] , [] )
-    "::: {.pullquote pq-style=\"upright\" pq-weight=\"medium\" pq-family=\"sans\"}\nThis is a Medium-weight, Upright, Sans-Serif quote.\n:::"
+    "::: {.pullquote pq-style=\"upright\" pq-weight=\"medium\" pq-font=\"Noto Sans\"}\nThis is a Medium-weight, Upright quote using Noto Sans.\n:::"
 , Div
     ( ""
     , [ "pullquote" ]
     , [ ( "pq-style" , "upright" )
       , ( "pq-weight" , "medium" )
-      , ( "pq-family" , "sans" )
+      , ( "pq-font" , "Noto Sans" )
       ]
     )
     [ Para
@@ -607,11 +482,15 @@
         , Space
         , Str "Medium-weight,"
         , Space
-        , Str "Upright,"
+        , Str "Upright"
         , Space
-        , Str "Sans-Serif"
+        , Str "quote"
         , Space
-        , Str "quote."
+        , Str "using"
+        , Space
+        , Str "Noto"
+        , Space
+        , Str "Sans."
         ]
     ]
 ]

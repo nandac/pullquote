@@ -4,4 +4,7 @@
 .markdownlint.json
 artifacts/
 docs/pullquote.lua
+docs/pullquote.css
+docs/pullquote.tex
+docs/pullquote.typ
 docs/pullquote.sty

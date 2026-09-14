@@ -1,5 +1,5 @@
 to: html5
 
 css:
+  - pullquote.css
   - preview-styles.css
-

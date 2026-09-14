@@ -1,40 +1,9 @@
 % Example showing pullquote.sty used directly in LaTeX, with no
-% Pandoc/Quarto involved. Compile with lualatex or xelatex (what `make docs`
-% uses, via the Makefile's LATEX variable) for font parity with the other
-% three specimens (Noto Serif/Sans, Fira Mono, all loaded via fontspec
-% below). pdflatex still compiles, since pullquote.sty's core \pullquote
-% environment doesn't itself require fontspec, but fontspec-dependent
-% features (a literal pq-family font name, and every \setmainfont/
-% \setsansfont/\setmonofont call below) are silently skipped under it, so
-% the whole document falls back to Computer Modern instead of matching the
-% other specimens. Built automatically by `make docs` (see the Makefile)
-% into docs/pullquote-standalone-example.pdf.
+% Pandoc involved. Compile with lualatex or xelatex for full font
+% parity and custom font loading.
 %
 % pullquote.sty must be on TEXINPUTS or in the same directory as this file;
 % it lives at the repo root.
-%
-% This mirrors every example in test/pullquote-examples.md (the Pandoc/
-% Quarto specimen), translated from pq-* attributes to the .sty's own
-% width/color/size/skip/align/boxalign/barwidth/barcolor/padding* keys, so
-% the two specimens exercise the same feature set and stay easy to compare
-% side by side. A few pq-* concepts from that file have no LaTeX
-% equivalent and are intentionally left out:
-%   - pq-html-unit (rem vs. em): HTML-only, no meaning for a LaTeX length.
-%   - The Typst missing-sans-font note: Typst-only, not relevant here.
-%   - The pq-family="mono" Typst caveat: likewise Typst-only.
-% "Global Metadata Configuration" (YAML frontmatter driving un-keyed
-% pullquotes) has no literal equivalent either, since .sty has no document
-% metadata to read — but \pqsetdefaults is the same idea in LaTeX
-% (project-wide defaults an un-keyed \pullquote falls back to), so it gets
-% its own section below instead of being dropped.
-% The class options, geometry and parskip below all mirror what Pandoc's
-% default template generates for the other three specimens from
-% test/settings/shared.yaml (fontsize: 12pt, papersize: A4, margin=20mm) and
-% from the template's own no-indent paragraph handling. Without them this
-% file inherits article's defaults — 10pt on US Letter with indented,
-% unspaced paragraphs — which made the standalone PDF look like a different
-% package rather than the same one in a differently-configured document,
-% defeating the side-by-side comparison this file exists for.
 \documentclass[12pt, a4paper]{article}
 \usepackage[margin=20mm]{geometry}
 \usepackage{parskip}
@@ -42,63 +11,25 @@
 \usepackage{titlesec}
 \usepackage{microtype}
 \usepackage{pullquote}
+\usepackage[colorlinks=true, bookmarks=true, bookmarksnumbered=true]{hyperref}
 
-% Both of these come from Pandoc's default LaTeX template too. At 12pt the
-% long slash-separated \texttt key lists in this file no longer fit the
-% measure, and without an emergency stretch pass they set as overfull lines
-% that run past the right margin.
+% Globally set inline code to Maroon
+\let\oldtexttt\texttt
+\renewcommand{\texttt}[1]{\textcolor{Maroon}{\oldtexttt{#1}}}
+
 \setlength{\emergencystretch}{3em}
 
-% A tcolorbox (already loaded by pullquote.sty itself) styled to match the
-% dark, sharp-cornered code blocks Pandoc's syntax highlighting renders in
-% the other three specimens (test/pullquote-examples.md), so the
-% \pullquote[...] source shown before each example here looks consistent
-% with those rather than a bare, unstyled \verbatim block.
-\newtcolorbox{pqcode}{
-  colback=black!85, colupper=white, colframe=black!85,
-  sharp corners, boxrule=0pt,
-  fontupper=\ttfamily\small,
-  left=8pt, right=8pt, top=6pt, bottom=6pt,
-  width=\linewidth,
-}
-
 % Noto Serif/Noto Sans/Fira Mono, matching test/settings/shared.yaml's
-% mainfont/sansfont/monofont exactly, so the "Font Families" section below
-% (\rmfamily/\sffamily/\ttfamily) and this file's own \pqcode code blocks
-% (which use \ttfamily) render in the same fonts as the other three
-% specimens. fontspec (loaded by pullquote.sty on XeLaTeX/LuaLaTeX) provides
-% \setmainfont/\setsansfont/\setmonofont; under pdflatex there's no
-% fontspec, so all three fall back to Computer Modern instead.
-\ifPDFTeX
-  \newcommand{\PQCustomFont}{}
-  % No fontspec on this engine, so there's no SemiBold face to select;
-  % fall back to the class's own bold headings.
-  \newcommand{\pqheadingfont}{\bfseries}
-\else
-  \setmainfont{Noto Serif}
-  \setsansfont{Noto Sans}
-  \setmonofont{Fira Mono}
-  % pq-family accepts a literal font name (e.g. pq-family="Libre
-  % Baskerville") rendered via \fontspec; that only works under
-  % XeLaTeX/LuaLaTeX, matching the pq-family literal-font-name path in
-  % pullquote.lua and the same guard pullquote.sty itself uses.
-  \newcommand{\PQCustomFont}{\fontspec{Libre Baskerville}}
-  % Mirrors \pfaheadingfont in test/assets/preview-styles.tex, which renders
-  % headings in the other three specimens as Noto Serif SemiBold rather than
-  % the heavier Bold that article's \bfseries would select.
-  \newfontfamily\pqheadingfont{Noto Serif}[UprightFont={* SemiBold},ItalicFont={* SemiBold Italic}]
-\fi
+% mainfont/sansfont/monofont exactly.
+\setmainfont{Noto Serif}
+\setsansfont{Noto Sans}
+\setmonofont{Fira Mono}
+\newfontfamily\pqheadingfont{Noto Serif}[UprightFont={* SemiBold},ItalicFont={* SemiBold Italic}]
 
-% Same titlesec mapping preview-styles.tex applies to the Pandoc specimens.
-% Only \section and \subsection are used in this file.
 \titleformat*{\section}{\Large\pqheadingfont}
 \titleformat*{\subsection}{\large\pqheadingfont}
 
-% Hex-code colors from the "Hex Codes" section below, defined once up
-% front. pullquote.lua resolves pq-text-color="#827397" and
-% pq-bar-color="#FAA" (a 3-digit shorthand, expanded to #FFAAAA) the same
-% way: via \definecolor{...}{HTML}{...} plus a color=/barcolor= key that
-% names the color, rather than passing the hex digits inline.
+% Hex-code colors from the "Hex Codes" section below, defined once up front.
 \definecolor{pqHexText}{HTML}{827397}
 \definecolor{pqHexBar}{HTML}{FFAAAA}
 
@@ -109,329 +40,171 @@
 \begin{document}
 \maketitle
 
-% Matches test/settings/shared.yaml's linestretch: 1.25, which Pandoc's
-% default template turns into this exact \setstretch{...} call (also right
-% after \maketitle, leaving the title itself unstretched) — without it,
-% this document's line spacing defaults to 1.0x and reads visibly tighter
-% than the other three specimens.
 \setstretch{1.25}
 
 \section*{Introduction}
 
-This document showcases \texttt{pullquote.sty}, the standalone LaTeX
-distribution of the \texttt{pullquote} environment for documents
-compiled directly with (pdf/Xe/Lua)LaTeX, without Pandoc or Quarto.
-Each example below mirrors one in \texttt{test/pullquote-examples.md}
-(the Pandoc/Quarto specimen), translated from \texttt{pq-*} attributes
-to the \texttt{.sty}'s own \texttt{width}, \texttt{color}, \texttt{size},
-\texttt{skip}, \texttt{align}, \texttt{boxalign}, \texttt{barwidth},
-\texttt{barcolor}, and \texttt{padding*} keys, so both specimens
-exercise the same feature set and stay easy to compare side by side.
+This document showcases the features of the \texttt{pullquote} LaTeX package. Each example displays the required syntax alongside its rendered output, ensuring visually identical layouts across LaTeX (PDF), Typst (PDF), and HTML formats.
 
-\textbf{Engine Note:} compile with \texttt{lualatex} or \texttt{xelatex}
-(what \texttt{make docs} uses) for font parity with the other three
-specimens — Noto Serif, Noto Sans, and Fira Mono, all loaded via
-\texttt{fontspec} below. \texttt{pdflatex} still compiles this document,
-but silently falls back to Computer Modern throughout, since
-\texttt{fontspec} isn't available on that engine.
+\section*{Environment Invocations}
 
-\textbf{Installation Note:} place \texttt{pullquote.sty} on your
-\texttt{TEXINPUTS} or alongside your document, then load it with
-\texttt{\textbackslash usepackage\{pullquote\}}.
-
-\section*{Basic Example}
-
-Ordinary paragraph text before the pullquote, to show how it breaks the
-flow of the page.
+In accordance with LaTeX conventions, pullquotes must be instantiated exclusively via the \texttt{pullquote} environment.
 
 \begin{pullquote}
-"Typography is the craft of endowing human language with a durable visual
-form." --- Robert Bringhurst
+"Typography is the craft of endowing human language with a durable visual form."
+--- Robert Bringhurst
 \end{pullquote}
 
-Ordinary paragraph text after the pullquote. The keys below match the
-\texttt{tcolorbox}-backed environment defined in \texttt{pullquote.sty}:
-\texttt{width}, \texttt{color}, \texttt{size}, \texttt{skip},
-\texttt{align}, \texttt{boxalign}, \texttt{barwidth}, \texttt{barcolor},
-and \texttt{paddingleft}\slash\texttt{paddingright}\slash%
-\texttt{paddingtop}\slash\texttt{paddingbottom}.
+\section*{Font Sizing}
 
-\subsection*{Font Sizing}
+The package provides a sizing scale to adjust the text relative to the document's base font size. While the filter supports a full 5-step scale (from \texttt{s} to \texttt{2xl}) alongside custom arbitrary units, the larger sizes below are the most practical for pullquotes. If omitted, it naturally inherits the document's current font size.
 
-There's no named size scale in LaTeX the way \texttt{pq-size}
-provides one (\texttt{3xs} through \texttt{3xl}) — the \texttt{size} key
-just takes a raw font-switching command, so the scale below is spelled
-out using the same LaTeX commands \texttt{pullquote.lua} would emit for
-each named step, plus \texttt{\textbackslash fontsize\{\}\{\}\textbackslash selectfont}
-for an arbitrary point size.
-
-\begin{pqcode}
-\begin{verbatim}
-\begin{pullquote}[size=\Large\itshape\rmfamily]
-...
-\end{pullquote}
-\end{verbatim}
-\end{pqcode}
-
-\begin{pullquote}[size=\normalsize\itshape\rmfamily]
-\textbf{m:} Medium (base document size).
+\begin{pullquote}[size=m]
+\textbf{size=m:} Medium (Base document size)
 \end{pullquote}
 
-\begin{pullquote}[size=\large\itshape\rmfamily]
-\textbf{l:} Large (the .sty's default size).
+\begin{pullquote}[size=l]
+\textbf{size=l:} Large
 \end{pullquote}
 
-\begin{pullquote}[size=\Large\itshape\rmfamily]
-\textbf{xl:} Extra Large.
+\begin{pullquote}[size=xl]
+\textbf{size=xl:} Extra Large
 \end{pullquote}
 
-\begin{pullquote}[size=\LARGE\itshape\rmfamily]
-\textbf{2xl:} Extra Extra Large.
+\begin{pullquote}[size=2xl]
+\textbf{size=2xl:} Extra Extra Large
 \end{pullquote}
 
-\begin{pullquote}[size=\huge\itshape\rmfamily]
-\textbf{3xl:} Extra Extra Extra Large.
+\begin{pullquote}[size=\fontsize{24pt}{28.8pt}\selectfont]
+\textbf{24pt:} Custom Arbitrary Dimensions
 \end{pullquote}
 
-\begin{pullquote}[size=\fontsize{24pt}{28.8pt}\selectfont\itshape\rmfamily]
-\textbf{24pt:} Custom arbitrary point size.
-\end{pullquote}
+\section*{Font Weights and Shapes}
 
-\subsection*{Font Weights, Shapes, and Families}
+The package provides predefined typographic utility attributes.
 
-\begin{pqcode}
-\begin{verbatim}
-\begin{pullquote}[size=\large\bfseries\itshape\rmfamily]
-This paragraph is in bold weight.
-\end{pullquote}
-\end{verbatim}
-\end{pqcode}
+\subsection*{Font Weights}
 
-\begin{pullquote}[size=\large\bfseries\itshape\rmfamily]
+\begin{pullquote}[weight=bold]
 This paragraph is in bold weight.
 \end{pullquote}
 
-Pullquotes render in italics by default; \texttt{\textbackslash upshape}
-overrides that back to upright.
+\subsection*{Font Styles}
 
-\begin{pullquote}[size=\large\upshape\rmfamily]
-This paragraph is explicitly rendered upright (non-italicized).
+By default, pullquotes perfectly inherit the surrounding document's font style. You can override this using the style utilities.
+
+\begin{pullquote}[style=italic]
+This paragraph is explicitly rendered in italics, overriding the inherited body text style.
 \end{pullquote}
 
-\texttt{\textbackslash rmfamily}\slash\texttt{\textbackslash sffamily}\slash%
-\texttt{\textbackslash ttfamily} match the same
-serif/sans/mono families \texttt{pq-family} resolves to across every
-format:
+\section*{Custom Fonts}
 
-\begin{pullquote}[size=\large\itshape\rmfamily]
-This paragraph is in serif.
+Because pullquotes are designed to fit seamlessly into your existing layout, they automatically inherit your document's ambient font settings. However, if you want a specific quote to visually break away from the body text, you can override it using the \texttt{font} attribute. The package natively wraps this in a \texttt{\textbackslash fontspec} call.
+
+\begin{pullquote}[font={Georgia}]
+This pullquote overrides the document defaults and explicitly uses the Georgia font.
 \end{pullquote}
 
-\begin{pullquote}[size=\large\itshape\sffamily]
-This paragraph is in sans-serif.
+\section*{Colors}
+
+This section describes how to apply colors to the pullquote text and its decorative left border.
+
+\subsection*{Basic Color Attributes}
+
+\begin{pullquote}[color=CadetBlue, barcolor=Thistle]
+This quote uses the SVG named color \textbf{CadetBlue} for text and the pastel \textbf{Thistle} for the border.
 \end{pullquote}
 
-\begin{pullquote}[size=\large\itshape\ttfamily]
-This paragraph is in monospace.
-\end{pullquote}
-
-Any other font name is a literal, applied directly via
-\texttt{\textbackslash fontspec} (XeLaTeX/LuaLaTeX only) instead of going
-through \texttt{\textbackslash rmfamily}\slash\texttt{\textbackslash sffamily}\slash%
-\texttt{\textbackslash ttfamily}:
-
-\begin{pullquote}[size=\large\itshape\PQCustomFont]
-This pullquote uses a specific display font, independent of the
-document's main font.
-\end{pullquote}
-
-\subsection*{Colors and Borders}
-
-Named SVG colors (loaded via \texttt{xcolor}'s \texttt{svgnames}
-option) work directly as \texttt{color}\slash\texttt{barcolor} values;
-\texttt{barwidth} adjusts the left border's thickness. A \texttt{rem}
-value from the Pandoc specimen becomes the same number of \texttt{em}
-here, since both LaTeX and Typst resolve \texttt{em} natively against
-the current font size.
-
-\begin{pqcode}
-\begin{verbatim}
-\begin{pullquote}[color=CadetBlue, barcolor=Thistle, barwidth=0.5em]
-...
-\end{pullquote}
-\end{verbatim}
-\end{pqcode}
-
-\begin{pullquote}[color=CadetBlue, barcolor=Thistle, barwidth=0.5em]
-This quote uses the SVG named color \textbf{CadetBlue} for text and the
-pastel \textbf{Thistle} for a thick 0.5em border.
-\end{pullquote}
-
-\texttt{paddingleft} controls the gap between the bar and the text,
-independent of the bar's own thickness:
-
-\begin{pullquote}[barwidth=0.5em, paddingleft=1.5em]
-This quote widens the gap between the bar and the text using
-\textbf{paddingleft=1.5em}, independent of the 0.5em bar thickness.
-\end{pullquote}
-
-The remaining three sides — \texttt{paddingright}, \texttt{paddingtop},
-and \texttt{paddingbottom} — can each be tuned independently:
-
-\begin{pullquote}[barcolor=SeaGreen, paddingleft=1em, paddingright=1em, paddingtop=1em, paddingbottom=1em]
-This quote sets an even 1em of padding on every side, giving the text
-room to breathe on all edges rather than just next to the bar.
-\end{pullquote}
-
-6-digit and shorthand 3-digit hex codes both work, via
-\texttt{\textbackslash definecolor\{...\}\allowbreak\{HTML\}\allowbreak\{...\}} plus a
-\texttt{color}\slash\texttt{barcolor} key naming the defined color (see the
-preamble above):
+\subsection*{Hex Codes}
 
 \begin{pullquote}[color=pqHexText, barcolor=pqHexBar]
-This quote uses raw Hex codes: \textbf{\#827397} for text and the
-shorthand \textbf{\#FAA} (Soft Coral) for the bar.
+This quote uses raw Hex codes: \textbf{\#827397} for text and the shorthand \textbf{\#FAA} (Soft Coral) for the bar.
 \end{pullquote}
 
-\texttt{xcolor}'s percentage-mixing syntax (\texttt{Color!pct!Color})
-works directly in \texttt{color}\slash\texttt{barcolor} — the same syntax
-\texttt{pullquote.lua} passes through unchanged for LaTeX output:
+\subsection*{Color Mixing}
 
-\begin{pullquote}[color=Indigo!90!Black, barcolor=Indigo!20, barwidth=0.375em]
-This quote uses a three-part blend for the text (\textbf{Indigo mixed
-at 90\% with Black}) and a standard two-part blend with white for the
-bar.
+The package supports LaTeX's \texttt{xcolor} percentage-mixing syntax.
+
+\begin{pullquote}[color=Indigo!90!Black, barcolor=Indigo!20]
+This quote uses a three-part blend for the text (\textbf{Indigo mixed at 90\% with Black}) and a standard two-part blend with white for the bar.
 \end{pullquote}
 
-\subsection*{Block-Level Positioning and Width}
+\section*{Box Padding and Borders}
 
-\texttt{width} and \texttt{boxalign} position the pullquote block
-within the page; \texttt{boxalign} takes \texttt{tcolorbox}'s own
-keywords (\texttt{flush left}, \texttt{center}, \texttt{flush right})
-rather than \texttt{pq-box-align}'s left/center/right.
+The \texttt{paddingleft} attribute controls the gap between the bar and the quote text, independent of the bar's own thickness.
 
-\begin{pullquote}[width=0.45\linewidth, boxalign=flush right]
-This quote takes up 45\% of the page width and is aligned flush to the
-right margin.
+\begin{pullquote}[barwidth=0.5em, paddingleft=1.5em]
+This quote widens the gap between the bar and the text using \textbf{paddingleft=1.5em}, independent of the 0.5em bar thickness.
 \end{pullquote}
 
-\subsection*{Inner Text Alignment}
+The remaining three sides — \texttt{paddingright}, \texttt{paddingtop}, and \texttt{paddingbottom} — can each be tuned independently of \texttt{paddingleft}, giving full control over the box's inner spacing.
 
-\texttt{align} controls text alignment \emph{within} the box — the same
-\texttt{\textbackslash raggedright}\slash\texttt{\textbackslash centering}\slash%
-\texttt{\textbackslash raggedleft} commands \texttt{pq-text-align} resolves
-to for LaTeX — independent of \texttt{boxalign}, which positions the
-box itself:
-
-\begin{pullquote}[align=\centering, width=0.7\linewidth, boxalign=flush left]
-This quote takes up 70\% of the page and is aligned to the left margin,
-but the text \emph{inside} the box is centered.
+\begin{pullquote}[barcolor=SeaGreen, paddingleft=1em, paddingright=1em, paddingtop=1em, paddingbottom=1em]
+This quote sets an even 1em of padding on every side, giving the text room to breathe on all edges rather than just next to the bar.
 \end{pullquote}
 
-\subsection*{Interline Spacing (Line-Height)}
+\section*{Block-Level Positioning and Width}
 
-\texttt{skip} sets \texttt{\textbackslash baselineskip} directly, rather
-than acting as a multiplier the way \texttt{pq-skip} does — so the
-\texttt{pq-skip="2.0"} equivalent below is spelled out as \texttt{2em},
-matching what \texttt{pullquote.lua} itself emits for that same value:
+By adjusting \texttt{width} and \texttt{boxalign}, you can set the width of the pullquote and position the entire block to the left, center, or right of the page.
 
-\begin{pullquote}[size=\Large\itshape\rmfamily, skip=2em]
-This quote uses a 2em baselineskip, doubling the interline spacing to
-let the text breathe.
+\begin{pullquote}[width=0.45\linewidth, boxalign=right]
+This quote takes up 45\% of the page width and is aligned flush to the right margin.
 \end{pullquote}
 
-Tightening works the same way, with one caveat that is LaTeX's rather than
-this package's: TeX will not set a \texttt{\textbackslash baselineskip}
-below the natural line height, so it falls back to
-\texttt{\textbackslash lineskip} and quietly clamps values much under
-\texttt{1.2em}. The HTML and Typst pathways honour them instead.
+\section*{Inner Text Alignment}
 
-\begin{pullquote}[size=\large\itshape\rmfamily, skip=1.15em]
-This quote is deliberately tight, to show how far the lines can be pulled
-together before an engine stops following.
+The \texttt{textalign} attribute controls text alignment \emph{within} the box.
+
+\begin{pullquote}[textalign=center, width=0.7\linewidth, boxalign=left]
+This quote takes up 70\% of the page and is aligned to the left margin, but the text \emph{inside} the box is centered.
 \end{pullquote}
 
-An explicit length behaves the same as it does in the filter: an
-\texttt{em} value scales with the pullquote's own font size, so it stays
-proportional as \texttt{size} changes.
+\section*{Interline Spacing (Line-Height)}
 
-\begin{pullquote}[size=\large\itshape\rmfamily, skip=1.6em]
-This quote sets its interline spacing as an explicit 1.6em length rather
-than a bare multiplier.
+Because \texttt{pullquote.sty} delegates semantic spacing translations to Pandoc, standalone usage requires passing the raw baseline multiplier directly to the \texttt{skip} attribute.
+
+\begin{pullquote}[size=xl, skip=1.8]
+This quote uses a \texttt{skip} value of 1.8, acting as a double-spacing multiplier to let the text breathe.
 \end{pullquote}
 
-\subsection*{Global Configuration}
+Tightening works the same way by using a lower multiplier:
 
-There's no document metadata for a LaTeX \texttt{\textbackslash pullquote}
-to fall back to, but \texttt{\textbackslash pqsetdefaults} is the same
-idea: redefine it once, and every un-keyed \texttt{\textbackslash pullquote}
-after that point picks up the new project-wide defaults automatically.
+\begin{pullquote}[size=l, skip=1.2]
+This quote is deliberately set to 1.2, making it ideal for dense, heavily styled multi-line blocks.
+\end{pullquote}
 
-\begin{pqcode}
-\begin{verbatim}
-\renewcommand{\pqsetdefaults}{%
-  \def\pqcolor{DarkSlateGray}%
-  \def\pqbarcolor{CadetBlue}%
-  \def\pqwidth{0.8\linewidth}%
-  \def\pqboxalign{center}%
-  \def\pqsize{\large\itshape\rmfamily}%
-  \def\pqskip{\baselineskip}%
-  \def\pqalign{\raggedright}%
-  \def\pqbarwidth{4pt}%
-  \def\pqpaddingleft{12pt}%
-  \def\pqpaddingright{0pt}%
-  \def\pqpaddingtop{4pt}%
-  \def\pqpaddingbottom{4pt}%
-}
-\end{verbatim}
-\end{pqcode}
+\section*{Global Metadata Configuration}
 
-\renewcommand{\pqsetdefaults}{%
-  \def\pqcolor{DarkSlateGray}%
-  \def\pqbarcolor{CadetBlue}%
-  \def\pqwidth{0.8\linewidth}%
-  \def\pqboxalign{center}%
-  \def\pqsize{\large\itshape\rmfamily}%
-  \def\pqskip{\baselineskip}%
-  \def\pqalign{\raggedright}%
-  \def\pqbarwidth{4pt}%
-  \def\pqpaddingleft{12pt}%
-  \def\pqpaddingright{0pt}%
-  \def\pqpaddingtop{4pt}%
-  \def\pqpaddingbottom{4pt}%
+You can establish project-wide defaults for your pullquotes using \texttt{\textbackslash pullquotesetup}.
+
+\pullquotesetup{
+  color=DarkSlateGray,
+  barcolor=CadetBlue,
+  width=0.8\linewidth,
+  size=l,
+  boxalign=center
 }
 
 \begin{pullquote}
-This quote has no inline keys at all. It inherits its styling entirely
-from the redefined \texttt{\textbackslash pqsetdefaults} above (centered,
-80\% width, DarkSlateGray text, CadetBlue bar).
+This quote has no inline attributes. It inherits its styling entirely from the setup declaration defined at the top of this document.
 \end{pullquote}
 
-% Restore the package's original defaults so later examples in this file
-% (and any appended after it) aren't silently affected by the override
-% demonstrated above.
-\renewcommand{\pqsetdefaults}{%
-  \def\pqwidth{0.8\textwidth}%
-  \def\pqcolor{pqdefaulttext}%
-  \def\pqsize{\large\itshape}%
-  \def\pqskip{\baselineskip}%
-  \def\pqalign{\raggedright}%
-  \def\pqboxalign{center}%
-  \def\pqbarwidth{4pt}%
-  \def\pqbarcolor{pqdefaultbar}%
-  \def\pqpaddingleft{12pt}%
-  \def\pqpaddingright{0pt}%
-  \def\pqpaddingtop{4pt}%
-  \def\pqpaddingbottom{4pt}%
+% Restore defaults
+\pullquotesetup{
+  color=, barcolor=pqdefaultbar, width=0.8\linewidth,
+  barwidth=4pt, paddingleft=12pt, paddingright=0pt,
+  paddingtop=4pt, paddingbottom=4pt, boxalign=center,
+  size=, weight=, style=, font=, textalign=, skip=
 }
 
-\subsection*{Combining Multiple Attributes}
+\section*{Combining Multiple Attributes}
 
-Every key composes independently, the same as every \texttt{pq-*}
-attribute does across the other three formats:
+Every key composes independently to create highly customized layouts:
 
-\begin{pullquote}[size=\huge\bfseries\slshape\rmfamily, align=\centering, boxalign=center, width=0.95\linewidth, color=DarkSlateBlue, barcolor=PowderBlue, barwidth=0.75em, paddingleft=1.25em, skip=2em]
-The Ultimate Stress Test
+\begin{pullquote}[font={Georgia}, style=italic, size=xl, width=0.8\linewidth, boxalign=center, color=DarkSlateGray, barcolor=SteelBlue, barwidth=4pt, paddingleft=1.5em, skip=1.55]
+"Typography is the detail and the presentation of a story. It represents the voice of an atmosphere, or historical setting of some kind. It can do a lot of things."
+
+— Cyrus Highsmith
 \end{pullquote}
 
 \end{document}

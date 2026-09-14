@@ -1,11 +1,20 @@
 title: pullquote
 author: Nandakumar Chandrasekhar
-version: 1.2.0
+version: 2.0.0
 
 contributes:
   filters:
     - pullquote.lua
 
   formats:
+    # 1. LaTeX-based PDFs
     pdf:
       include-in-header: pullquote.tex
+
+    # 2. Typst-based PDFs (Quarto 1.4+)
+    typst:
+      include-in-header: pullquote.typ
+
+    # 3. HTML outputs
+    html:
+      css: pullquote.css

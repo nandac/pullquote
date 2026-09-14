@@ -4,6 +4,7 @@ pdf-engine: typst
 template: test/assets/custom-template.typst
 
 include-in-header:
+  - _extensions/pullquote/pullquote.typ
   - test/assets/preview-styles.typ
 
 variables:
@@ -13,3 +14,5 @@ variables:
     bottom: 20mm
     left: 20mm
     right: 20mm
+  header-includes: |
+    #show math.equation: set text(font: "STIX Two Math")

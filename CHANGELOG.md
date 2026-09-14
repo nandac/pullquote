@@ -7,6 +7,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] — 2026-09-14
+
+### Migration
+
+- **`pq-family` is renamed to `pq-font`, and generic keyword resolution is gone.** `serif`/`sans`/`mono` are no longer accepted, and `mainfont`/`sansfont`/`monofont`/`codefont` document metadata is no longer consulted to resolve them. `pq-font` now always takes a literal font name (e.g. `pq-font="Georgia"`) — update any pullquotes still using `pq-family` or a generic keyword.
+- **`pq-size`'s semantic scale shrank from 9 steps to 5.** `3xs`, `2xs`, `xs`, and `3xl` are removed; only `s`, `m`, `l`, `xl`, and `2xl` remain. Replace a removed step with a custom dimension (e.g. `pq-size="0.5em"`) or the nearest remaining step.
+- **`pq-skip` now takes a semantic keyword or a bare multiplier, not a length.** Use `tight`, `base`, `relaxed`, `loose`, or a unitless number (e.g. `pq-skip="1.4"`) — `px`/`pt`/`rem`/`em` lengths are no longer accepted. The cross-engine default is also now a single unified `1.35` (previously each engine had its own natural default).
+- Custom `pq-size` dimensions no longer accept `ex` or `vw` units — use `px`, `pt`, `rem`, or `em`.
+
+### Added
+
+- New companion asset files — `_extensions/pullquote/pullquote.css` and `_extensions/pullquote/pullquote.typ` — wired into `_extension.yml` per output format alongside `pullquote.tex`, so a hand-authored file now owns all rendering for its format.
+- `pq-text-align` accepts a new `justify` value.
+
+### Changed
+
+- **"Delegated architecture" rewrite of the filter's output.** For every attribute, the Lua filter now hands off a value instead of computing final CSS/TeX/Typst itself: HTML gets CSS custom properties and `data-pq-*` attributes for `pullquote.css` to style, LaTeX gets keys for a rewritten `pullquote.tex`/`pullquote.sty` translation layer, and Typst gets named arguments to a new `#pullquote(...)` function in `pullquote.typ`.
+- A document without the `fenced_divs` extension enabled now no-ops the filter entirely instead of only warning.
+- Validation warnings are more specific about the actual problem (e.g. "Invalid unit for pq-width" instead of "Invalid value ... for pq-width").
+- Updated test fixtures, snapshots, demo docs, and `test/settings/*.yaml` (lowercase `papersize`, added `mathfont`, wired in `pullquote.typ`) for the new API.
+
+### Removed
+
+- Typst's missing-sans-serif-font warning and best-effort fallback chain, along with all generic serif/sans/mono font resolution — superseded by `pq-font` always being a literal name.
+- `test-errors-family.md` and the `test-family` Makefile target, replaced by `test-errors-font.md` and `test-font` to match the `pq-font` rename.
+
 ## [1.2.0] — 2026-09-11
 
 ### Migration
@@ -89,6 +115,7 @@ Initial public release of the `pullquote` Pandoc Lua filter.
 - Pandoc extension manifest (`_extension.yml`) for `pandoc-ext`/`quarto`-style installation.
 - Robust `Makefile` for multi-backend AST testing, artifact previews, and documentation generation.
 
+[2.0.0]: https://github.com/nandac/pullquote/compare/v1.2.0...v2.0.0
 [1.2.0]: https://github.com/nandac/pullquote/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/nandac/pullquote/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/nandac/pullquote/releases/tag/v1.0.0

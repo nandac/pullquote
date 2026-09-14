@@ -1,0 +1,70 @@
+/* ==============================================================================
+   pullquote.css
+   Companion HTML styling for the pullquote.lua Pandoc filter (v2.0.0+)
+   ============================================================================== */
+
+.pullquote {
+  /* Core Structure */
+  display: block;
+  box-sizing: border-box;
+  margin-top: 15px;
+  margin-bottom: 15px;
+
+  /* Theme Defaults (overridden dynamically via inline styles) */
+  --pq-width: 80%;
+  --pq-bar-width: 4px;
+  --pq-bar-color: #D9D9D9;
+  --pq-text-color: inherit;
+  --pq-padding-left: 12px;
+  --pq-padding-right: 0px;
+  --pq-padding-top: 4px;
+  --pq-padding-bottom: 4px;
+
+  /* Applying Structural Variables */
+  width: var(--pq-width);
+  border-left: var(--pq-bar-width) solid var(--pq-bar-color);
+  padding: var(--pq-padding-top) var(--pq-padding-right) var(--pq-padding-bottom) var(--pq-padding-left);
+  color: var(--pq-text-color);
+
+  /* Core Base Defaults */
+  --pq-line-height: 1.35;
+  line-height: var(--pq-line-height);
+}
+
+/* ==========================================================================
+   Semantic Value Mappings
+   ========================================================================== */
+
+/* --- 1. Size Mappings --- */
+.pullquote[data-pq-html-unit="rem"][data-pq-size="s"]   { font-size: 0.85rem; }
+.pullquote[data-pq-html-unit="rem"][data-pq-size="m"]   { font-size: 1rem; }
+.pullquote[data-pq-html-unit="rem"][data-pq-size="l"]   { font-size: 1.2rem; }
+.pullquote[data-pq-html-unit="rem"][data-pq-size="xl"]  { font-size: 1.5rem; }
+.pullquote[data-pq-html-unit="rem"][data-pq-size="2xl"] { font-size: 2rem; }
+
+.pullquote[data-pq-html-unit="em"][data-pq-size="s"]    { font-size: 0.85em; }
+.pullquote[data-pq-html-unit="em"][data-pq-size="m"]    { font-size: 1em; }
+.pullquote[data-pq-html-unit="em"][data-pq-size="l"]    { font-size: 1.2em; }
+.pullquote[data-pq-html-unit="em"][data-pq-size="xl"]   { font-size: 1.5em; }
+.pullquote[data-pq-html-unit="em"][data-pq-size="2xl"]  { font-size: 2em; }
+
+/* --- 2. Box Alignment --- */
+.pullquote[data-pq-box-align="left"]   { margin-left: 0; margin-right: auto; }
+.pullquote[data-pq-box-align="right"]  { margin-left: auto; margin-right: 0; }
+.pullquote[data-pq-box-align="center"] { margin-left: auto; margin-right: auto; }
+
+/* --- 3. Text Alignment --- */
+.pullquote[data-pq-text-align="left"]    { text-align: left; }
+.pullquote[data-pq-text-align="right"]   { text-align: right; }
+.pullquote[data-pq-text-align="center"]  { text-align: center; }
+.pullquote[data-pq-text-align="justify"] { text-align: justify; }
+
+/* --- 4. Font Weight/Style --- */
+.pullquote[data-pq-weight="normal"] { font-weight: normal; }
+.pullquote[data-pq-weight="medium"] { font-weight: 500; }
+.pullquote[data-pq-weight="bold"]   { font-weight: bold; }
+
+.pullquote[data-pq-style="italic"]    { font-style: italic; }
+.pullquote[data-pq-style="upright"]   { font-style: normal; }
+.pullquote[data-pq-style="slanted"]   { font-style: oblique; }
+.pullquote[data-pq-style="smallcaps"] { font-variant: small-caps; }

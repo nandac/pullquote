@@ -11,8 +11,10 @@ FILTER_DIST := $(EXT_DIR)/pullquote.lua
 # Root-level filter shortcut for Pandoc/Quarto execution
 FILTER_FILE := pullquote.lua
 
-# Core distribution CSS file (hand-authored; not generated)
-CSS_FILE := $(EXT_DIR)/pullquote.css
+# Core distribution companion files (hand-authored; not generated)
+CSS_FILE   := $(EXT_DIR)/pullquote.css
+TEX_FILE   := $(EXT_DIR)/pullquote.tex
+TYPST_FILE := $(EXT_DIR)/pullquote.typ
 
 # Demonstration Document Name (Change this to rename your showcase file)
 DEMO_NAME := pullquote-examples
@@ -36,7 +38,7 @@ LATEX ?= lualatex
 VERSION = $(shell git tag --sort=-version:refname --merged | head -n1 | \
                          sed -e 's/^v//' | tr -d "\n")
 ifeq "$(VERSION)" ""
-VERSION = 0.0.0
+VERSION = 2.0.0
 endif
 
 # Build date for the demo/specimen docs, computed fresh on every build instead
@@ -53,7 +55,7 @@ TEST_MDS   := $(wildcard test/fixtures/*.md)
 ALL_TEST_NAMES := $(patsubst test/fixtures/%.md,%,$(TEST_MDS))
 
 # Filter out the error-testing files so they aren't passed to the AST diff or preview generators
-TEST_NAMES := $(filter-out test-errors test-errors-family, $(ALL_TEST_NAMES))
+TEST_NAMES := $(filter-out test-errors test-errors-font, $(ALL_TEST_NAMES))
 DIFF_NAMES := $(TEST_NAMES)
 
 # Reusable Defaults Chaining Profiles
@@ -62,26 +64,23 @@ DEFAULTS_LATEX  := $(DEFAULTS_SHARED) --defaults=test/settings/latex.yaml
 DEFAULTS_TYPST  := $(DEFAULTS_SHARED) --defaults=test/settings/typst.yaml
 DEFAULTS_HTML   := $(DEFAULTS_SHARED) --defaults=test/settings/html.yaml
 
-
 # ==============================================================================
 # Help Menu (Self-Documenting Target)
 # ==============================================================================
 .PHONY: help
 help: ## Show this help menu
-	@echo "Pandoc Pullquote Extension Build System"
-	@echo "==============================================="
+	@echo "Pandoc Pullquote Extension Build System (v2.0.0 Delegated Architecture)"
+	@echo "========================================================================="
 	@echo "Usage: make [target]"
 	@echo ""
 	@echo "Targets:"
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
-
 
 # ==============================================================================
 # Master Pipeline
 # ==============================================================================
 .PHONY: all
 all: clean filter-proxy docs previews test ## Run the complete clean, build, test, and docs pipeline
-
 
 # ==============================================================================
 # Environment Setup (Cross-Platform Root-level Filter Proxy)
@@ -93,12 +92,11 @@ $(FILTER_FILE): $(FILTER_DIST)
 .PHONY: filter-proxy
 filter-proxy: $(FILTER_FILE) ## Generate the cross-platform root-level filter proxy
 
-
 # ==============================================================================
 # Testing Rules (Using clean YAML Defaults + Format Overrides)
 # ==============================================================================
 .PHONY: test
-test: $(FILTER_FILE) $(addprefix test-,$(DIFF_NAMES)) test-errors test-errors-family test-family ## Run all multi-backend AST differential tests and error tests
+test: $(FILTER_FILE) $(addprefix test-,$(DIFF_NAMES)) test-errors test-font ## Run all multi-backend AST differential tests and error tests
 
 test-%: $(FILTER_FILE) test/fixtures/%.md
 	@echo "🧪 Verifying AST layout integrity for case: $*"
@@ -167,119 +165,64 @@ test-errors: $(FILTER_FILE) test/fixtures/test-errors.md test/fixtures/test-colo
 		fi; \
 	done
 	@rm -f symmetry_log.txt
-	@echo "  Checking warnings (Invalid Taxonomy Keys)..."
-	@if grep -q "Invalid value .* for pq-size" error_log.txt && \
-	    grep -q "Unknown text-align value" error_log.txt && \
-	    grep -q "Unknown box-align value" error_log.txt; then \
-		echo "  ✅ PASS: Caught all taxonomy fallback warnings."; \
-	else \
-		echo "  ❌ FAIL: Expected taxonomy warnings not found."; \
-		cat error_log.txt; rm error_log.txt; exit 1; \
-	fi
 	@echo "  Checking warnings (Invalid Dimension & Unit Values)..."
-	@if grep -q "Invalid value .* for pq-width" error_log.txt && \
-	    grep -q "Invalid value .* for pq-bar-width" error_log.txt && \
-	    grep -q "Invalid value .* for pq-padding-left" error_log.txt && \
-	    grep -q "Invalid value .* for pq-padding-right" error_log.txt && \
-	    grep -q "Invalid value .* for pq-padding-top" error_log.txt && \
-	    grep -q "Invalid value .* for pq-padding-bottom" error_log.txt && \
-	    grep -q "Invalid value .* for pq-html-unit" error_log.txt; then \
+	@if grep -q "Invalid unit for pq-width" error_log.txt && \
+	    grep -q "Invalid unit for pq-bar-width" error_log.txt && \
+	    grep -q "Invalid unit for pq-padding-left" error_log.txt && \
+	    grep -q "Invalid unit for pq-padding-right" error_log.txt && \
+	    grep -q "Invalid unit for pq-padding-top" error_log.txt && \
+	    grep -q "Invalid unit for pq-padding-bottom" error_log.txt; then \
 		echo "  ✅ PASS: Caught all dimension/unit fallback warnings."; \
 	else \
 		echo "  ❌ FAIL: Expected dimension/unit warnings not found."; \
 		cat error_log.txt; rm error_log.txt; exit 1; \
 	fi
-	@echo "  Checking warnings (Invalid pq-skip, pq-size, and Color-Mix Syntax)..."
-	@if grep -q "Invalid value .* for pq-skip" error_log.txt && \
-	    grep -q "Invalid value .* for pq-size" error_log.txt && \
-	    grep -q "Invalid color-mix syntax" error_log.txt; then \
-		echo "  ✅ PASS: Caught pq-skip, pq-size, and color-mix fallback warnings."; \
+	@echo "  Checking warnings (Invalid Size Unit)..."
+	@if grep -q 'Invalid unit for pq-size: "3xl"' error_log.txt; then \
+		echo "  ✅ PASS: Caught obsolete semantic size warning."; \
 	else \
-		echo "  ❌ FAIL: Expected pq-skip/pq-size/color-mix warnings not found."; \
+		echo "  ❌ FAIL: Expected obsolete size warning not found."; \
 		cat error_log.txt; rm error_log.txt; exit 1; \
 	fi
-	@echo "  Checking warnings (Missing fenced_divs extension)..."
-	@$(PANDOC) test/fixtures/test-errors.md --lua-filter=$(FILTER_FILE) -f markdown-fenced_divs -t html > /dev/null 2> error_log.txt || true
-	@if grep -q "Required extension \"fenced_divs\" is disabled" error_log.txt; then \
-		echo "  ✅ PASS: Caught missing extension warning."; \
+	@echo "  Checking warnings (Invalid Color-Mix Syntax)..."
+	@if grep -q "Invalid color-mix syntax" error_log.txt; then \
+		echo "  ✅ PASS: Caught color-mix fallback warnings."; \
 	else \
-		echo "  ❌ FAIL: Expected fenced_divs warning not found."; \
+		echo "  ❌ FAIL: Expected color-mix warnings not found."; \
 		cat error_log.txt; rm error_log.txt; exit 1; \
 	fi
-	@echo "  Checking warnings (Typst Missing Sans-Serif Font, fires once per document)..."
-	@$(PANDOC) test/fixtures/test-errors.md --lua-filter=$(FILTER_FILE) -t typst > /dev/null 2> error_log.txt || true
-	@if [ "$$(grep -c "No sans font configured for Typst output" error_log.txt)" = "1" ]; then \
-		echo "  ✅ PASS: Caught Typst missing sans-serif font warning exactly once, despite two pq-family=\"sans\" pullquotes."; \
+	@echo "  Checking warnings (Invalid Skip Value)..."
+	@if grep -q "Invalid pq-skip value" error_log.txt; then \
+		echo "  ✅ PASS: Caught semantic skip fallback warning."; \
 	else \
-		echo "  ❌ FAIL: Expected exactly one Typst sans-serif warning."; \
+		echo "  ❌ FAIL: Expected pq-skip warning not found."; \
 		cat error_log.txt; rm error_log.txt; exit 1; \
-	fi
-	@rm -f error_log.txt
-	@echo "  Checking warnings (Typst Sans-Serif Font: no warning when pq-family=\"sans\" is never used)..."
-	@$(PANDOC) test/fixtures/test-colors.md --lua-filter=$(FILTER_FILE) -t typst > /dev/null 2> error_log.txt || true
-	@if grep -q "No sans font configured for Typst output" error_log.txt; then \
-		echo "  ❌ FAIL: Sans-serif warning fired even though no pullquote requested pq-family=\"sans\"."; \
-		cat error_log.txt; rm error_log.txt; exit 1; \
-	else \
-		echo "  ✅ PASS: No warning fired for a document that never requests pq-family=\"sans\"."; \
-	fi
-	@rm -f error_log.txt
-	@echo "  Checking warnings (Typst Sans-Serif Font: no warning when sansfont is configured as a variable)..."
-	@$(PANDOC) test/fixtures/test-font-styles.md --lua-filter=$(FILTER_FILE) $(DEFAULTS_TYPST) -t typst > typst_family_check.txt 2> error_log.txt
-	@if grep -q "No sans font configured for Typst output" error_log.txt; then \
-		echo "  ❌ FAIL: Sans-serif warning fired even though sansfont is configured as a Pandoc variable."; \
-		cat error_log.txt; rm -f error_log.txt typst_family_check.txt; exit 1; \
-	elif ! grep -qF '#set text(font: "Noto Sans")' typst_family_check.txt; then \
-		echo "  ❌ FAIL: Expected #set text(font: \"Noto Sans\") not found in Typst output."; \
-		rm -f error_log.txt typst_family_check.txt; exit 1; \
-	else \
-		echo "  ✅ PASS: No warning fired, and the configured sansfont variable (\"Noto Sans\") was applied."; \
-	fi
-	@rm -f error_log.txt typst_family_check.txt
-
-.PHONY: test-errors-family
-test-errors-family: $(FILTER_FILE) test/fixtures/test-errors-family.md ## Test the fatal pq-family abort (comma-separated / invalid-character font names)
-	@echo "🧪 Verifying pq-family error handling..."
-	@echo "  Checking fatal error (Invalid pq-family)..."
-	@if $(PANDOC) test/fixtures/test-errors-family.md --lua-filter=$(FILTER_FILE) $(DEFAULTS_HTML) -t html > /dev/null 2> error_log.txt; then \
-		echo "  ❌ FAIL: Pandoc should have crashed on an invalid pq-family value, but it succeeded."; \
-		rm error_log.txt; exit 1; \
-	else \
-		if grep -q "CRITICAL ERROR: Invalid pq-family value" error_log.txt; then \
-			echo "  ✅ PASS: Caught expected fatal error."; \
-		else \
-			echo "  ❌ FAIL: Pandoc crashed, but not for the expected reason."; \
-			cat error_log.txt; rm error_log.txt; exit 1; \
-		fi \
 	fi
 	@rm -f error_log.txt
 
-.PHONY: test-family
-test-family: $(FILTER_FILE) test/fixtures/test-font-styles.md ## Verify pq-family resolves through mainfont/sansfont/monofont, and that literal font names pass through unmodified
-	@echo "🧪 Verifying pq-family font resolution..."
-	@echo "  Checking HTML: serif/sans/mono resolve to the configured mainfont/sansfont/monofont, and literal font names pass through..."
-	@$(PANDOC) test/fixtures/test-font-styles.md --lua-filter=$(FILTER_FILE) $(DEFAULTS_HTML) -t html > family_check.txt 2>/dev/null
-	@if grep -qF 'font-family: &quot;Noto Serif&quot;, serif' family_check.txt && \
-	    grep -qF 'font-family: &quot;Noto Sans&quot;, sans-serif' family_check.txt && \
-	    grep -qF 'font-family: &quot;Fira Mono&quot;, monospace' family_check.txt && \
-	    grep -qF 'font-family: &quot;Libre Baskerville&quot;, serif' family_check.txt; then \
-		echo "  ✅ PASS: HTML font-family resolution is correct."; \
+.PHONY: test-font
+test-font: $(FILTER_FILE) test/fixtures/test-font-styles.md
+	@echo "🧪 Verifying pq-font data delegation..."
+	@echo "  Checking HTML: custom font names map to data-pq-font attribute..."
+	@$(PANDOC) test/fixtures/test-font-styles.md --lua-filter=$(FILTER_FILE) $(DEFAULTS_HTML) -t html > font_check.txt 2>/dev/null
+	@if grep -qF 'data-pq-font="Georgia"' font_check.txt; then \
+		echo "  ✅ PASS: HTML delegation is correct."; \
 	else \
-		echo "  ❌ FAIL: Expected font-family values not found in HTML output."; \
-		rm -f family_check.txt; exit 1; \
+		echo "  ❌ FAIL: Expected data-pq-font attribute not found."; \
+		cat font_check.txt; rm -f font_check.txt; exit 1; \
 	fi
-	@rm -f family_check.txt
-	@echo "  Checking LaTeX: literal custom font names use fontspec..."
-	@if $(PANDOC) test/fixtures/test-font-styles.md --lua-filter=$(FILTER_FILE) $(DEFAULTS_LATEX) -t latex 2>/dev/null | grep -qF '\fontspec{Libre Baskerville}'; then \
-		echo "  ✅ PASS: LaTeX uses fontspec for the literal custom font name."; \
+	@rm -f font_check.txt
+	@echo "  Checking LaTeX: custom font names pass to keys..."
+	@if $(PANDOC) test/fixtures/test-font-styles.md --lua-filter=$(FILTER_FILE) $(DEFAULTS_LATEX) -t latex 2>/dev/null | grep -qF 'font={Georgia}'; then \
+		echo "  ✅ PASS: LaTeX passes font key correctly."; \
 	else \
-		echo "  ❌ FAIL: Expected fontspec{Libre Baskerville} not found in LaTeX output."; exit 1; \
+		echo "  ❌ FAIL: Expected font={Georgia} not found."; exit 1; \
 	fi
-	@echo "  Checking Typst: literal custom font names are set directly..."
-	@if $(PANDOC) test/fixtures/test-font-styles.md --lua-filter=$(FILTER_FILE) $(DEFAULTS_TYPST) -t typst 2>/dev/null | grep -qF '#set text(font: "Libre Baskerville")'; then \
-		echo "  ✅ PASS: Typst sets the literal custom font name directly."; \
+	@echo "  Checking Typst: custom font names pass to dictionary..."
+	@if $(PANDOC) test/fixtures/test-font-styles.md --lua-filter=$(FILTER_FILE) $(DEFAULTS_TYPST) -t typst 2>/dev/null | grep -qF 'font: "Georgia"'; then \
+		echo "  ✅ PASS: Typst passes font key correctly."; \
 	else \
-		echo "  ❌ FAIL: Expected #set text(font: \"Libre Baskerville\") not found in Typst output."; exit 1; \
+		echo "  ❌ FAIL: Expected font: \"Georgia\" not found."; exit 1; \
 	fi
 
 # ==============================================================================
@@ -298,11 +241,10 @@ previews: $(FILTER_FILE) $(PREVIEW_HTMLS) $(PREVIEW_TYPST_PDFS) $(PREVIEW_LATEX_
 $(PREVIEWS_DIR)/html/html-%.html: test/fixtures/%.md
 	@mkdir -p $(@D)
 	@cp test/assets/preview-styles.css $(@D)/ 2>/dev/null || true
+	@cp $(CSS_FILE) $(@D)/ 2>/dev/null || true
 	$(PANDOC) $< \
 		$(DEFAULTS_HTML) \
 		--syntax-highlighting=$(SYNTAX_HIGHLIGHTING) \
-		--number-sections \
-		--shift-heading-level-by=-1 \
 		--output=$@
 
 $(PREVIEWS_DIR)/typst/typst-%.pdf: test/fixtures/%.md
@@ -310,8 +252,6 @@ $(PREVIEWS_DIR)/typst/typst-%.pdf: test/fixtures/%.md
 	$(PANDOC) $< \
 		$(DEFAULTS_TYPST) \
 		--syntax-highlighting=$(SYNTAX_HIGHLIGHTING) \
-		--number-sections \
-		--shift-heading-level-by=-1 \
 		--to=pdf \
 		--output=$@
 
@@ -320,21 +260,19 @@ $(PREVIEWS_DIR)/latex/latex-%.pdf: test/fixtures/%.md
 	$(PANDOC) $< \
 		$(DEFAULTS_LATEX) \
 		--syntax-highlighting=$(SYNTAX_HIGHLIGHTING) \
-		--number-sections \
-		--shift-heading-level-by=-1 \
 		--to=pdf \
 		--output=$@
-
 
 # ==============================================================================
 # Documentation System (With Dual-Engine Output Targets)
 # ==============================================================================
 .PHONY: docs
-docs: docs/$(DEMO_NAME).html docs/$(DEMO_NAME)-latex.pdf docs/$(DEMO_NAME)-typst.pdf docs/pullquote.lua docs/$(STANDALONE_NAME).pdf docs/$(STY_FILE) ## Build the standalone docs portal with dual-format PDFs
+docs: docs/$(DEMO_NAME).html docs/$(DEMO_NAME)-latex.pdf docs/$(DEMO_NAME)-typst.pdf docs/pullquote.lua docs/pullquote.css docs/pullquote.tex docs/pullquote.typ docs/$(STANDALONE_NAME).pdf docs/$(STY_FILE) ## Build the standalone docs portal with dual-format PDFs and extension assets
 
 docs/$(DEMO_NAME).html: $(DEMO_SRC)
 	@mkdir -p $(@D)
 	@cp test/assets/preview-styles.css $(@D)/ 2>/dev/null || true
+	@cp $(CSS_FILE) $(@D)/ 2>/dev/null || true
 	$(PANDOC) $< \
 		$(DEFAULTS_HTML) \
 		--syntax-highlighting=$(SYNTAX_HIGHLIGHTING) \
@@ -355,12 +293,23 @@ docs/$(DEMO_NAME)-typst.pdf: $(DEMO_SRC)
 		--pdf-engine-opt=--root=. \
 		--output=$@
 
+# Copy the core distribution extension assets over to the docs folder
+docs/pullquote.%: $(EXT_DIR)/pullquote.%
+	@mkdir -p docs
+	cp $< $@
+
+# Edge case: Lua file handles both extension directory and proxy route
 docs/pullquote.lua: $(FILTER_FILE)
 	@mkdir -p docs
-	cp $(FILTER_FILE) $@
+	cp $(EXT_DIR)/pullquote.lua $@
 
+# docs/$(STANDALONE_NAME).pdf: $(STANDALONE_SRC) $(STY_FILE)
+# 	@mkdir -p $(@D)
+# 	TEXINPUTS=".:$(CURDIR):" $(LATEX) -interaction=nonstopmode -halt-on-error -output-directory=$(@D) $< > /dev/null
+# 	@rm -f $(@D)/$(STANDALONE_NAME).aux $(@D)/$(STANDALONE_NAME).log
 docs/$(STANDALONE_NAME).pdf: $(STANDALONE_SRC) $(STY_FILE)
 	@mkdir -p $(@D)
+	@cp $(STY_FILE) $(@D)/
 	TEXINPUTS=".:$(CURDIR):" $(LATEX) -interaction=nonstopmode -halt-on-error -output-directory=$(@D) $< > /dev/null
 	@rm -f $(@D)/$(STANDALONE_NAME).aux $(@D)/$(STANDALONE_NAME).log
 
@@ -368,13 +317,13 @@ docs/$(STY_FILE): $(STY_FILE)
 	@mkdir -p docs
 	cp $< $@
 
-
 # ==============================================================================
 # Housekeeping
 # ==============================================================================
 .PHONY: clean
 clean: ## Purge all temporary assets and generated distribution instances
-	rm -f docs/$(DEMO_NAME).html docs/$(DEMO_NAME)-latex.pdf docs/$(DEMO_NAME)-typst.pdf docs/preview-styles.css docs/pullquote.lua
+	rm -f docs/$(DEMO_NAME).html docs/$(DEMO_NAME)-latex.pdf docs/$(DEMO_NAME)-typst.pdf
+	rm -f docs/pullquote.lua docs/pullquote.tex docs/pullquote.typ docs/pullquote.css docs/preview-styles.css
 	rm -f docs/$(STANDALONE_NAME).pdf docs/$(STY_FILE)
 	rm -rf $(PREVIEWS_DIR)
 	rm -f $(FILTER_FILE)

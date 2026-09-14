@@ -1,23 +1,22 @@
 ---
 title: Demonstration of the Pullquote Filter for Pandoc
-pq-text-color: "DarkSlateGray"
-pq-bar-color: "CadetBlue"
-pq-width: "80%"
-pq-size: "l"
-pq-box-align: "center"
 ---
 
 ## Introduction
 
 This document showcases the features of the `pullquote` Pandoc Lua filter. Each example displays the required Markdown syntax alongside its rendered output, ensuring visually identical layouts across LaTeX (PDF), Typst (PDF), and HTML formats.
 
-**Backend Note:** Typst and HTML outputs are fully standalone. For LaTeX output, you must include the provided `pullquote.tex` file in your document's preamble. You can do this by passing `--include-in-header=pullquote.tex` to your Pandoc command or by referencing it in your document's YAML metadata.
+**Backend Note:** The `pullquote` filter uses a delegated architecture, meaning no format is standalone. You must provide the corresponding companion file to your typesetting engine:
+
+* **LaTeX:** Include `pullquote.tex` in your document's preamble (e.g., by passing `--include-in-header=pullquote.tex` to Pandoc or referencing it in your YAML metadata).
+* **Typst:** Include `pullquote.typ` in your document's preamble (e.g., by passing `--include-in-header=pullquote.typ` to Pandoc or referencing it in your YAML metadata).
+* **HTML:** Link `pullquote.css` (e.g., by passing `--css=pullquote.css` to Pandoc).
 
 The extension leverages Pandoc’s `fenced_divs` extension. If this is disabled, the filter will issue a terminal warning and render the elements as raw text instead of applying the styles.
 
 ## Fenced Divs Invocations
 
-This filter follows Pandoc’s standard conventions for container-based styling. Because pullquotes are inherently block-level elements, they are invoked exclusively using Fenced Divs with the `.pullquote` class.
+In accordance with Pandoc's standard conventions for styling block elements, pullquotes must be instantiated exclusively via Fenced Divs using `.pullquote` class.
 
 ```markdown
 ::: {.pullquote}
@@ -33,29 +32,55 @@ This filter follows Pandoc’s standard conventions for container-based styling.
 
 ## Font Sizing
 
-The extension provides a sizing scale to adjust the text relative to the document’s base font size. While the filter supports a full 9-step scale (from `3xs` to `3xl`) alongside custom arbitrary units, the larger sizes below are the most practical for pullquotes. If omitted, it defaults to the `l` (large) scale.
+The extension provides a sizing scale to adjust the text relative to the document’s base font size. While the filter supports a full 5-step scale (from `s` to `2xl`) alongside custom arbitrary units, the larger sizes below are the most practical for pullquotes. If omitted, it naturally inherits the document's current font size.
 
 **Rendered Sizing Scale:**
+
+```markdown
+::: {.pullquote pq-size="m"}
+**pq-size="m":** Medium (Base document size)
+:::
+```
 
 ::: {.pullquote pq-size="m"}
 **pq-size="m":** Medium (Base document size)
 :::
 
+```markdown
 ::: {.pullquote pq-size="l"}
-**pq-size="l":** Large (The Default Size)
+**pq-size="l":** Large
 :::
+```
+
+::: {.pullquote pq-size="l"}
+**pq-size="l":** Large
+:::
+
+```markdown
+::: {.pullquote pq-size="xl"}
+**pq-size="xl":** Extra Large
+:::
+```
 
 ::: {.pullquote pq-size="xl"}
 **pq-size="xl":** Extra Large
 :::
 
+```markdown
+::: {.pullquote pq-size="2xl"}
+**pq-size="2xl":** Extra Extra Large
+:::
+```
+
 ::: {.pullquote pq-size="2xl"}
 **pq-size="2xl":** Extra Extra Large
 :::
 
-::: {.pullquote pq-size="3xl"}
-**pq-size="3xl":** Extra Extra Extra Large
+```markdown
+::: {.pullquote pq-size="24pt"}
+**pq-size="24pt":** Custom Arbitrary Dimensions
 :::
+```
 
 ::: {.pullquote pq-size="24pt"}
 **pq-size="24pt":** Custom Arbitrary Dimensions
@@ -75,7 +100,7 @@ For HTML output only, the `pq-html-unit` attribute controls whether the scale ab
 **pq-html-unit="em":** This quote scales using em units instead of the default rem.
 :::
 
-## Font Weights, Shapes, and Families
+## Font Weights and Shapes
 
 The extension provides predefined typographic utility attributes. These styles are mapped to equivalent rendering properties across all formats to ensure consistent output, regardless of the underlying engine.
 
@@ -93,112 +118,52 @@ This paragraph is in bold weight.
 
 ### Font Styles
 
-By default, pullquotes render in italics. You can override this using the style utilities.
+By default, pullquotes perfectly inherit the surrounding document's font style. You can override this using the style utilities.
 
 ```markdown
-::: {.pullquote pq-style="upright"}
-This paragraph is explicitly rendered upright (non-italicized).
+::: {.pullquote pq-style="italic"}
+This paragraph is explicitly rendered in italics, overriding the inherited body text style.
 :::
 ```
 
-::: {.pullquote pq-style="upright"}
-This paragraph is explicitly rendered upright (non-italicized).
+::: {.pullquote pq-style="italic"}
+This paragraph is explicitly rendered in italics, overriding the inherited body text style.
 :::
 
-### Font Families
+## Custom Fonts
 
-`pq-family="serif"`/`"sans"`/`"mono"` resolves to the same `mainfont`/`sansfont`/`monofont` (or `codefont` for mono) across LaTeX, Typst, and HTML, so a pullquote always matches the rest of your document — there's no separate font to configure per format.
+Because pullquotes are designed to fit seamlessly into your existing layout, they automatically inherit your document's ambient font settings (such as the `mainfont` defined in your YAML `variables:` block). You do not need to configure anything specially for the filter. However, if you want a specific quote to visually break away from the body text, you can override it using the `pq-font` attribute.
+
+You must pass the exact, literal font name you wish to use.
 
 ```markdown
-::: {.pullquote pq-family="serif"}
-This paragraph is in serif.
-:::
-
-::: {.pullquote pq-family="sans"}
-This paragraph is in sans-serif.
-:::
-
-::: {.pullquote pq-family="mono"}
-This paragraph is in monospace.
+::: {.pullquote pq-font="Georgia"}
+This pullquote overrides the document defaults and explicitly uses the Georgia font.
 :::
 ```
 
-::: {.pullquote pq-family="serif"}
-This paragraph is in serif.
+::: {.pullquote pq-font="Georgia"}
+This pullquote overrides the document defaults and explicitly uses the Georgia font.
 :::
 
-::: {.pullquote pq-family="sans"}
-This paragraph is in sans-serif.
-:::
+> **No Font Validation:** The filter passes this name directly to the typesetting engine without checking if the font is actually available. If the font is unavailable, LaTeX's `fontspec` will halt with a compile error, Typst will substitute a fallback issuing a warning, and HTML browsers will silently revert to their default system fonts.
 
-::: {.pullquote pq-family="mono"}
-This paragraph is in monospace.
-:::
-
-`pq-family` defaults to `serif` when omitted, so an un-styled pullquote already matches your document's `mainfont` without needing `pq-family="serif"` explicitly.
-
-### Custom Font Names
-
-Any value other than `serif`, `sans`, or `mono` is treated as a literal font name, applied directly instead of going through `mainfont`/`sansfont`/`monofont` — useful for giving one specific pullquote its own distinct look, independent of the rest of the document.
-
-```markdown
-::: {.pullquote pq-family="Libre Baskerville"}
-This pullquote uses a specific display font, independent of the document's mainfont.
-:::
-```
-
-::: {.pullquote pq-family="Libre Baskerville"}
-This pullquote uses a specific display font, independent of the document's mainfont.
-:::
-
-> **No Font Validation:** The filter does not check whether the named font actually exists — if it isn't available, LaTeX's `fontspec` raises a hard compile error, while Typst warns and substitutes a fallback. Neither is caught by this filter; both are the engine's own native behavior.
-
-<!-- -->
-
-> **Typst Note:** Typst ships no default sans-serif font. If you use `pq-family="sans"` with Typst output, set `sansfont` in your metadata explicitly — otherwise the filter falls back to a best-effort chain (`Noto Sans`, `DejaVu Sans`, `Liberation Sans`, `Arial`, `Helvetica`) and emits a warning to `stderr`.
-
-## Colors and Borders
+## Colors
 
 This section describes how to apply colors to the pullquote text and its decorative left border. The filter normalizes color inputs to ensure they render identically across LaTeX, Typst, and HTML.
 
 ### Basic Color Attributes
 
-Use `pq-text-color` for the text, `pq-bar-color` for the left border, and `pq-bar-width` to adjust the border's thickness.
+Use `pq-text-color` for the text, and `pq-bar-color` for the left border.
 
 ```markdown
-::: {.pullquote pq-text-color="CadetBlue" pq-bar-color="Thistle" pq-bar-width="0.5rem"}
-This quote uses the SVG named color **CadetBlue** for text and the pastel **Thistle** for a thick 0.5rem border.
+::: {.pullquote pq-text-color="CadetBlue" pq-bar-color="Thistle"}
+This quote uses the SVG named color **CadetBlue** for text and the pastel **Thistle** for the border.
 :::
 ```
 
-::: {.pullquote pq-text-color="CadetBlue" pq-bar-color="Thistle" pq-bar-width="0.5rem"}
-This quote uses the SVG named color **CadetBlue** for text and the pastel **Thistle** for a thick 0.5rem border.
-:::
-
-### Bar Spacing
-
-The `pq-padding-left` attribute controls the gap between the bar and the quote text, independent of the bar's own thickness (`pq-bar-width`).
-
-```markdown
-::: {.pullquote pq-bar-width="0.5rem" pq-padding-left="1.5rem"}
-This quote widens the gap between the bar and the text using **pq-padding-left="1.5rem"**, independent of the 0.5rem bar thickness.
-:::
-```
-
-::: {.pullquote pq-bar-width="0.5rem" pq-padding-left="1.5rem"}
-This quote widens the gap between the bar and the text using **pq-padding-left="1.5rem"**, independent of the 0.5rem bar thickness.
-:::
-
-The remaining three sides — `pq-padding-right`, `pq-padding-top`, and `pq-padding-bottom` — can each be tuned independently of `pq-padding-left`, giving full control over the box's inner spacing.
-
-```markdown
-::: {.pullquote pq-bar-color="SeaGreen" pq-padding-left="1rem" pq-padding-right="1rem" pq-padding-top="1rem" pq-padding-bottom="1rem"}
-This quote sets an even 1rem of padding on every side, giving the text room to breathe on all edges rather than just next to the bar.
-:::
-```
-
-::: {.pullquote pq-bar-color="SeaGreen" pq-padding-left="1rem" pq-padding-right="1rem" pq-padding-top="1rem" pq-padding-bottom="1rem"}
-This quote sets an even 1rem of padding on every side, giving the text room to breathe on all edges rather than just next to the bar.
+::: {.pullquote pq-text-color="CadetBlue" pq-bar-color="Thistle"}
+This quote uses the SVG named color **CadetBlue** for text and the pastel **Thistle** for the border.
 :::
 
 ### Hex Codes
@@ -220,18 +185,44 @@ This quote uses raw Hex codes: **#827397** for text and the shorthand **#FAA** (
 The extension supports LaTeX’s `xcolor` percentage-mixing syntax. This maps reliably across Typst, LaTeX, and HTML (which leverages the native CSS `color-mix()` function).
 
 ```markdown
-::: {.pullquote pq-text-color="Indigo!90!Black" pq-bar-color="Indigo!20" pq-bar-width="0.375rem"}
+::: {.pullquote pq-text-color="Indigo!90!Black" pq-bar-color="Indigo!20"}
 This quote uses a three-part blend for the text (**Indigo mixed at 90% with Black**) and a standard two-part blend with white for the bar.
 :::
 ```
 
-::: {.pullquote pq-text-color="Indigo!90!Black" pq-bar-color="Indigo!20" pq-bar-width="0.375rem"}
+::: {.pullquote pq-text-color="Indigo!90!Black" pq-bar-color="Indigo!20"}
 This quote uses a three-part blend for the text (**Indigo mixed at 90% with Black**) and a standard two-part blend with white for the bar.
+:::
+
+## Box Padding and Borders
+
+The `pq-padding-left` attribute controls the gap between the bar and the quote text, independent of the bar's own thickness (`pq-bar-width`).
+
+```markdown
+::: {.pullquote pq-bar-width="0.5em" pq-padding-left="1.5em"}
+This quote widens the gap between the bar and the text using **pq-padding-left="1.5em"**, independent of the 0.5em bar thickness.
+:::
+```
+
+::: {.pullquote pq-bar-width="0.5em" pq-padding-left="1.5em"}
+This quote widens the gap between the bar and the text using **pq-padding-left="1.5em"**, independent of the 0.5em bar thickness.
+:::
+
+The remaining three sides — `pq-padding-right`, `pq-padding-top`, and `pq-padding-bottom` — can each be tuned independently of `pq-padding-left`, giving full control over the box's inner spacing.
+
+```markdown
+::: {.pullquote pq-bar-color="SeaGreen" pq-padding-left="1em" pq-padding-right="1em" pq-padding-top="1em" pq-padding-bottom="1em"}
+This quote sets an even 1em of padding on every side, giving the text room to breathe on all edges rather than just next to the bar.
+:::
+```
+
+::: {.pullquote pq-bar-color="SeaGreen" pq-padding-left="1em" pq-padding-right="1em" pq-padding-top="1em" pq-padding-bottom="1em"}
+This quote sets an even 1em of padding on every side, giving the text room to breathe on all edges rather than just next to the bar.
 :::
 
 ## Block-Level Positioning and Width
 
-By adjusting `pq-width` and `pq-box-align`, we can position the entire pullquote block to the left, center, or right of the page. This shifts the block within the standard document flow; the body text will sit above and below it rather than wrapping around it.
+By adjusting `pq-width` and `pq-box-align`, you can set the width of the pullquote and position the entire block to the left, center, or right of the page.
 
 ```markdown
 ::: {.pullquote pq-width="45%" pq-box-align="right"}
@@ -243,7 +234,7 @@ This quote takes up 45% of the page width and is aligned flush to the right marg
 This quote takes up 45% of the page width and is aligned flush to the right margin.
 :::
 
-*(Absolute units such as `pq-width="300pt"` or `pq-width="10cm"` are also fully supported).*
+Absolute units such as `pq-width="300pt"` or `pq-width="10cm"` are also fully supported.
 
 ## Inner Text Alignment
 
@@ -261,40 +252,28 @@ This quote takes up 70% of the page and is aligned to the left margin, but the t
 
 ## Interline Spacing (Line-Height)
 
-The `pq-skip` attribute allows you to adjust the vertical space between lines of text. It is a *baseline-to-baseline* multiple — the same measurement CSS calls `line-height` and LaTeX calls `\baselineskip` — so a given value produces the same line spacing in all three formats. Typst is the exception under the hood: its native `leading` is the gap *between* lines rather than the baseline-to-baseline distance, so the filter translates the value rather than passing it through. This is particularly useful for dense multi-line quotes or when using very large custom font sizes.
+The `pq-skip` attribute allows you to adjust the vertical space between lines of text. To guarantee identical layouts across all three formatting engines, it uses a semantic dictionary rather than raw units.
 
 ```markdown
-::: {.pullquote pq-size="xl" pq-skip="2.0"}
-This quote uses a `pq-skip` value of 2.0, acting as a double-spacing multiplier to let the text breathe.
+::: {.pullquote pq-size="xl" pq-skip="loose"}
+This quote uses a `pq-skip` value of `loose`, acting as a double-spacing multiplier to let the text breathe.
 :::
 ```
 
-::: {.pullquote pq-size="xl" pq-skip="2.0"}
-This quote uses a `pq-skip` value of 2.0, acting as a double-spacing multiplier to let the text breathe.
+::: {.pullquote pq-size="xl" pq-skip="loose"}
+This quote uses a `pq-skip` value of `loose`, acting as a double-spacing multiplier to let the text breathe.
 :::
 
-Tightening works the same way. Note that LaTeX will not set a `\baselineskip` below the natural line height, so it quietly clamps values much under `1.2` where HTML and Typst honour them:
+Tightening works the same way by using the `tight` keyword:
 
 ```markdown
-::: {.pullquote pq-size="l" pq-skip="1.15"}
-This quote is deliberately tight, to show how far the lines can be pulled together before an engine stops following.
+::: {.pullquote pq-size="l" pq-skip="tight"}
+This quote is deliberately set to `tight`, making it ideal for dense, heavily styled multi-line blocks.
 :::
 ```
 
-::: {.pullquote pq-size="l" pq-skip="1.15"}
-This quote is deliberately tight, to show how far the lines can be pulled together before an engine stops following.
-:::
-
-Instead of a bare multiplier you can give an exact length. An `em` value scales with the pullquote's own font size, so it stays proportional as `pq-size` changes:
-
-```markdown
-::: {.pullquote pq-size="l" pq-skip="1.6em"}
-This quote sets its interline spacing as an explicit 1.6em length rather than a bare multiplier.
-:::
-```
-
-::: {.pullquote pq-size="l" pq-skip="1.6em"}
-This quote sets its interline spacing as an explicit 1.6em length rather than a bare multiplier.
+::: {.pullquote pq-size="l" pq-skip="tight"}
+This quote is deliberately set to `tight`, making it ideal for dense, heavily styled multi-line blocks.
 :::
 
 ## Global Metadata Configuration
@@ -321,20 +300,24 @@ This quote has no inline attributes. It inherits its styling entirely from the Y
 :::
 ```
 
-::: {.pullquote}
+::: {.pullquote pq-text-color="DarkSlateGray" pq-bar-color="CadetBlue" pq-width="80%" pq-size="l" pq-box-align="center"}
 This quote has no inline attributes. It inherits its styling entirely from the YAML frontmatter defined at the top of this document (Centered, 80% width, Large size, DarkSlateGray text, CadetBlue bar).
 :::
 
 ## Combining Multiple Attributes
 
-Multiple typographic utilities and attributes can be combined within the same element. Font, size, color, and alignment compose independently.
+Every key composes independently to create highly customized layouts:
 
 ```markdown
-::: {.pullquote pq-weight="bold" pq-family="serif" pq-style="slanted" pq-size="3xl" pq-text-align="center" pq-box-align="center" pq-width="95%" pq-text-color="DarkSlateBlue" pq-bar-color="PowderBlue" pq-bar-width="0.75rem" pq-padding-left="1.25rem" pq-skip="2.0"}
-The Ultimate Stress Test
+::: {.pullquote pq-font="Georgia" pq-style="italic" pq-size="xl" pq-width="80%" pq-box-align="center" pq-text-color="DarkSlateGray" pq-bar-color="SteelBlue" pq-bar-width="4px" pq-padding-left="1.5rem" pq-skip="relaxed"}
+"Typography is the detail and the presentation of a story. It represents the voice of an atmosphere, or historical setting of some kind. It can do a lot of things."
+
+— Cyrus Highsmith
 :::
 ```
 
-::: {.pullquote pq-weight="bold" pq-family="serif" pq-style="slanted" pq-size="3xl" pq-text-align="center" pq-box-align="center" pq-width="95%" pq-text-color="DarkSlateBlue" pq-bar-color="PowderBlue" pq-bar-width="0.75rem" pq-padding-left="1.25rem" pq-skip="2.0"}
-The Ultimate Stress Test
+::: {.pullquote pq-font="Georgia" pq-style="italic" pq-size="xl" pq-width="80%" pq-box-align="center" pq-text-color="DarkSlateGray" pq-bar-color="SteelBlue" pq-bar-width="4px" pq-padding-left="1.5rem" pq-skip="relaxed"}
+"Typography is the detail and the presentation of a story. It represents the voice of an atmosphere, or historical setting of some kind. It can do a lot of things."
+
+— Cyrus Highsmith
 :::

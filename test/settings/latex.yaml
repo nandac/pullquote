@@ -6,11 +6,12 @@ include-in-header:
   - test/assets/preview-styles.tex
 
 variables:
-  papersize: A4
+  papersize: a4
   geometry:
     - margin=20mm
   monofontoptions:
     - Scale=0.97
+  mathfont: STIX Two Math
   colorlinks: true
   linkcolor: blue
   urlcolor: blue

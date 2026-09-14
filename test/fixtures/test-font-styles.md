@@ -2,11 +2,11 @@
 title: "Pullquote Test: Typography Styles"
 ---
 
-`pq-weight`, `pq-family` and `pq-style` are three independent axes that compose into a single font selection. Each engine applies them in its own way — CSS declarations, LaTeX font-shape commands inside the `size=` key, and Typst `#set text` rules — so this fixture is mostly a check that all three axes survive being combined. Compare the three rendered previews: `serif`/`sans`/`mono` resolve through the document's own `mainfont`/`sansfont`/`monofont`, so they only match across formats when those are configured identically, as `test/settings/shared.yaml` does. Typst is the one engine with no bundled sans-serif, so a document that asks for `sans` without configuring one falls back to a best-effort chain and warns.
+`pq-weight`, `pq-font` and `pq-style` are three independent axes that compose into a single font selection. Each engine applies them in its own way — CSS declarations, LaTeX font-shape commands inside the `size=` key, and Typst `#set text` rules — so this fixture is mostly a check that all three axes survive being combined. Compare the three rendered previews: by default, pullquotes seamlessly inherit the document's configured fonts. Using `pq-font` allows overriding this inheritance with a literal custom font name.
 
-## Weights, Families, and Variants
+## Weights, Fonts, and Variants
 
-This tests the CSS-like class injection for font weights, families, and styles without disrupting the component layout.
+This tests the CSS-like class injection for font weights, fonts, and styles without disrupting the component layout.
 
 ### Font Weights
 
@@ -40,56 +40,26 @@ This is a Bold weight quote.
 This is a Bold weight quote.
 :::
 
-### Font Families
+### Custom Fonts
 
 ```markdown
 ::: {.pullquote}
-This is an un-styled quote, which should default pq-family to serif.
+This is an un-styled quote, which naturally inherits the document's font.
 :::
 ```
 
 ::: {.pullquote}
-This is an un-styled quote, which should default pq-family to serif.
+This is an un-styled quote, which naturally inherits the document's font.
 :::
 
 ```markdown
-::: {.pullquote pq-family="serif"}
-This is a Serif quote.
+::: {.pullquote pq-font="Georgia"}
+This is a quote using a literal custom font name.
 :::
 ```
 
-::: {.pullquote pq-family="serif"}
-This is a Serif quote.
-:::
-
-```markdown
-::: {.pullquote pq-family="sans"}
-This is a Sans-Serif quote.
-:::
-```
-
-::: {.pullquote pq-family="sans"}
-This is a Sans-Serif quote.
-:::
-
-```markdown
-::: {.pullquote pq-family="mono"}
-This is a Monospace quote.
-:::
-```
-
-::: {.pullquote pq-family="mono"}
-This is a Monospace quote.
-:::
-
-```markdown
-::: {.pullquote pq-family="Libre Baskerville"}
-This is a quote using a literal custom font name, not one of serif/sans/mono.
-:::
-```
-
-::: {.pullquote pq-family="Libre Baskerville"}
-This is a quote using a literal custom font name, not one of serif/sans/mono.
+::: {.pullquote pq-font="Georgia"}
+This is a quote using a literal custom font name.
 :::
 
 ### Font Styles and Variants
@@ -144,24 +114,24 @@ This is a Small-Caps quote.
 This is a Small-Caps quote.
 :::
 
-### 4. Combinations
+### Combinations
 
 ```markdown
-::: {.pullquote pq-style="smallcaps" pq-weight="bold" pq-family="serif"}
-This is a Bold, Small-Caps, Serif quote.
+::: {.pullquote pq-style="smallcaps" pq-weight="bold" pq-font="Georgia"}
+This is a Bold, Small-Caps quote using Georgia.
 :::
 ```
 
-::: {.pullquote pq-style="smallcaps" pq-weight="bold" pq-family="serif"}
-This is a Bold, Small-Caps, Serif quote.
+::: {.pullquote pq-style="smallcaps" pq-weight="bold" pq-font="Georgia"}
+This is a Bold, Small-Caps quote using Georgia.
 :::
 
 ```markdown
-::: {.pullquote pq-style="upright" pq-weight="medium" pq-family="sans"}
-This is a Medium-weight, Upright, Sans-Serif quote.
+::: {.pullquote pq-style="upright" pq-weight="medium" pq-font="Noto Sans"}
+This is a Medium-weight, Upright quote using Noto Sans.
 :::
 ```
 
-::: {.pullquote pq-style="upright" pq-weight="medium" pq-family="sans"}
-This is a Medium-weight, Upright, Sans-Serif quote.
+::: {.pullquote pq-style="upright" pq-weight="medium" pq-font="Noto Sans"}
+This is a Medium-weight, Upright quote using Noto Sans.
 :::

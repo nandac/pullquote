@@ -1,9 +1,9 @@
+% ==============================================================================
+% pullquote.sty
+% Companion LaTeX package for the pullquote.lua Pandoc filter (v2.0.0+)
+% ==============================================================================
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{pullquote}[2026/09/11 v1.2.0 Typographic pullquote box environment]
-
-% Standalone LaTeX distribution of the pullquote environment.
-% Note: Keep this file in sync with the Pandoc/Quarto preamble
-% (_extensions/pullquote/pullquote.tex).
+\ProvidesPackage{pullquote}[2026/09/14 v2.0.0 Typographic pullquote box environment]
 
 % --- Safe Package Loading ---
 \PassOptionsToPackage{svgnames}{xcolor}
@@ -12,68 +12,129 @@
 \RequirePackage{tcolorbox}
 \RequirePackage{environ}
 \RequirePackage{keyval}
-\RequirePackage{fontspec} % Requires XeLaTeX or LuaLaTeX
+\RequirePackage{etoolbox}
+\RequirePackage{fontspec}
+\RequirePackage{xfp}
 
-% Load svgnames directly as a fallback in case xcolor was loaded without options earlier.
 \input{svgnam.def}
 
 % --- Default Colors ---
-% Exact hex values matching HTML/Typst outputs for cross-engine consistency.
-\definecolor{pqdefaulttext}{HTML}{888888}
 \definecolor{pqdefaultbar}{HTML}{D9D9D9}
 
 % --- Define the Keys ---
 \makeatletter
 \define@key{pullquote}{width}{\def\pqwidth{#1}}
 \define@key{pullquote}{color}{\def\pqcolor{#1}}
-\define@key{pullquote}{size}{\def\pqsize{#1}}
-\define@key{pullquote}{skip}{\def\pqskip{#1}}
-\define@key{pullquote}{align}{\def\pqalign{#1}}
-\define@key{pullquote}{boxalign}{\def\pqboxalign{#1}}
 \define@key{pullquote}{barwidth}{\def\pqbarwidth{#1}}
 \define@key{pullquote}{barcolor}{\def\pqbarcolor{#1}}
 \define@key{pullquote}{paddingleft}{\def\pqpaddingleft{#1}}
 \define@key{pullquote}{paddingright}{\def\pqpaddingright{#1}}
 \define@key{pullquote}{paddingtop}{\def\pqpaddingtop{#1}}
 \define@key{pullquote}{paddingbottom}{\def\pqpaddingbottom{#1}}
+\define@key{pullquote}{size}{\def\pqrawsize{#1}}
+\define@key{pullquote}{textalign}{\def\pqrawtextalign{#1}}
+\define@key{pullquote}{boxalign}{\def\pqrawboxalign{#1}}
+\define@key{pullquote}{weight}{\def\pqrawweight{#1}}
+\define@key{pullquote}{style}{\def\pqrawstyle{#1}}
+\define@key{pullquote}{font}{\def\pqrawfont{#1}}
+\define@key{pullquote}{skip}{\def\pqrawskip{#1}}
+
+% --- Translation Layer ---
+\newcommand{\pqapplymappings}{%
+  % Semantic Size mapping (Calculated dynamically relative to current font size)
+  \edef\pqcurrentsize{\f@size}%
+  \def\pqsize{\pqrawsize}%
+  \ifdefstring{\pqrawsize}{s}{\def\pqsize{\fontsize{\fpeval{0.85 * \pqcurrentsize}pt}{\fpeval{1.02 * \pqcurrentsize}pt}\selectfont}}{}%
+  \ifdefstring{\pqrawsize}{m}{\def\pqsize{\fontsize{\fpeval{1.0 * \pqcurrentsize}pt}{\fpeval{1.2 * \pqcurrentsize}pt}\selectfont}}{}%
+  \ifdefstring{\pqrawsize}{l}{\def\pqsize{\fontsize{\fpeval{1.2 * \pqcurrentsize}pt}{\fpeval{1.44 * \pqcurrentsize}pt}\selectfont}}{}%
+  \ifdefstring{\pqrawsize}{xl}{\def\pqsize{\fontsize{\fpeval{1.5 * \pqcurrentsize}pt}{\fpeval{1.8 * \pqcurrentsize}pt}\selectfont}}{}%
+  \ifdefstring{\pqrawsize}{2xl}{\def\pqsize{\fontsize{\fpeval{2.0 * \pqcurrentsize}pt}{\fpeval{2.4 * \pqcurrentsize}pt}\selectfont}}{}%
+
+  \def\pqboxalign{center}% structure default
+  \ifdefstring{\pqrawboxalign}{left}{\def\pqboxalign{flush left}}{}%
+  \ifdefstring{\pqrawboxalign}{right}{\def\pqboxalign{flush right}}{}%
+
+  \def\pqtextalign{}% default to inherit
+  \ifdefstring{\pqrawtextalign}{center}{\def\pqtextalign{\centering}}{}%
+  \ifdefstring{\pqrawtextalign}{right}{\def\pqtextalign{\raggedleft}}{}%
+  \ifdefstring{\pqrawtextalign}{justify}{\def\pqtextalign{\relax}}{}%
+
+  \def\pqweight{}% default to inherit
+  \ifdefstring{\pqrawweight}{normal}{\def\pqweight{\mdseries}}{}%
+  \ifdefstring{\pqrawweight}{bold}{\def\pqweight{\bfseries}}{}%
+  \ifdefstring{\pqrawweight}{medium}{\def\pqweight{\bfseries}}{}%
+
+  \def\pqstyle{}% default to inherit
+  \ifdefstring{\pqrawstyle}{italic}{\def\pqstyle{\itshape}}{}%
+  \ifdefstring{\pqrawstyle}{upright}{\def\pqstyle{\upshape}}{}%
+  \ifdefstring{\pqrawstyle}{slanted}{\def\pqstyle{\slshape}}{}%
+  \ifdefstring{\pqrawstyle}{smallcaps}{\def\pqstyle{\scshape}}{}%
+
+  \def\pqfont{}% default to inherit
+  \ifdefempty{\pqrawfont}{}{%
+    \def\pqfont{\fontspec{\pqrawfont}}% literal override
+  }%
+
+  % Semantic Line Spacing (Math calculated against baseline)
+  \def\pqskip{}% default
+  \ifdefempty{\pqrawskip}{}{%
+    \def\pqskip{\linespread{\fpeval{\pqrawskip / 1.2}}}%
+  }%
+}
 \makeatother
 
-% --- Publicly Sensible Default Values ---
+% --- Empty Typography Defaults ---
 \newcommand{\pqsetdefaults}{%
-  \def\pqwidth{0.8\textwidth}%
-  \def\pqcolor{pqdefaulttext}%
-  \def\pqsize{\large\itshape}%
-  % Default to the natural leading of the chosen font size.
-  \def\pqskip{\baselineskip}%
-  \def\pqalign{\raggedright}%
-  \def\pqboxalign{center}%
+  \def\pqwidth{0.8\linewidth}%
+  \def\pqcolor{}% Empty inherits current \color
   \def\pqbarwidth{4pt}%
   \def\pqbarcolor{pqdefaultbar}%
   \def\pqpaddingleft{12pt}%
   \def\pqpaddingright{0pt}%
   \def\pqpaddingtop{4pt}%
   \def\pqpaddingbottom{4pt}%
+  \def\pqrawsize{}%
+  \def\pqrawtextalign{}%
+  \def\pqrawboxalign{center}%
+  \def\pqrawweight{}%
+  \def\pqrawstyle{}%
+  \def\pqrawfont{}%
+  \def\pqrawskip{}%
 }
+
+% --- Global Setup ---
+\newcommand{\pqglobalsetup}{}
+\newcommand{\pullquotesetup}[1]{\renewcommand{\pqglobalsetup}{#1}}
+% Helper macro to safely force 1-level expansion before passing to setkeys
+\newcommand{\pqsetglobalkeys}[1]{\setkeys{pullquote}{#1}}
 
 % --- Environment Definition ---
 \NewEnviron{pullquote}[1][]{%
   \pqsetdefaults
-  \setkeys{pullquote}{#1}%
+  \expandafter\pqsetglobalkeys\expandafter{\pqglobalsetup}% Applies global keys
+  \setkeys{pullquote}{#1}% Applies inline keys (overriding global if present)
+  \pqapplymappings
   %
   \begin{tcolorbox}[
-    enhanced,       % Enables advanced border controls
+    enhanced,
     sharp corners,
     colback=white,
-    frame hidden,   % Completely disables the base bounding box (kills the hairline)
-    borderline west={\pqbarwidth}{0pt}{\pqbarcolor}, % Explicitly draws ONLY the left bar
+    frame hidden,
+    borderline west={\pqbarwidth}{0pt}{\pqbarcolor},
     width=\pqwidth,
     \pqboxalign,
     left=\pqpaddingleft, right=\pqpaddingright, top=\pqpaddingtop, bottom=\pqpaddingbottom,
     before skip=15pt, after skip=15pt,
-    colupper=\pqcolor,
-    % Restore half a baselineskip for paragraph gaps, as tcolorbox resets \parskip.
-    before upper={\pqsize\setlength{\baselineskip}{\pqskip}\setlength{\parskip}{0.5\baselineskip}\pqalign},
+    % Apply typography stack sequentially
+    before upper={%
+      \ifdefempty{\pqcolor}{}{\color{\pqcolor}}%
+      \pqsize\pqfont\pqweight\pqstyle
+      \pqskip\selectfont
+      \setlength{\parskip}{0.5\baselineskip}%
+      \ifdefempty{\pqtextalign}{}{\pqtextalign}%
+    },
   ]
    \BODY
   \end{tcolorbox}
 }
+\endinput

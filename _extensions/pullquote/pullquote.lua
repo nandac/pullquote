@@ -1,27 +1,22 @@
 --- pullquote.lua
 ---
 --- A Pandoc Lua Filter for semantic, multi-format pullquote components.
---- Uses a strict attribute-based API (e.g., pq-text-align="center") alongside a single .pullquote class.
---- Translates to precise LaTeX, HTML, and Typst elements.
+--- Delegated Architecture: Passes data to pullquote.css, pullquote.tex, and pullquote.typ
 ---
---- @author    Nandakumar Chandrasekhar (nandac)
+--- @author    Nandakumar Chandrasekhar
 --- @copyright © 2026 Nandakumar Chandrasekhar
 --- @license   MIT - see LICENSE for details
---- @version   1.2.0
---- @release   2026-09-11
----
---- @note      LaTeX output requires pullquote.tex to be included in the document preamble.
----            Typst and HTML outputs are fully standalone.
+--- @version   2.0.0
+--- @release   2026-09-14
 
 PANDOC_VERSION:must_be_at_least('3.10')
-
 assert(type(pandoc) == 'table', 'Cannot find the pandoc library')
 
 local List = assert(pandoc.List, 'Cannot find the pandoc.List class')
 local utils = require 'pandoc.utils'
 
 -- ==============================================================================
--- SECTION 1: LOGGING, ERROR HANDLING & STATE
+-- SECTION 1: LOGGING, ERROR HANDLING & FAIL-FAST
 -- ==============================================================================
 
 local function warn(message)
@@ -33,9 +28,9 @@ local function abort(message)
 end
 
 if PANDOC_READER_OPTIONS and PANDOC_READER_OPTIONS.extensions then
-  local ext = PANDOC_READER_OPTIONS.extensions
-  if not ext:includes('fenced_divs') then
-    warn('Required extension "fenced_divs" is disabled.')
+  if not PANDOC_READER_OPTIONS.extensions:includes('fenced_divs') then
+    warn("The 'fenced_divs' extension is disabled. Pullquotes will render as raw text.")
+    return {}
   end
 end
 
@@ -51,26 +46,10 @@ local function get_attr(el, attr_key)
 end
 
 -- ==============================================================================
--- SECTION 2: DATA DICTIONARIES & CONFIGURATION
+-- SECTION 2: PARSING & HELPER FUNCTIONS
 -- ==============================================================================
 
--- Typst lacks a default sans-serif font. Fall back to a standard chain if unconfigured.
-local typst_fonts = {
-  serif = "Libertinus Serif",
-  sans  = { "Noto Sans", "DejaVu Sans", "Liberation Sans", "Arial", "Helvetica" },
-  mono  = "DejaVu Sans Mono"
-}
-
--- Caches document fonts so HTML generic keywords (serif, sans) resolve
--- to actual fonts. Falls back to generic CSS keywords if nil.
-local html_fonts = {}
-
--- Tracks Typst sansfont configuration to emit a single warning
--- only if a sans font is actually requested.
-local typst_sansfont_configured = false
-local typst_sans_warned = false
-
-local css_colors = {
+local CSS_COLORS = {
   aliceblue = 'F0F8FF', antiquewhite = 'FAEBD7', aqua = '00FFFF', aquamarine = '7FFFD4', azure = 'F0FFFF',
   beige = 'F5F5DC', bisque = 'FFE4C4', black = '000000', blanchedalmond = 'FFEBCD', blue = '0000FF',
   blueviolet = '8A2BE2', brown = 'A52A2A', burlywood = 'DEB887', cadetblue = '5F9EA0', chartreuse = '7FFF00',
@@ -105,7 +84,7 @@ local css_colors = {
   yellow = 'FFFF00', yellowgreen = '9ACD32'
 }
 
-local typst_palette = {
+local TYPST_PALETTE = {
   typstblack   = '000000', typstgray    = 'AAAAAA', typstsilver  = 'DDDDDD',
   typstwhite   = 'FFFFFF', typstnavy    = '001F3F', typstblue    = '0074D9',
   typstaqua    = '7FDBFF', typstteal    = '39CCCC', typsteastern = '239DAD',
@@ -114,65 +93,30 @@ local typst_palette = {
   typstolive   = '3D9970', typstgreen   = '2ECC40', typstlime    = '01FF70'
 }
 
--- Symmetrical 9-point size scale mapped to native relative font multipliers
-local pq_sizes = {
-  ['3xs'] = { tex = '\\tiny',         scale = '0.5',    typst = '0.5em' },
-  ['2xs'] = { tex = '\\scriptsize',   scale = '0.6667', typst = '0.6667em' },
-  ['xs']  = { tex = '\\footnotesize', scale = '0.8333', typst = '0.8333em' },
-  ['s']   = { tex = '\\small',        scale = '0.9125', typst = '0.9125em' },
-  ['m']   = { tex = '\\normalsize',   scale = '1.0',    typst = '1.0em' },
-  ['l']   = { tex = '\\large',        scale = '1.2',    typst = '1.2em' },
-  ['xl']  = { tex = '\\Large',        scale = '1.44',   typst = '1.44em' },
-  ['2xl'] = { tex = '\\LARGE',        scale = '1.728',  typst = '1.728em' },
-  ['3xl'] = { tex = '\\huge',         scale = '2.0736', typst = '2.0736em' },
+local SEMANTIC_SIZES = {
+  ["s"]   = true, ["m"]   = true, ["l"]  = true,
+  ["xl"]  = true, ["2xl"] = true
 }
 
-local pq_text_aligns = {
-  ['left']   = { tex = '\\raggedright', css = 'left' },
-  ['center'] = { tex = '\\centering',   css = 'center' },
-  ['right']  = { tex = '\\raggedleft',  css = 'right' }
+local SKIP_TARGETS = {
+  tight   = 1.20,
+  base    = 1.35,
+  relaxed = 1.55,
+  loose   = 1.80
 }
 
-local pq_box_aligns = {
-  ['left']   = { tex = 'flush left',  html_margin = '1.5rem auto 1.5rem 0', typst = 'left' },
-  ['center'] = { tex = 'center',      html_margin = '1.5rem auto',          typst = 'center' },
-  ['right']  = { tex = 'flush right', html_margin = '1.5rem 0 1.5rem auto', typst = 'right' }
+local VALID_TEXT_ALIGNS = {
+  ["left"]    = true,
+  ["right"]   = true,
+  ["center"]  = true,
+  ["justify"] = true
 }
 
-local pq_weights = {
-  ['bold']   = { tex = '\\bfseries',   css = 'font-weight: bold !important;',   typst = '#set text(weight: 700)\n' },
-  ['medium'] = { tex = '\\mdseries',   css = 'font-weight: 500 !important;',    typst = '#set text(weight: 500)\n' },
-  ['normal'] = { tex = '\\normalfont', css = 'font-weight: normal !important;', typst = '#set text(weight: 400, style: "normal")\n' }
+local VALID_BOX_ALIGNS = {
+  ["left"]   = true,
+  ["right"]  = true,
+  ["center"] = true
 }
-
-local pq_styles = {
-  ['emph']      = { tex = '\\em',      css = 'font-style: italic !important;',       typst = '#set text(style: "italic")\n' },
-  ['italic']    = { tex = '\\itshape', css = 'font-style: italic !important;',       typst = '#set text(style: "italic")\n' },
-  ['slanted']   = { tex = '\\slshape', css = 'font-style: oblique !important;',      typst = '#set text(style: "oblique")\n' },
-  ['smallcaps'] = { tex = '\\scshape', css = 'font-variant: small-caps !important;', typst = '#show text: smallcaps\n' },
-  ['upright']   = { tex = '\\upshape', css = 'font-style: normal !important;',       typst = '#set text(style: "normal")\n' }
-}
-
-local pq_families = {
-  ['mono']  = { tex = '\\ttfamily', css_generic = 'monospace',  typst_family = 'mono' },
-  ['sans']  = { tex = '\\sffamily', css_generic = 'sans-serif', typst_family = 'sans' },
-  ['serif'] = { tex = '\\rmfamily', css_generic = 'serif',      typst_family = 'serif' }
-}
-
--- Resolves a CSS font-family declaration, prioritizing document-configured
--- fonts over generic CSS fallbacks.
-local function resolve_html_family(key)
-  local generic = pq_families[key].css_generic
-  local actual = html_fonts[key]
-  if actual then
-    return string.format('font-family: "%s", %s !important;', actual, generic)
-  end
-  return string.format('font-family: %s !important;', generic)
-end
-
--- ==============================================================================
--- SECTION 3: COLOR PARSING & HELPER FUNCTIONS
--- ==============================================================================
 
 local function resolve_single_color(input)
   if not input then return nil, nil end
@@ -181,86 +125,25 @@ local function resolve_single_color(input)
 
   local clean_name = clean_input:lower():gsub('[^%w]', '')
 
-  if typst_palette[clean_name] then
-    local hex = typst_palette[clean_name]
-    return '#' .. hex, hex
-  end
-
-  if css_colors[clean_name] then
-    local hex = css_colors[clean_name]
-    return '#' .. hex, hex
-  end
+  if TYPST_PALETTE[clean_name] then return '#' .. TYPST_PALETTE[clean_name], TYPST_PALETTE[clean_name] end
+  if CSS_COLORS[clean_name] then return '#' .. CSS_COLORS[clean_name], CSS_COLORS[clean_name] end
 
   local raw_hex = clean_input:gsub('^#', '')
   if raw_hex:match('^%x+$') then
     local len = #raw_hex
-    if len == 6 or len == 8 then
-      local full_hex = raw_hex:upper()
-      return '#' .. full_hex, full_hex
-    elseif len == 3 or len == 4 then
+    if len == 6 or len == 8 then return '#' .. raw_hex:upper(), raw_hex:upper() end
+    if len == 3 or len == 4 then
       local r, g, b = raw_hex:sub(1,1), raw_hex:sub(2,2), raw_hex:sub(3,3)
       local full_hex = r .. r .. g .. g .. b .. b
       if len == 4 then
         local a = raw_hex:sub(4,4)
         full_hex = full_hex .. a .. a
       end
-      full_hex = full_hex:upper()
-      return '#' .. full_hex, full_hex
+      return '#' .. full_hex:upper(), full_hex:upper()
     end
   end
-
-  -- Abort if color is not a known CSS/Typst name or valid hex,
-  -- ensuring consistent validation across formats.
-  abort(string.format('Undefined color keyword "%s".\nColor must be a valid standard CSS keyword, a Hex code (e.g. #FF0000), or valid cross-platform mixing syntax.', clean_input))
+  abort(string.format('Undefined color keyword or invalid hex: "%s"', clean_input))
 end
-
-local function format_typst_font(font_value)
-  if type(font_value) == 'table' then
-    local quoted = {}
-    for _, name in ipairs(font_value) do
-      table.insert(quoted, '"' .. name .. '"')
-    end
-    return '(' .. table.concat(quoted, ', ') .. ')'
-  end
-  return '"' .. font_value .. '"'
-end
-
--- Validates px/pt/rem/em dimensions. Returns value if valid, or nil
--- (with warning) to trigger engine defaults.
-local function validate_px_pt(value, attr_name)
-  if not value then return nil end
-  local num, unit = value:match("^(%d+%.?%d*)(%a+)$")
-  if num and (unit == "px" or unit == "pt" or unit == "rem" or unit == "em") then
-    return value
-  end
-  warn(string.format('Invalid value "%s" for %s. Use a "px", "pt", "rem", or "em" unit (e.g., "4px", "3pt", "0.25rem"). Falling back to default.', value, attr_name))
-  return nil
-end
-
--- Converts web units to PDF-safe equivalents (px to pt at 96dpi, rem to em)
--- for LaTeX and Typst compatibility.
-local function px_to_pt(value)
-  local num, unit = value:match("^(%d+%.?%d*)(%a+)$")
-  if unit == "px" then
-    return string.format("%.4gpt", tonumber(num) * 0.75)
-  elseif unit == "rem" then
-    return num .. "em"
-  end
-  return value
-end
-
--- Converts baseline-to-baseline spacing into Typst's gap-based leading.
--- By pinning Typst's line box to exactly 1em elsewhere, leading simply
--- becomes '(requested em) - 1em', ensuring spacing matches HTML/LaTeX.
-local function typst_leading(total)
-  local num, unit = total:match("^(%d+%.?%d*)(%a+)$")
-  if unit == "em" then
-    return string.format("%.4gem", tonumber(num) - 1)
-  end
-  return total .. " - 1em"
-end
-
--- resolve_single_color() aborts on failure, so returned values below are always valid.
 
 local function format_html_color(c)
   if not c then return nil end
@@ -269,11 +152,13 @@ local function format_html_color(c)
     local c1, pct, c2 = c:match('^([^!]+)!(%d+)!?([^!]*)$')
     if c1 and pct then
       c2 = (c2 == '' or not c2) and 'white' or c2
-      local css_c1 = resolve_single_color(c1)
-      local css_c2 = resolve_single_color(c2)
-      return string.format("color-mix(in srgb, %s %s%%, %s)", css_c1, pct, css_c2)
+      local res1 = resolve_single_color(c1)
+      local res2 = resolve_single_color(c2)
+      if res1 and res2 then
+        return string.format("color-mix(in srgb, %s %s%%, %s)", res1, pct, res2)
+      end
     end
-    warn(string.format('Invalid color-mix syntax "%s". Use "Color!Percent" or "Color1!Percent!Color2" (e.g. "red!30"). Falling back to default.', c))
+    warn('Invalid color-mix syntax. Falling back to default.')
     return nil
   end
   return (resolve_single_color(c))
@@ -288,24 +173,101 @@ local function format_typst_color(c)
       c2 = (c2 == '' or not c2) and 'white' or c2
       local _, hex1 = resolve_single_color(c1)
       local _, hex2 = resolve_single_color(c2)
-      local col1 = 'rgb("#' .. hex1:lower() .. '")'
-      local col2 = 'rgb("#' .. hex2:lower() .. '")'
-      return string.format('color.mix((%s, %d%%), (%s, %d%%))', col1, tonumber(pct), col2, 100 - tonumber(pct))
+      if hex1 and hex2 then
+        return string.format('color.mix((rgb("#%s"), %d%%), (rgb("#%s"), %d%%))', hex1:lower(), tonumber(pct), hex2:lower(), 100 - tonumber(pct))
+      end
     end
-    warn(string.format('Invalid color-mix syntax "%s". Use "Color!Percent" or "Color1!Percent!Color2" (e.g. "red!30"). Falling back to default.', c))
+    warn('Invalid color-mix syntax. Falling back to default.')
     return nil
   end
-  local css_val = resolve_single_color(c)
-  return 'rgb("' .. css_val .. '")'
+  local resolved = resolve_single_color(c)
+  if resolved then return 'rgb("' .. resolved .. '")' end
+  return nil
+end
+
+local function format_typst_font(f)
+  if not f then return nil end
+  return f:gsub("(%a)([%w_']*)", function(first, rest) return first:upper() .. rest end)
+end
+
+local function validate_font(font)
+  if not font then return nil end
+  if font:find(',') then abort(string.format('Invalid font specification (font chaining is not supported): "%s"', font)) end
+  return font
+end
+
+local function validate_size(size)
+  if not size then return nil end
+  if SEMANTIC_SIZES[size] then return size end
+  local num, unit = size:match("^(%d+%.?%d*)(%a+)$")
+  if num and (unit == "px" or unit == "pt" or unit == "rem" or unit == "em") then return size end
+  warn(string.format('Invalid unit for pq-size: "%s". Use semantic keys (s-2xl) or px, pt, rem, em.', size))
+  return nil
+end
+
+-- Centralized skip logic (Returns a pure number)
+local function resolve_skip(skip)
+  if not skip then return 1.35 end
+  if SKIP_TARGETS[skip] then return SKIP_TARGETS[skip] end
+  local num_str = skip:match("^(%d+%.?%d*)%s*%a*$")
+  if num_str and tonumber(num_str) then return tonumber(num_str) end
+  warn(string.format('Invalid pq-skip value: "%s". Must be tight, base, relaxed, loose, or a unitless number. Falling back to base (1.35).', skip))
+  return 1.35
+end
+
+local function validate_html_unit(unit)
+  if not unit then return "rem" end -- Defaults to 'rem' if nil
+  if unit == "rem" or unit == "em" then return unit end
+  warn(string.format('Invalid pq-html-unit: "%s". Use rem or em. Falling back to rem.', unit))
+  return "rem"
+end
+
+local function validate_width(width)
+  if not width then return nil end
+  if width:match("^%d+%.?%d*%%$") then return width end
+  local num, unit = width:match("^(%d+%.?%d*)(%a+)$")
+  if num and (unit == "px" or unit == "pt" or unit == "rem" or unit == "em") then return width end
+  warn(string.format('Invalid unit for pq-width: "%s". Use %%, px, pt, rem, or em.', width))
+  return nil
+end
+
+local function validate_px_pt(value, attr_name)
+  if not value then return nil end
+  local num, unit = value:match("^(%d+%.?%d*)(%a+)$")
+  if num and (unit == "px" or unit == "pt" or unit == "rem" or unit == "em") then return value end
+  warn(string.format('Invalid unit for %s: "%s". Use px, pt, rem, or em.', attr_name, value))
+  return nil
+end
+
+local function px_to_pt(value)
+  if not value then return nil end
+  local num, unit = value:match("^(%d+%.?%d*)(%a+)$")
+  if not num then return nil end
+  if unit == "px" then return string.format("%.4gpt", tonumber(num) * 0.75) end
+  if unit == "rem" then return num .. "em" end
+  return value
+end
+
+local function validate_text_align(align)
+  if not align then return nil end
+  if VALID_TEXT_ALIGNS[align] then return align end
+  warn(string.format('Invalid pq-text-align: "%s". Use left, right, center, or justify.', align))
+  return nil
+end
+
+local function validate_box_align(align)
+  if not align then return nil end
+  if VALID_BOX_ALIGNS[align] then return align end
+  warn(string.format('Invalid pq-box-align: "%s". Use left, right, or center.', align))
+  return nil
 end
 
 -- =========================================================================
--- SECTION 4: MAIN FILTER LOGIC
+-- SECTION 3: MAIN FILTER LOGIC
 -- =========================================================================
 
 local function process_pullquote(el)
-  -- Extract all configuration parameters using strict pq- attributes
-  local width          = get_attr(el, 'pq-width')
+  local width          = validate_width(get_attr(el, 'pq-width'))
   local color          = get_attr(el, 'pq-text-color')
   local barwidth       = validate_px_pt(get_attr(el, 'pq-bar-width'), 'pq-bar-width')
   local barcolor       = get_attr(el, 'pq-bar-color')
@@ -313,352 +275,247 @@ local function process_pullquote(el)
   local paddingright   = validate_px_pt(get_attr(el, 'pq-padding-right'), 'pq-padding-right')
   local paddingtop     = validate_px_pt(get_attr(el, 'pq-padding-top'), 'pq-padding-top')
   local paddingbottom  = validate_px_pt(get_attr(el, 'pq-padding-bottom'), 'pq-padding-bottom')
-  local raw_skip       = get_attr(el, 'pq-skip')
-  local raw_size       = get_attr(el, 'pq-size')
-  local raw_text_align = get_attr(el, 'pq-text-align')
-  local raw_box_align  = get_attr(el, 'pq-box-align')
-  local raw_weight     = get_attr(el, 'pq-weight')
-  local raw_style      = get_attr(el, 'pq-style')
-  local raw_family     = get_attr(el, 'pq-family') or 'serif'
 
-  -- Validate pq-family: Allow only safe characters. Rejects CSS-style font
-  -- chains and ensures safe LaTeX \fontspec injection.
-  if not raw_family:match("^[%w%s%-']+$") then
-    abort(string.format('Invalid pq-family value "%s". Font names may only contain letters, digits, spaces, hyphens, and apostrophes.', raw_family))
-  end
-
-  -- Validate pq-width: Must be a percentage or absolute length.
-  -- Allows cm/mm/in alongside px/pt/rem/em.
-  local width_units = { px = true, pt = true, rem = true, em = true, cm = true, mm = true, ["in"] = true }
-  local width_is_percent = width and width:match("^%d+%.?%d*%%$")
-  if width and not width_is_percent then
-    local num, unit = width:match("^(%d+%.?%d*)(%a+)$")
-    if not (num and width_units[unit]) then
-      warn(string.format('Invalid value "%s" for pq-width. Use a percentage (e.g., "80%%") or a length in px/pt/rem/em/cm/mm/in (e.g., "300pt"). Falling back to default.', width))
-      width = nil
-    end
-  end
-
-  -- Fetch global or inline HTML unit preference, defaulting to rem
-  local html_unit      = get_attr(el, 'pq-html-unit') or 'rem'
-  if html_unit ~= 'rem' and html_unit ~= 'em' then
-    warn(string.format('Invalid value "%s" for pq-html-unit. Use "rem" or "em". Falling back to "rem".', html_unit))
-    html_unit = 'rem'
-  end
-
-  -- Resolve Final Size (Dictionary > Custom Dimension > Default Fallback)
-  local final_tex_size, final_css_size, final_typst_size
-  if raw_size then
-    if pq_sizes[raw_size] then
-      final_tex_size   = pq_sizes[raw_size].tex
-      final_css_size   = pq_sizes[raw_size].scale .. html_unit
-      final_typst_size = pq_sizes[raw_size].typst
-    else
-      local num, unit = raw_size:match("^(%d+%.?%d*)([a-zA-Z]+)$")
-      if num and tonumber(num) > 0 and (unit == "pt" or unit == "em" or unit == "ex" or unit == "rem" or unit == "px" or unit == "vw") then
-         -- Safely convert web-specific units for PDF engines
-         local pdf_num, pdf_unit = num, unit
-         if unit == "rem" or unit == "vw" then
-            pdf_unit = "em"
-         elseif unit == "px" then
-            -- Scale px by 96dpi:72pt ratio (1px = 0.75pt) to match HTML sizing.
-            pdf_num, pdf_unit = string.format("%.4g", tonumber(num) * 0.75), "pt"
-         end
-
-         local lead = tostring(tonumber(pdf_num) * 1.2)
-
-         final_tex_size = string.format("\\fontsize{%s%s}{%s%s}\\selectfont", pdf_num, pdf_unit, lead, pdf_unit)
-         final_css_size = raw_size
-         final_typst_size = pdf_num .. pdf_unit
-      else
-         warn(string.format('Invalid value "%s" for pq-size. Use standard keys (e.g., xs, s, m, l) or standard units (pt, em, ex, rem, px, vw). Falling back to default.', raw_size))
-         final_tex_size   = pq_sizes['l'].tex
-         final_css_size   = pq_sizes['l'].scale .. html_unit
-         final_typst_size = pq_sizes['l'].typst
-      end
-    end
-  else
-    final_tex_size   = pq_sizes['l'].tex
-    final_css_size   = pq_sizes['l'].scale .. html_unit
-    final_typst_size = pq_sizes['l'].typst
-  end
-
-  -- Validate pq-skip: Must be a multiplier or valid length.
-  -- Rejects HTML-only keywords like 'normal'.
-  if raw_skip and not tonumber(raw_skip) and not validate_px_pt(raw_skip, 'pq-skip') then
-    raw_skip = nil
-  end
-
-  -- Calculate cross-engine line-height. Typst is adjusted to baseline-to-baseline
-  -- via typst_leading(). LaTeX defaults to a no-op.
-  local tex_skip, html_skip, typst_skip = nil, "1.5", "0.5em"
-  if raw_skip then
-    local num = tonumber(raw_skip)
-    if num then
-      tex_skip = num .. "em"
-      html_skip = tostring(num)
-      typst_skip = typst_leading(num .. "em")
-    else
-      -- Convert px/rem for PDF engines.
-      html_skip = raw_skip
-      tex_skip = px_to_pt(raw_skip)
-      typst_skip = typst_leading(px_to_pt(raw_skip))
-    end
-  end
-
-  -- Validate Alignments
-  if raw_text_align and not pq_text_aligns[raw_text_align] then
-    warn(string.format('Unknown text-align value "%s" ignored.', raw_text_align))
-    raw_text_align = nil
-  end
-  if raw_box_align and not pq_box_aligns[raw_box_align] then
-    warn(string.format('Unknown box-align value "%s" ignored.', raw_box_align))
-    raw_box_align = nil
-  end
-
-  -- Build Typography Arrays
-  local active_tex_fonts, active_css_fonts, active_typst_fonts = {}, {}, {}
-
-  if raw_weight and pq_weights[raw_weight] then
-    table.insert(active_tex_fonts, pq_weights[raw_weight].tex)
-    table.insert(active_css_fonts, pq_weights[raw_weight].css)
-    table.insert(active_typst_fonts, pq_weights[raw_weight].typst)
-  elseif raw_weight then
-    warn(string.format('Unknown weight value "%s" ignored.', raw_weight))
-  end
-
-  if raw_style and pq_styles[raw_style] then
-    table.insert(active_tex_fonts, pq_styles[raw_style].tex)
-    table.insert(active_css_fonts, pq_styles[raw_style].css)
-    table.insert(active_typst_fonts, pq_styles[raw_style].typst)
-  elseif raw_style then
-    warn(string.format('Unknown style value "%s" ignored.', raw_style))
-  else
-    table.insert(active_tex_fonts, '\\itshape')
-    table.insert(active_css_fonts, 'font-style: italic !important;')
-    table.insert(active_typst_fonts, '#set text(style: "italic")\n')
-  end
-
-  if pq_families[raw_family] then
-    table.insert(active_tex_fonts, pq_families[raw_family].tex)
-    table.insert(active_css_fonts, resolve_html_family(raw_family))
-    table.insert(active_typst_fonts, '#set text(font: ' .. format_typst_font(typst_fonts[pq_families[raw_family].typst_family]) .. ')\n')
-
-    if raw_family == 'sans' and FORMAT:match('typst') and not typst_sansfont_configured and not typst_sans_warned then
-      typst_sans_warned = true
-      warn('No sans font configured for Typst output (set "sansfont" as a Pandoc variable). Typst has no bundled sans-serif font, so a best-effort fallback chain will be used and may not render as true sans-serif on all systems.')
-    end
-  else
-    -- Treat unknown families as literal font names. Rejects fallback chains
-    -- (handled natively by backends). HTML adds a generic serif fallback.
-    table.insert(active_tex_fonts, '\\fontspec{' .. raw_family .. '}')
-    table.insert(active_css_fonts, string.format('font-family: "%s", serif !important;', raw_family))
-    table.insert(active_typst_fonts, '#set text(font: ' .. format_typst_font(raw_family) .. ')\n')
-  end
-
-  -------------------------------------------------------------------------
-  -- TARGET: LATEX (PDF)
-  -------------------------------------------------------------------------
-  if FORMAT:match 'latex' then
-    local options = {}
-    local tex_open = "\\begingroup\n"
-
-    if width then
-      local tex_width = width:match("%%$") and (tonumber(width:sub(1, -2)) / 100) .. "\\linewidth" or px_to_pt(width)
-      table.insert(options, "width=" .. tex_width)
-    end
-
-    local function process_tex_color(input_color, option_key, temp_color_name)
-      if not input_color then return end
-      local c = input_color:match("^%s*(.-)%s*$")
-      if c:find('!') then
-        table.insert(options, option_key .. "=" .. c)
-      else
-        local _, tex_val = resolve_single_color(c)
-        -- Drop alpha channels for LaTeX (xcolor HTML model only supports 6-digit hex).
-        tex_open = tex_open .. "\\definecolor{" .. temp_color_name .. "}{HTML}{" .. tex_val:sub(1, 6) .. "}\n"
-        table.insert(options, option_key .. "=" .. temp_color_name)
-      end
-    end
-
-    process_tex_color(color, "color", "pqtxtcol")
-    process_tex_color(barcolor, "barcolor", "pqbarcol")
-
-    if tex_skip then table.insert(options, "skip=" .. tex_skip) end
-    if barwidth then table.insert(options, "barwidth=" .. px_to_pt(barwidth)) end
-    if paddingleft then table.insert(options, "paddingleft=" .. px_to_pt(paddingleft)) end
-    if paddingright then table.insert(options, "paddingright=" .. px_to_pt(paddingright)) end
-    if paddingtop then table.insert(options, "paddingtop=" .. px_to_pt(paddingtop)) end
-    if paddingbottom then table.insert(options, "paddingbottom=" .. px_to_pt(paddingbottom)) end
-
-    local tex_size_str = final_tex_size
-    for _, font_cmd in ipairs(active_tex_fonts) do
-      tex_size_str = tex_size_str .. font_cmd
-    end
-    table.insert(options, "size=" .. tex_size_str)
-
-    if raw_text_align then table.insert(options, "align=" .. pq_text_aligns[raw_text_align].tex) end
-    if raw_box_align then table.insert(options, "boxalign=" .. pq_box_aligns[raw_box_align].tex) end
-
-    local opt_str = #options > 0 and ("[" .. table.concat(options, ", ") .. "]") or ""
-    local blocks = List({ pandoc.RawBlock('latex', tex_open .. '\\begin{pullquote}' .. opt_str) })
-    blocks:extend(el.content)
-    blocks:insert(pandoc.RawBlock('latex', '\\end{pullquote}\n\\endgroup'))
-    return blocks
+  -- Skip is always resolved to a numeric baseline multiplier here
+  local skip           = resolve_skip(get_attr(el, 'pq-skip'))
+  local size           = validate_size(get_attr(el, 'pq-size'))
+  local html_unit      = validate_html_unit(get_attr(el, 'pq-html-unit'))
+  local text_align     = validate_text_align(get_attr(el, 'pq-text-align'))
+  local box_align      = validate_box_align(get_attr(el, 'pq-box-align'))
+  local weight         = get_attr(el, 'pq-weight')
+  local style          = get_attr(el, 'pq-style')
+  local font           = validate_font(get_attr(el, 'pq-font'))
 
   -------------------------------------------------------------------------
   -- TARGET: HTML
   -------------------------------------------------------------------------
-  elseif FORMAT:match 'html' then
+  if FORMAT:match 'html' then
+    local styles = {}
 
-    local final_color = format_html_color(color) or "#888888"
-    local final_barcolor = format_html_color(barcolor) or "#d9d9d9"
+    local keys_to_remove = {}
+    for k, _ in pairs(el.attributes) do
+      if k:match("^pq%-") then
+        table.insert(keys_to_remove, k)
+      end
+    end
+    for _, k in ipairs(keys_to_remove) do el.attributes[k] = nil end
 
-    local styles = {
-      "display: block !important;",
-      "box-sizing: border-box !important;",
-      "padding-left: " .. (paddingleft or "1em") .. " !important;",
-      "padding-right: " .. (paddingright or "0") .. " !important;",
-      "padding-top: " .. (paddingtop or "0.25em") .. " !important;",
-      "padding-bottom: " .. (paddingbottom or "0.25em") .. " !important;",
-      "line-height: " .. html_skip .. " !important;",
-      "width: " .. (width or "80%") .. " !important;",
-      "color: " .. final_color .. " !important;",
-      "border-left: " .. (barwidth or "0.25em") .. " solid " .. final_barcolor .. " !important;"
-    }
+    if width then table.insert(styles, "--pq-width: " .. width .. ";") end
+    if color then
+      local hc = format_html_color(color)
+      if hc then table.insert(styles, "--pq-text-color: " .. hc .. ";") end
+    end
+    if barwidth then table.insert(styles, "--pq-bar-width: " .. barwidth .. ";") end
+    if barcolor then
+      local bc = format_html_color(barcolor)
+      if bc then table.insert(styles, "--pq-bar-color: " .. bc .. ";") end
+    end
+    if paddingleft then table.insert(styles, "--pq-padding-left: " .. paddingleft .. ";") end
+    if paddingright then table.insert(styles, "--pq-padding-right: " .. paddingright .. ";") end
+    if paddingtop then table.insert(styles, "--pq-padding-top: " .. paddingtop .. ";") end
+    if paddingbottom then table.insert(styles, "--pq-padding-bottom: " .. paddingbottom .. ";") end
+    if font then table.insert(styles, "font-family: '" .. font .. "';") end
 
-    local margin = "1.5rem auto"
-    if raw_box_align then margin = pq_box_aligns[raw_box_align].html_margin end
-    table.insert(styles, "margin: " .. margin .. " !important;")
-
-    table.insert(styles, "font-size: " .. final_css_size .. " !important;")
-
-    if raw_text_align then table.insert(styles, "text-align: " .. pq_text_aligns[raw_text_align].css .. " !important;") end
-
-    for _, font_rule in ipairs(active_css_fonts) do
-      table.insert(styles, font_rule)
+    if size then
+      if SEMANTIC_SIZES[size] then
+        el.attributes['data-pq-size'] = size
+      else
+        table.insert(styles, "font-size: " .. size .. ";")
+      end
     end
 
-    -- Handle paragraph margins to prevent stacking with custom padding
-    if #el.content == 1 and el.content[1].t == 'Para' then
-      -- For a single paragraph, simply strip the <p> tags entirely
-      el.content[1] = pandoc.Plain(el.content[1].content)
-    elseif #el.content > 1 then
-      -- For multiple paragraphs, safely inject a scoped <style> block to neutralize outer margins
-      local css_fix = '<style>.pullquote p:first-of-type { margin-top: 0 !important; } .pullquote p:last-of-type { margin-bottom: 0 !important; }</style>'
-      el.content:insert(1, pandoc.RawBlock('html', css_fix))
-    end
+    -- Skip is now guaranteed to be a number, handled entirely via CSS variable
+    table.insert(styles, "--pq-line-height: " .. skip .. ";")
 
-    el.attributes['style'] = (el.attributes['style'] or "") .. " " .. table.concat(styles, " ")
+    if #styles > 0 then el.attributes['style'] = table.concat(styles, " ") end
+
+    if html_unit then el.attributes['data-pq-html-unit'] = html_unit end
+    if text_align then el.attributes['data-pq-text-align'] = text_align end
+    if box_align then el.attributes['data-pq-box-align'] = box_align end
+    if weight then el.attributes['data-pq-weight'] = weight end
+    if style then el.attributes['data-pq-style'] = style end
+    if font then el.attributes['data-pq-font'] = font end
+
+    el.classes:insert('pullquote')
     return el
 
   -------------------------------------------------------------------------
   -- TARGET: TYPST (PDF)
   -------------------------------------------------------------------------
   elseif FORMAT:match 'typst' then
-    local final_color = color and format_typst_color(color) or 'rgb("#888888")'
-    local final_barcolor = barcolor and format_typst_color(barcolor) or 'rgb("#d9d9d9")'
+    local args = {}
 
-    local b_width = width and (width:match("%%$") and width or px_to_pt(width)) or "80%"
-    local b_stroke = (barwidth and px_to_pt(barwidth) or "4pt") .. " + " .. final_barcolor
-    local b_padding_left = paddingleft and px_to_pt(paddingleft) or "12pt"
-    local b_padding_right = paddingright and px_to_pt(paddingright) or "0pt"
-    local b_padding_top = paddingtop and px_to_pt(paddingtop) or "4pt"
-    local b_padding_bottom = paddingbottom and px_to_pt(paddingbottom) or "4pt"
-
-    local box_align = "center"
-    if raw_box_align then box_align = pq_box_aligns[raw_box_align].typst end
-
-    local text_align = "left"
-    if raw_text_align then text_align = pq_text_aligns[raw_text_align].css end
-
-    local block_open = string.format(
-      '#align(%s)[\n  #block(width: %s, above: 15pt, below: 15pt, stroke: (left: %s), inset: (left: %s, right: %s, top: %s, bottom: %s))[\n',
-      box_align, b_width, b_stroke, b_padding_left, b_padding_right, b_padding_top, b_padding_bottom
-    )
-
-    -- Pin Typst's line box to 1em to unify baseline-to-baseline spacing with HTML/LaTeX.
-    local typst_injections = string.format(
-      '    #set align(%s)\n    #set text(fill: %s, size: %s, top-edge: 0.8em, bottom-edge: -0.2em)\n    #set par(leading: %s)\n',
-      text_align, final_color, final_typst_size, typst_skip
-    )
-
-    for _, font_rule in ipairs(active_typst_fonts) do
-      typst_injections = typst_injections .. '    ' .. font_rule
+    if width then
+      if width:match("%%$") then
+        table.insert(args, 'width: ' .. width)
+      else
+        local conv = px_to_pt(width)
+        if conv then table.insert(args, 'width: ' .. conv) end
+      end
+    end
+    if color then
+      local tc = format_typst_color(color)
+      if tc then table.insert(args, 'color: ' .. tc) end
+    end
+    if barcolor then
+      local tbc = format_typst_color(barcolor)
+      if tbc then table.insert(args, 'barcolor: ' .. tbc) end
+    end
+    if barwidth then
+      local conv = px_to_pt(barwidth)
+      if conv then table.insert(args, 'barwidth: ' .. conv) end
     end
 
-    local blocks = List({ pandoc.RawBlock('typst', block_open .. typst_injections) })
+    if paddingleft then
+      local conv = px_to_pt(paddingleft)
+      if conv then table.insert(args, 'paddingleft: ' .. conv) end
+    end
+    if paddingright then
+      local conv = px_to_pt(paddingright)
+      if conv then table.insert(args, 'paddingright: ' .. conv) end
+    end
+    if paddingtop then
+      local conv = px_to_pt(paddingtop)
+      if conv then table.insert(args, 'paddingtop: ' .. conv) end
+    end
+    if paddingbottom then
+      local conv = px_to_pt(paddingbottom)
+      if conv then table.insert(args, 'paddingbottom: ' .. conv) end
+    end
+
+    -- Always emit skip as a raw float
+    table.insert(args, 'skip: ' .. skip)
+
+    if size then
+      if SEMANTIC_SIZES[size] then
+        table.insert(args, 'size: "' .. size .. '"')
+      else
+        local t_size = px_to_pt(size) or size
+        table.insert(args, 'size: ' .. t_size)
+      end
+    end
+
+    if text_align then table.insert(args, 'text-align: "' .. text_align .. '"') end
+    if box_align then table.insert(args, 'box-align: "' .. box_align .. '"') end
+    if weight then table.insert(args, 'weight: "' .. weight .. '"') end
+    if style then table.insert(args, 'style: "' .. style .. '"') end
+    if font then table.insert(args, 'font: "' .. format_typst_font(font) .. '"') end
+
+    local arg_str = #args > 0 and "(" .. table.concat(args, ", ") .. ")" or "()"
+    local blocks = List({ pandoc.RawBlock('typst', '#pullquote' .. arg_str .. '[\n') })
     blocks:extend(el.content)
-    blocks:insert(pandoc.RawBlock('typst', '\n  ]\n]'))
+    blocks:insert(pandoc.RawBlock('typst', '\n]'))
+    return blocks
+
+  -------------------------------------------------------------------------
+  -- TARGET: LATEX (PDF)
+  -------------------------------------------------------------------------
+  elseif FORMAT:match 'latex' then
+    local options = {}
+
+    if width then
+      if width:match("%%$") then
+        local num = width:sub(1, -2)
+        local num_val = tonumber(num)
+        if num_val then
+          table.insert(options, "width=" .. (num_val / 100) .. "\\linewidth")
+        end
+      else
+        local valid_width = validate_px_pt(width, 'pq-width')
+        if valid_width then
+          local conv = px_to_pt(valid_width)
+          if conv then table.insert(options, "width=" .. conv) end
+        end
+      end
+    end
+
+    local tex_open = "\\begingroup\n"
+    local function process_tex_color(input_color, option_key, temp_color_name)
+      if not input_color then return end
+      if input_color:find('!') then
+        table.insert(options, option_key .. "=" .. input_color)
+      else
+        local _, tex_val = resolve_single_color(input_color)
+        if tex_val then
+          tex_open = tex_open .. "\\definecolor{" .. temp_color_name .. "}{HTML}{" .. tex_val:sub(1, 6) .. "}\n"
+          table.insert(options, option_key .. "=" .. temp_color_name)
+        end
+      end
+    end
+
+    process_tex_color(color, "color", "pqtxtcol")
+    process_tex_color(barcolor, "barcolor", "pqbarcol")
+
+    if barwidth then
+      local conv = px_to_pt(barwidth)
+      if conv then table.insert(options, "barwidth=" .. conv) end
+    end
+    if paddingleft then
+      local conv = px_to_pt(paddingleft)
+      if conv then table.insert(options, "paddingleft=" .. conv) end
+    end
+    if paddingright then
+      local conv = px_to_pt(paddingright)
+      if conv then table.insert(options, "paddingright=" .. conv) end
+    end
+    if paddingtop then
+      local conv = px_to_pt(paddingtop)
+      if conv then table.insert(options, "paddingtop=" .. conv) end
+    end
+    if paddingbottom then
+      local conv = px_to_pt(paddingbottom)
+      if conv then table.insert(options, "paddingbottom=" .. conv) end
+    end
+
+    -- Always emit skip as a raw float
+    table.insert(options, "skip=" .. skip)
+
+    if size then
+      if SEMANTIC_SIZES[size] then
+        table.insert(options, "size=" .. size)
+      else
+        local pt_size = px_to_pt(size) or size
+        local num, unit = pt_size:match("^(%d+%.?%d*)(%a+)$")
+        if num and unit then
+          -- Dynamically use the resolved multiplier to set baseline skip for custom absolute sizes!
+          local bl = tostring(tonumber(num) * skip) .. unit
+          table.insert(options, "size={\\fontsize{" .. pt_size .. "}{" .. bl .. "}\\selectfont}")
+        else
+          table.insert(options, "size={" .. size .. "}")
+        end
+      end
+    end
+
+    if text_align then table.insert(options, "textalign=" .. text_align) end
+    if box_align then table.insert(options, "boxalign=" .. box_align) end
+    if weight then table.insert(options, "weight=" .. weight) end
+    if style then table.insert(options, "style=" .. style) end
+    if font then table.insert(options, "font={" .. font .. "}") end
+
+    local opt_str = #options > 0 and ("[" .. table.concat(options, ", ") .. "]") or ""
+    local blocks = List({ pandoc.RawBlock('latex', tex_open .. '\\begin{pullquote}' .. opt_str) })
+    blocks:extend(el.content)
+    blocks:insert(pandoc.RawBlock('latex', '\\end{pullquote}\n\\endgroup'))
     return blocks
   end
   return nil
 end
 
 -- =========================================================================
--- PANDOC FILTER EXECUTION PIPELINE
+-- SECTION 4: EXECUTION
 -- =========================================================================
-
--- Resolve font variables from YAML metadata or command-line variables (-V).
--- Variables take precedence.
-local function resolve_font_var(doc, key)
-  local variables = PANDOC_WRITER_OPTIONS and PANDOC_WRITER_OPTIONS.variables
-  if variables and variables[key] then return tostring(variables[key]) end
-  if doc.meta[key] then return utils.stringify(doc.meta[key]) end
-  return nil
-end
-
 return {
   {
-    Meta = function(meta)
-      global_meta = meta
-    end
-  },
-  {
-    Pandoc = function(doc)
-      if FORMAT:match('html') then
-        local mainfont = resolve_font_var(doc, 'mainfont')
-        local sansfont = resolve_font_var(doc, 'sansfont')
-        local codefont = resolve_font_var(doc, 'codefont')
-        local monofont = resolve_font_var(doc, 'monofont')
-
-        if mainfont then html_fonts.serif = mainfont end
-        if sansfont then html_fonts.sans = sansfont end
-        if codefont     then html_fonts.mono = codefont
-        elseif monofont then html_fonts.mono = monofont end
-      end
-
-      if not FORMAT:match('typst') then return end
-
-      local mainfont = resolve_font_var(doc, 'mainfont')
-      local sansfont = resolve_font_var(doc, 'sansfont')
-      local codefont = resolve_font_var(doc, 'codefont')
-      local monofont = resolve_font_var(doc, 'monofont')
-
-      if mainfont then typst_fonts.serif = mainfont
-      else typst_fonts.serif = "Libertinus Serif" end
-
-      if codefont    then typst_fonts.mono = codefont
-      elseif monofont    then typst_fonts.mono = monofont
-      else typst_fonts.mono = "DejaVu Sans Mono" end
-
-      if sansfont then
-        typst_fonts.sans = sansfont
-        typst_sansfont_configured = true
-      end
-    end
+    Meta = function(meta) global_meta = meta end
   },
   {
     Div = function(el)
       if not el.classes:includes('pullquote') then return nil end
-
       local status, result = pcall(process_pullquote, el)
-
       if not status then
         local el_id = el.identifier ~= "" and el.identifier or "[unnamed div]"
         abort(string.format('Failed to process pullquote div id: %s\nDetails: %s', el_id, result))
       end
-
       return result
     end
   }

@@ -24,16 +24,16 @@ Here is some standard body text following the quote to ensure vertical spacing (
 
 ## Vertical Spacing (Skip)
 
-This tests `pq-skip`, which sets the baseline-to-baseline line spacing as a multiple of the pullquote's own font size. The dedicated `test-skip.md` fixture covers the full range and the unit forms; this one only confirms that an extreme value still composes with everything else. All three engines should produce the same spacing.
+This tests `pq-skip`, which sets the interline spacing. The dedicated `test-skip.md` fixture covers the full semantic scale; this one only confirms that an extreme value still composes with everything else. All three engines should produce the same spacing.
 
 ```markdown
-::: {.pullquote pq-skip="2.5"}
-This quote has a highly exaggerated skip value of 2.5 applied to it. When this text wraps across multiple lines, you should clearly see a massive amount of vertical space between each line of text, proving the filter handles line-height correctly.
+::: {.pullquote pq-skip="loose"}
+This quote has a highly exaggerated `loose` skip value applied to it. When this text wraps across multiple lines, you should clearly see a massive amount of vertical space between each line of text, proving the filter handles line-height correctly.
 :::
 ```
 
-::: {.pullquote pq-skip="2.5"}
-This quote has a highly exaggerated skip value of 2.5 applied to it. When this text wraps across multiple lines, you should clearly see a massive amount of vertical space between each line of text, proving the filter handles line-height correctly.
+::: {.pullquote pq-skip="loose"}
+This quote has a highly exaggerated `loose` skip value applied to it. When this text wraps across multiple lines, you should clearly see a massive amount of vertical space between each line of text, proving the filter handles line-height correctly.
 :::
 
 ## The Extreme Stress Test
@@ -41,11 +41,11 @@ This quote has a highly exaggerated skip value of 2.5 applied to it. When this t
 Finally, we combine everything: custom width, extreme size, custom colors, custom alignments, and multiple font styles in a single fenced Div.
 
 ```markdown
-::: {.pullquote pq-weight="bold" pq-family="serif" pq-style="slanted" pq-size="3xl" pq-text-align="center" pq-box-align="center" pq-width="95%" pq-text-color="DarkSlateBlue" pq-bar-color="PowderBlue" pq-bar-width="12px" pq-padding-left="20px" pq-skip="2.0"}
+::: {.pullquote pq-weight="bold" pq-style="slanted" pq-font="Georgia" pq-size="2xl" pq-text-align="center" pq-box-align="center" pq-width="95%" pq-text-color="DarkSlateBlue" pq-bar-color="PowderBlue" pq-bar-width="12px" pq-padding-left="20px" pq-skip="loose"}
 THE ULTIMATE TEST
 :::
 ```
 
-::: {.pullquote pq-weight="bold" pq-family="serif" pq-style="slanted" pq-size="3xl" pq-text-align="center" pq-box-align="center" pq-width="95%" pq-text-color="DarkSlateBlue" pq-bar-color="PowderBlue" pq-bar-width="12px" pq-padding-left="20px" pq-skip="2.0"}
+::: {.pullquote pq-weight="bold" pq-style="slanted" pq-font="Georgia" pq-size="2xl" pq-text-align="center" pq-box-align="center" pq-width="95%" pq-text-color="DarkSlateBlue" pq-bar-color="PowderBlue" pq-bar-width="12px" pq-padding-left="20px" pq-skip="loose"}
 THE ULTIMATE TEST
 :::

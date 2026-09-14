@@ -20,11 +20,11 @@
     , Str "scale"
     , Space
     , Str "("
-    , Code ( "" , [] , [] ) "3xs"
+    , Code ( "" , [] , [] ) "s"
     , Space
     , Str "through"
     , Space
-    , Code ( "" , [] , [] ) "3xl"
+    , Code ( "" , [] , [] ) "2xl"
     , Str ")"
     , Space
     , Str "or"
@@ -164,70 +164,6 @@
     , Str "PDF"
     , Space
     , Str "engines."
-    , Space
-    , Str "The"
-    , Space
-    , Str "exception"
-    , Space
-    , Str "is"
-    , Space
-    , Code ( "" , [] , [] ) "vw"
-    , Str ","
-    , Space
-    , Str "which"
-    , Space
-    , Str "is"
-    , Space
-    , Str "genuinely"
-    , Space
-    , Str "viewport-relative"
-    , Space
-    , Str "and"
-    , Space
-    , Str "has"
-    , Space
-    , Str "no"
-    , Space
-    , Str "PDF"
-    , Space
-    , Str "equivalent;"
-    , Space
-    , Str "HTML"
-    , Space
-    , Str "resolves"
-    , Space
-    , Str "it"
-    , Space
-    , Str "against"
-    , Space
-    , Str "the"
-    , Space
-    , Str "window"
-    , Space
-    , Str "while"
-    , Space
-    , Str "LaTeX"
-    , Space
-    , Str "and"
-    , Space
-    , Str "Typst"
-    , Space
-    , Str "fall"
-    , Space
-    , Str "back"
-    , Space
-    , Str "to"
-    , Space
-    , Str "treating"
-    , Space
-    , Str "the"
-    , Space
-    , Str "number"
-    , Space
-    , Str "as"
-    , Space
-    , Code ( "" , [] , [] ) "em"
-    , Str "."
     ]
 , Header
     2
@@ -256,57 +192,6 @@
     , Str "the"
     , Space
     , Str "filter."
-    ]
-, CodeBlock
-    ( "" , [ "markdown" ] , [] )
-    "::: {.pullquote pq-size=\"3xs\"}\nThis is extra extra extra small.\n:::"
-, Div
-    ( "" , [ "pullquote" ] , [ ( "pq-size" , "3xs" ) ] )
-    [ Para
-        [ Str "This"
-        , Space
-        , Str "is"
-        , Space
-        , Str "extra"
-        , Space
-        , Str "extra"
-        , Space
-        , Str "extra"
-        , Space
-        , Str "small."
-        ]
-    ]
-, CodeBlock
-    ( "" , [ "markdown" ] , [] )
-    "::: {.pullquote pq-size=\"2xs\"}\nThis is extra extra small.\n:::"
-, Div
-    ( "" , [ "pullquote" ] , [ ( "pq-size" , "2xs" ) ] )
-    [ Para
-        [ Str "This"
-        , Space
-        , Str "is"
-        , Space
-        , Str "extra"
-        , Space
-        , Str "extra"
-        , Space
-        , Str "small."
-        ]
-    ]
-, CodeBlock
-    ( "" , [ "markdown" ] , [] )
-    "::: {.pullquote pq-size=\"xs\"}\nThis is extra small.\n:::"
-, Div
-    ( "" , [ "pullquote" ] , [ ( "pq-size" , "xs" ) ] )
-    [ Para
-        [ Str "This"
-        , Space
-        , Str "is"
-        , Space
-        , Str "extra"
-        , Space
-        , Str "small."
-        ]
     ]
 , CodeBlock
     ( "" , [ "markdown" ] , [] )
@@ -392,27 +277,6 @@
         [ Str "This"
         , Space
         , Str "is"
-        , Space
-        , Str "extra"
-        , Space
-        , Str "extra"
-        , Space
-        , Str "large"
-        , Space
-        , Str "size."
-        ]
-    ]
-, CodeBlock
-    ( "" , [ "markdown" ] , [] )
-    "::: {.pullquote pq-size=\"3xl\"}\nThis is extra extra extra large size.\n:::"
-, Div
-    ( "" , [ "pullquote" ] , [ ( "pq-size" , "3xl" ) ] )
-    [ Para
-        [ Str "This"
-        , Space
-        , Str "is"
-        , Space
-        , Str "extra"
         , Space
         , Str "extra"
         , Space
@@ -594,57 +458,6 @@
         , Str "PDF"
         , Space
         , Str "engines."
-        ]
-    ]
-, CodeBlock
-    ( "" , [ "markdown" ] , [] )
-    "::: {.pullquote pq-size=\"2.5vw\"}\nThis text has been set to 2.5vw, a viewport unit that only HTML resolves natively; the PDF engines fall back to em.\n:::"
-, Div
-    ( "" , [ "pullquote" ] , [ ( "pq-size" , "2.5vw" ) ] )
-    [ Para
-        [ Str "This"
-        , Space
-        , Str "text"
-        , Space
-        , Str "has"
-        , Space
-        , Str "been"
-        , Space
-        , Str "set"
-        , Space
-        , Str "to"
-        , Space
-        , Str "2.5vw,"
-        , Space
-        , Str "a"
-        , Space
-        , Str "viewport"
-        , Space
-        , Str "unit"
-        , Space
-        , Str "that"
-        , Space
-        , Str "only"
-        , Space
-        , Str "HTML"
-        , Space
-        , Str "resolves"
-        , Space
-        , Str "natively;"
-        , Space
-        , Str "the"
-        , Space
-        , Str "PDF"
-        , Space
-        , Str "engines"
-        , Space
-        , Str "fall"
-        , Space
-        , Str "back"
-        , Space
-        , Str "to"
-        , Space
-        , Str "em."
         ]
     ]
 ]

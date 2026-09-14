@@ -9,9 +9,7 @@ variables:
   mainfont: Noto Serif
   sansfont: Noto Sans
   monofont: Fira Mono
-  codefont: Fira Mono
   linestretch: 1.25
-  number-sections: true
 
 metadata:
   author: Nandakumar Chandrasekhar
